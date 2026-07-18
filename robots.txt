@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://toufic-six-continents.vercel.app/sitemap.xml
