@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://protoufic.github.io/portfolio/</loc></url>
-  <url><loc>https://protoufic.github.io/portfolio/warsaw.html</loc></url>
-  <url><loc>https://protoufic.github.io/portfolio/record.html</loc></url>
-  <url><loc>https://protoufic.github.io/portfolio/partners.html</loc></url>
-  <url><loc>https://protoufic.github.io/portfolio/media.html</loc></url>
-  <url><loc>https://protoufic.github.io/portfolio/story.html</loc></url>
+  <url><loc>https://toufic-six-continents.vercel.app/</loc></url>
+  <url><loc>https://toufic-six-continents.vercel.app/record</loc></url>
+  <url><loc>https://toufic-six-continents.vercel.app/story</loc></url>
+  <url><loc>https://toufic-six-continents.vercel.app/partners</loc></url>
+  <url><loc>https://toufic-six-continents.vercel.app/warsaw</loc></url>
+  <url><loc>https://toufic-six-continents.vercel.app/media</loc></url>
 </urlset>
