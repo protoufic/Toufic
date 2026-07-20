@@ -1,102 +1,18 @@
 /**
- * PROOF.JS — Race archive filtering, expansion, and load-more
+ * PROOF.JS — Race filtering and expansion
  */
-(function () {
+(function(){
   "use strict";
-
-  var filterButtons = document.querySelectorAll(".filter[data-filter]");
-  var raceCards = document.querySelectorAll(".proof-card[data-category]");
-  var loadMoreBtn = document.querySelector(".load-more-btn");
-  var visibleCount = 0;
-  var batchSize = 8;
-
-  if (filterButtons.length === 0 || raceCards.length === 0) return;
-
-  // Initialize: show first batch
+  var btns=document.querySelectorAll(".filter[data-filter]");
+  var cards=document.querySelectorAll(".proof-card[data-category]");
+  var loadBtn=document.querySelector(".load-more-btn");
+  var batch=9;
+  if(!btns.length||!cards.length)return;
   showCards("all");
-
-  // Filter click
-  filterButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var filter = btn.dataset.filter;
-
-      // Update active state
-      filterButtons.forEach(function (b) { b.classList.remove("filter--active"); });
-      btn.classList.add("filter--active");
-
-      showCards(filter);
-    });
-  });
-
-  function showCards(filter) {
-    visibleCount = 0;
-    var shown = 0;
-
-    raceCards.forEach(function (card) {
-      var category = card.dataset.category;
-      var tags = card.dataset.tags ? card.dataset.tags.split(",") : [];
-      var match = filter === "all" || category === filter || tags.indexOf(filter) !== -1;
-
-      if (match) {
-        card.style.display = "";
-        visibleCount++;
-        if (shown < batchSize) {
-          card.style.display = "";
-          shown++;
-        } else {
-          card.style.display = "none";
-        }
-      } else {
-        card.style.display = "none";
-      }
-    });
-
-    updateLoadMore();
+  btns.forEach(function(b){b.addEventListener("click",function(){btns.forEach(function(x){x.classList.remove("filter--active")});b.classList.add("filter--active");showCards(b.dataset.filter)})});
+  function showCards(f){var shown=0;cards.forEach(function(c){var cat=c.dataset.category,tags=c.dataset.tags?c.dataset.tags.split(","):[],match=f==="all"||cat===f||tags.indexOf(f)!==-1;if(match){shown++;c.style.display=shown<=batch?"":"none"}else{c.style.display="none"}});
+    if(loadBtn){var hidden=cards.length-shown;loadBtn.parentElement.style.display=hidden>0?"":"none";loadBtn.textContent="Load More"}
   }
-
-  function updateLoadMore() {
-    if (!loadMoreBtn) return;
-    var hiddenCards = document.querySelectorAll('.proof-card[data-category]:not([style*="display: none"])');
-    var hidden = 0;
-    hiddenCards.forEach(function (c) {
-      if (c.style.display === "none") hidden++;
-    });
-    if (hidden > 0) {
-      loadMoreBtn.style.display = "";
-      loadMoreBtn.textContent = "Load More (" + hidden + " remaining)";
-    } else {
-      loadMoreBtn.style.display = "none";
-    }
-  }
-
-  if (loadMoreBtn) {
-    loadMoreBtn.addEventListener("click", function () {
-      var activeFilter = document.querySelector(".filter--active");
-      var filter = activeFilter ? activeFilter.dataset.filter : "all";
-
-      raceCards.forEach(function (card) {
-        var category = card.dataset.category;
-        var tags = card.dataset.tags ? card.dataset.tags.split(",") : [];
-        var match = filter === "all" || category === filter || tags.indexOf(filter) !== -1;
-
-        if (match && card.style.display === "none") {
-          card.style.display = "";
-        }
-      });
-
-      loadMoreBtn.style.display = "none";
-    });
-  }
-
-  // Expand/collapse race cards
-  document.querySelectorAll(".proof-card").forEach(function (card) {
-    var expandBtn = card.querySelector(".proof-card__expand");
-    if (!expandBtn) return;
-
-    expandBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      card.classList.toggle("proof-card--expanded");
-      expandBtn.textContent = card.classList.contains("proof-card--expanded") ? "Show Less" : "Show More";
-    });
-  });
+  if(loadBtn)loadBtn.addEventListener("click",function(){cards.forEach(function(c){if(c.style.display==="none")c.style.display=""});loadBtn.parentElement.style.display="none"});
+  document.querySelectorAll(".proof-card").forEach(function(c){var ex=c.querySelector(".proof-card__expand");if(!ex)return;ex.addEventListener("click",function(e){e.stopPropagation();c.classList.toggle("proof-card--expanded");ex.textContent=c.classList.contains("proof-card--expanded")?"Show Less":"Show More"})});
 })();

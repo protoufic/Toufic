@@ -4,13 +4,7 @@
   "description": "Six continents. Six full IRONMAN races. One world-record attempt.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
+  "background_color": "#050505",
   "theme_color": "#c8102e",
-  "icons": [
-    {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
+  "icons": [{"src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml"}]
 }
