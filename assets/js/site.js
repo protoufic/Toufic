@@ -1,225 +1,365 @@
-(() => {
-  'use strict';
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+/**
+ * SITE.JS — Core interactions, navigation, scroll reveal, countdown
+ */
 
-  // Navigation
-  const nav = $('.site-nav');
-  const toggle = $('.nav-toggle');
-  const body = document.body;
-  const syncNav = () => nav?.classList.toggle('scrolled', scrollY > 18);
-  syncNav();
-  addEventListener('scroll', syncNav, { passive: true });
-  toggle?.addEventListener('click', () => body.classList.toggle('menu-open'));
-  $$('.nav-links a').forEach(a => a.addEventListener('click', () => body.classList.remove('menu-open')));
+(function () {
+  "use strict";
 
-  // Global progress
-  const progress = $('.scroll-progress');
-  const syncProgress = () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    if (progress) progress.style.width = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
-  };
-  syncProgress();
-  addEventListener('scroll', syncProgress, { passive: true });
+  /* -----------------------------------------------------------
+     NAVIGATION
+  ----------------------------------------------------------- */
+  const nav = document.querySelector(".nav");
+  const toggle = document.querySelector(".nav__toggle");
+  const mobileMenu = document.querySelector(".mobile-menu");
+  const mobileLinks = document.querySelectorAll(".mobile-menu__link, .mobile-menu__cta .btn");
 
-  // Reveal
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const io = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
-      }
-    }), { threshold: .12, rootMargin: '0px 0px -7% 0px' });
-    $$('.reveal,.stagger').forEach(el => io.observe(el));
-  } else {
-    $$('.reveal,.stagger').forEach(el => el.classList.add('in-view'));
+  let lastScroll = 0;
+
+  function onScroll() {
+    const y = window.scrollY;
+    if (y > 60) {
+      nav.classList.add("nav--scrolled");
+    } else {
+      nav.classList.remove("nav--scrolled");
+    }
+    lastScroll = y;
   }
 
-  // Countdown
-  const daysEl = $('[data-deadline-days]');
-  if (daysEl) {
-    const deadline = new Date('2027-11-27T23:59:59+03:00');
-    daysEl.textContent = Math.max(0, Math.ceil((deadline - new Date()) / 86400000)).toLocaleString();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Mobile menu toggle
+  if (toggle && mobileMenu) {
+    toggle.addEventListener("click", function () {
+      const isOpen = mobileMenu.classList.contains("mobile-menu--open");
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    });
+
+    mobileLinks.forEach(function (link) {
+      link.addEventListener("click", closeMobileMenu);
+    });
   }
 
-  // Scroll-linked film. The supplied MP4 is re-encoded with dense keyframes for smooth seeking.
-  const film = $('.mission-film');
-  const video = $('#missionFilm');
-  const poster = $('.film-poster');
-  const meter = $('.film-meter i');
-  const chapters = $$('.film-chapter');
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (film && video && !reduced) {
-    let duration = 15.069;
-    let targetTime = 0;
-    let lastSet = -1;
-    let ready = false;
-    let raf = 0;
-    const thresholds = [0, .18, .39, .60, .79];
-
-    const setChapter = p => {
-      let active = 0;
-      thresholds.forEach((t, i) => { if (p >= t) active = i; });
-      chapters.forEach((c, i) => c.classList.toggle('active', i === active));
-    };
-
-    const readProgress = () => {
-      const rect = film.getBoundingClientRect();
-      const distance = Math.max(1, film.offsetHeight - innerHeight);
-      const p = clamp(-rect.top / distance, 0, 1);
-      targetTime = p * Math.max(.1, duration - .045);
-      if (meter) meter.style.width = `${p * 100}%`;
-      setChapter(p);
-    };
-
-    const seekLoop = () => {
-      if (ready && Math.abs(targetTime - lastSet) > .018 && !document.hidden) {
-        try {
-          video.currentTime = targetTime;
-          lastSet = targetTime;
-        } catch (_) {}
-      }
-      raf = requestAnimationFrame(seekLoop);
-    };
-
-    const markReady = () => {
-      duration = Number.isFinite(video.duration) ? video.duration : duration;
-      ready = video.readyState >= 2;
-      if (ready) {
-        video.classList.add('ready');
-        poster?.setAttribute('aria-hidden', 'true');
-        readProgress();
-      }
-    };
-    video.muted = true;
-    video.playsInline = true;
-    video.pause();
-    video.addEventListener('loadedmetadata', markReady);
-    video.addEventListener('loadeddata', markReady);
-    video.addEventListener('canplay', markReady);
-    video.load();
-
-    // Some mobile browsers require a user gesture before time-based video seeking.
-    const primeVideo = () => {
-      video.play().then(() => {
-        video.pause();
-        video.currentTime = targetTime;
-      }).catch(() => {});
-    };
-    addEventListener('touchstart', primeVideo, { once: true, passive: true });
-    addEventListener('pointerdown', primeVideo, { once: true, passive: true });
-
-    readProgress();
-    addEventListener('scroll', readProgress, { passive: true });
-    addEventListener('resize', readProgress);
-    raf = requestAnimationFrame(seekLoop);
-    addEventListener('pagehide', () => cancelAnimationFrame(raf), { once: true });
+  function openMobileMenu() {
+    mobileMenu.classList.add("mobile-menu--open");
+    toggle.classList.add("nav__toggle--open");
+    toggle.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
   }
 
-  // Map
-  const mapData = {
-    northamerica: ['North America', 'One qualifying IRONMAN chapter. Race selection is not public until entry, rules, visa, recovery and funding are controlled.'],
-    southamerica: ['South America', 'One qualifying IRONMAN chapter. Travel, bike transport, climate and recovery spacing must all work.'],
-    europe: ['Europe', 'One qualifying IRONMAN chapter. The race must fit the final record rules and the complete training plan.'],
-    africa: ['Africa', 'One qualifying IRONMAN chapter. The route stays private until it is safe, funded and executable.'],
-    asia: ['Asia', 'One qualifying IRONMAN chapter planned around the academic calendar, travel access and final record guidelines.'],
-    oceania: ['Oceania', 'One qualifying IRONMAN chapter. The final route must work physically, legally and financially.']
-  };
-  const mapTitle = $('#mapTitle');
-  const mapCopy = $('#mapCopy');
-  $$('.map-node').forEach(node => node.addEventListener('click', () => {
-    $$('.map-node').forEach(n => n.classList.remove('active'));
-    node.classList.add('active');
-    const [title, copy] = mapData[node.dataset.continent] || ['Six Continents', 'Route under review.'];
-    if (mapTitle) mapTitle.textContent = title;
-    if (mapCopy) mapCopy.textContent = copy;
-  }));
+  function closeMobileMenu() {
+    mobileMenu.classList.remove("mobile-menu--open");
+    toggle.classList.remove("nav__toggle--open");
+    toggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
 
-  // Partner dialog
-  const dialog = $('#partnerDialog');
-  $$('[data-open-partner]').forEach(btn => btn.addEventListener('click', e => {
-    e.preventDefault();
-    if (dialog?.showModal) dialog.showModal();
-    else location.href = 'mailto:protoufic@gmail.com?subject=Six%20Continents%20Partnership';
-  }));
-  $$('[data-close-dialog]').forEach(btn => btn.addEventListener('click', () => dialog?.close()));
-  dialog?.addEventListener('click', e => {
-    if (e.target === dialog) dialog.close();
-  });
-  $('#partnerForm')?.addEventListener('submit', e => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const subject = encodeURIComponent(`Six Continents partnership — ${form.get('company') || form.get('name') || 'Inquiry'}`);
-    const bodyText = [
-      `Name: ${form.get('name') || ''}`,
-      `Company: ${form.get('company') || ''}`,
-      `Email: ${form.get('email') || ''}`,
-      `Interest: ${form.get('route') || ''}`,
-      '',
-      form.get('message') || ''
-    ].join('\n');
-    location.href = `mailto:protoufic@gmail.com?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
-    dialog.close();
+  // Close on Escape
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      closeMobileMenu();
+      closeContactPanel();
+      closeLightbox();
+    }
   });
 
-  // Copy blocks
-  $$('[data-copy]').forEach(btn => btn.addEventListener('click', async () => {
-    const target = document.getElementById(btn.dataset.copy);
-    if (!target) return;
-    try {
-      await navigator.clipboard.writeText(target.innerText.trim());
-      const label = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(() => btn.textContent = label, 1200);
-    } catch (_) {}
-  }));
+  /* -----------------------------------------------------------
+     SCROLL REVEAL
+  ----------------------------------------------------------- */
+  const revealElements = document.querySelectorAll(".reveal");
 
-  // Lightbox. Works with static galleries and race cards created by record.js.
-  const lightbox = $('#lightbox');
-  const lbImg = $('#lightboxImage');
-  const lbCaption = $('#lightboxCaption');
-  let lbItems = [];
-  let lbIndex = 0;
-  const showLightboxItem = () => {
-    const item = lbItems[lbIndex];
-    if (!item || !lbImg) return;
-    lbImg.src = item.src;
-    lbImg.alt = item.caption || '';
-    if (lbCaption) lbCaption.textContent = item.caption || '';
-  };
-  const openLightbox = (items, index = 0) => {
-    if (!lightbox || !items?.length) return;
-    lbItems = items;
-    lbIndex = clamp(index, 0, items.length - 1);
-    showLightboxItem();
-    lightbox.classList.add('open');
-    lightbox.setAttribute('aria-hidden', 'false');
-    body.classList.add('modal-open');
-  };
-  const closeLightbox = () => {
-    lightbox?.classList.remove('open');
-    lightbox?.setAttribute('aria-hidden', 'true');
-    body.classList.remove('modal-open');
-  };
-  window.openMissionLightbox = openLightbox;
-  document.addEventListener('click', e => {
-    const trigger = e.target.closest('[data-lightbox]');
-    if (!trigger) return;
-    e.preventDefault();
-    const group = trigger.dataset.gallery || 'default';
-    const triggers = $$(`[data-lightbox][data-gallery="${CSS.escape(group)}"]`);
-    const items = triggers.map(t => ({ src: t.dataset.full || t.getAttribute('href') || t.querySelector('img')?.src, caption: t.dataset.caption || t.querySelector('img')?.alt || '' }));
-    openLightbox(items, triggers.indexOf(trigger));
+  if (revealElements.length > 0) {
+    const revealObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal--visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    revealElements.forEach(function (el) {
+      revealObserver.observe(el);
+    });
+  }
+
+  /* -----------------------------------------------------------
+     COUNTDOWN
+  ----------------------------------------------------------- */
+  const countdownEl = document.querySelector("[data-countdown]");
+  if (countdownEl) {
+    const deadline = new Date(countdownEl.dataset.countdown + "T23:59:59Z");
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = deadline - now;
+      if (diff <= 0) {
+        countdownEl.innerHTML =
+          '<div class="countdown__item"><div class="countdown__value">0</div><div class="countdown__label">Days</div></div>';
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      countdownEl.innerHTML =
+        '<div class="countdown__item"><div class="countdown__value">' +
+        days +
+        '</div><div class="countdown__label">Days</div></div>' +
+        '<div class="countdown__item"><div class="countdown__value">' +
+        String(hours).padStart(2, "0") +
+        '</div><div class="countdown__label">Hours</div></div>' +
+        '<div class="countdown__item"><div class="countdown__value">' +
+        String(mins).padStart(2, "0") +
+        '</div><div class="countdown__label">Minutes</div></div>' +
+        '<div class="countdown__item"><div class="countdown__value">' +
+        String(secs).padStart(2, "0") +
+        '</div><div class="countdown__label">Seconds</div></div>';
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+
+  /* -----------------------------------------------------------
+     ANIMATED COUNTERS
+  ----------------------------------------------------------- */
+  const counters = document.querySelectorAll("[data-count-to]");
+  if (counters.length > 0) {
+    const counterObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    counters.forEach(function (el) {
+      counterObserver.observe(el);
+    });
+  }
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.countTo, 10);
+    const suffix = el.dataset.countSuffix || "";
+    const prefix = el.dataset.countPrefix || "";
+    const duration = 2000;
+    const start = performance.now();
+
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * target);
+      el.textContent = prefix + current.toLocaleString() + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  /* -----------------------------------------------------------
+     DISTANCE BARS
+  ----------------------------------------------------------- */
+  const bars = document.querySelectorAll(".distance-bar__fill[data-width]");
+  if (bars.length > 0) {
+    const barObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.width = entry.target.dataset.width;
+            barObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    bars.forEach(function (el) {
+      el.style.width = "0%";
+      barObserver.observe(el);
+    });
+  }
+
+  /* -----------------------------------------------------------
+     CONTACT PANEL
+  ----------------------------------------------------------- */
+  const contactPanel = document.querySelector(".contact-panel");
+  const contactOverlay = document.querySelector(".contact-panel__overlay");
+  const contactOpeners = document.querySelectorAll("[data-open-contact]");
+  const contactClosers = document.querySelectorAll("[data-close-contact]");
+
+  contactOpeners.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      openContactPanel();
+    });
   });
-  $('[data-lightbox-close]')?.addEventListener('click', closeLightbox);
-  $('[data-lightbox-prev]')?.addEventListener('click', () => { lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length; showLightboxItem(); });
-  $('[data-lightbox-next]')?.addEventListener('click', () => { lbIndex = (lbIndex + 1) % lbItems.length; showLightboxItem(); });
-  lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-  addEventListener('keydown', e => {
-    if (!lightbox?.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') { lbIndex = (lbIndex - 1 + lbItems.length) % lbItems.length; showLightboxItem(); }
-    if (e.key === 'ArrowRight') { lbIndex = (lbIndex + 1) % lbItems.length; showLightboxItem(); }
+
+  contactClosers.forEach(function (btn) {
+    btn.addEventListener("click", closeContactPanel);
+  });
+
+  if (contactOverlay) {
+    contactOverlay.addEventListener("click", closeContactPanel);
+  }
+
+  function openContactPanel() {
+    if (contactPanel) contactPanel.classList.add("contact-panel--open");
+    if (contactOverlay) contactOverlay.classList.add("contact-panel__overlay--open");
+    document.body.style.overflow = "hidden";
+    // Focus first input
+    setTimeout(function () {
+      var firstInput = contactPanel.querySelector("input, select, textarea");
+      if (firstInput) firstInput.focus();
+    }, 400);
+  }
+
+  function closeContactPanel() {
+    if (contactPanel) contactPanel.classList.remove("contact-panel--open");
+    if (contactOverlay) contactOverlay.classList.remove("contact-panel__overlay--open");
+    document.body.style.overflow = "";
+  }
+
+  /* -----------------------------------------------------------
+     CONTACT FORM — mailto
+  ----------------------------------------------------------- */
+  const contactForm = document.getElementById("contact-form");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var fd = new FormData(contactForm);
+      var intent = fd.get("intent") || "General";
+      var name = fd.get("name") || "";
+      var company = fd.get("company") || "";
+      var role = fd.get("role") || "";
+      var email = fd.get("email") || "";
+      var goal = fd.get("goal") || "";
+      var type = fd.get("type") || "";
+      var funding = fd.get("funding") || "";
+      var message = fd.get("message") || "";
+
+      var subject = encodeURIComponent(
+        intent + " Enquiry — Six Continents Mission"
+      );
+      var body = encodeURIComponent(
+        "Intent: " +
+          intent +
+          "\n\nName: " +
+          name +
+          "\nCompany: " +
+          company +
+          "\nRole: " +
+          role +
+          "\nEmail: " +
+          email +
+          "\nGoal: " +
+          goal +
+          "\nPartnership Type: " +
+          type +
+          "\nFunding: " +
+          funding +
+          "\n\nMessage:\n" +
+          message
+      );
+
+      window.location.href =
+        "mailto:protoufic@gmail.com?subject=" + subject + "&body=" + body;
+    });
+  }
+
+  /* -----------------------------------------------------------
+     CONVERSION BLOCK OPTION SELECT
+  ----------------------------------------------------------- */
+  const convOptions = document.querySelectorAll(".conversion-block__option");
+  convOptions.forEach(function (opt) {
+    opt.addEventListener("click", function () {
+      convOptions.forEach(function (o) {
+        o.classList.remove("conversion-block__option--selected");
+      });
+      opt.classList.add("conversion-block__option--selected");
+    });
+  });
+
+  /* -----------------------------------------------------------
+     LIGHTBOX
+  ----------------------------------------------------------- */
+  const lightbox = document.querySelector(".lightbox");
+  const lightboxImg = lightbox ? lightbox.querySelector(".lightbox__img") : null;
+  const lightboxClose = lightbox ? lightbox.querySelector(".lightbox__close") : null;
+  const lightboxPrev = lightbox ? lightbox.querySelector(".lightbox__prev") : null;
+  const lightboxNext = lightbox ? lightbox.querySelector(".lightbox__next") : null;
+  let lightboxImages = [];
+  let lightboxIndex = 0;
+
+  document.querySelectorAll("[data-lightbox]").forEach(function (el, i) {
+    el.addEventListener("click", function () {
+      lightboxImages = Array.from(document.querySelectorAll("[data-lightbox]"));
+      lightboxIndex = lightboxImages.indexOf(el);
+      openLightbox(el.dataset.lightbox || el.querySelector("img")?.src);
+    });
+  });
+
+  function openLightbox(src) {
+    if (!lightbox || !lightboxImg) return;
+    lightboxImg.src = src;
+    lightbox.classList.add("lightbox--open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove("lightbox--open");
+    document.body.style.overflow = "";
+  }
+
+  if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+  if (lightbox) lightbox.addEventListener("click", function (e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  if (lightboxPrev) lightboxPrev.addEventListener("click", function () {
+    lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+    var src = lightboxImages[lightboxIndex].dataset.lightbox || lightboxImages[lightboxIndex].querySelector("img")?.src;
+    if (src) lightboxImg.src = src;
+  });
+  if (lightboxNext) lightboxNext.addEventListener("click", function () {
+    lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+    var src = lightboxImages[lightboxIndex].dataset.lightbox || lightboxImages[lightboxIndex].querySelector("img")?.src;
+    if (src) lightboxImg.src = src;
+  });
+
+  /* -----------------------------------------------------------
+     SMOOTH SCROLL FOR ANCHOR LINKS
+  ----------------------------------------------------------- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var target = document.querySelector(a.getAttribute("href"));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  /* -----------------------------------------------------------
+     ACTIVE NAV LINK
+  ----------------------------------------------------------- */
+  var currentPage = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".nav__link").forEach(function (link) {
+    var href = link.getAttribute("href");
+    if (href === currentPage || (currentPage === "" && href === "index.html")) {
+      link.classList.add("nav__link--active");
+    }
   });
 })();

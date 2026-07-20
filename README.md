@@ -1,45 +1,107 @@
-# Toufic Abou Ali — Six Continents
+# Six Continents — Toufic Abou Ali
 
-Static, Vercel-ready mission website. No CMS and no build step.
+**Six continents. Six full IRONMAN races. One world-record attempt.**
 
-## Deploy on Vercel
+Production-ready sponsor-conversion website for Lebanese founder-athlete Toufic Abou Ali's Six Continents world-record attempt.
 
-1. Extract this folder.
-2. Upload it to a new GitHub repository, with `index.html` directly at the repository root.
-3. In Vercel, choose **Add New → Project** and import the repository.
-4. Framework preset: **Other**.
-5. Build command: leave empty.
-6. Output directory: leave empty.
-7. Deploy.
+## Pages
 
-Vercel reads `vercel.json`, serves clean URLs, applies long-term caching to media assets, and adds basic security headers.
+| Page | File | Purpose |
+|---|---|---|
+| Home | `index.html` | Full sponsor-conversion journey |
+| Mission | `mission.html` | Mission clarity and ethical urgency |
+| Proof | `proof.html` | Complete race archive with filters |
+| Founder | `founder.html` | Toufic's identity and Sira |
+| Partners | `partners.html` | Partnership funnel and value |
+| IRONMAN 70.3 Warsaw | `warsaw.html` | Detailed race report and gallery |
+| Media | `media.html` | Bios, quotes, story angles for press |
+| 404 | `404.html` | Custom error page |
 
-## Before connecting a custom domain
+## Quick Start
 
-Update the URLs inside `sitemap.xml` from the current portfolio URL to the final custom domain. Also add absolute canonical and Open Graph URLs once the final domain is known.
+```bash
+# Serve locally
+cd six-continents
+python3 -m http.server 8000
+# Open http://localhost:8000
+```
 
-## Main files
+## Deploy to Vercel
 
-- `index.html` — mission and sponsor-conversion homepage
-- `warsaw.html` — IRONMAN 70.3 Warsaw origin story and proof
-- `record.html` — searchable, expandable race archive
-- `partners.html` — clear public partnership page without prices
-- `media.html` — media kit, bios, quotes and direct proof links
-- `story.html` — founder-athlete story
-- `data/races.js` and `data/races.json` — structured race archive
-- `assets/media/mission-scroll-1080.mp4` — scroll-linked desktop film
-- `assets/media/mission-scroll-720.mp4` — lighter mobile film
+1. Push this folder to a GitHub repository
+2. Import the repository in Vercel (vercel.com/new)
+3. Framework Preset: **Other**
+4. Root Directory: `./`
+5. Click **Deploy**
 
-## Accuracy rules already applied
+No build step required. Vercel serves the static files directly.
 
-- Uses `Founder & CEO of Sira` as the public title.
-- Uses `world-record attempt` and never claims Guinness approval.
-- Does not publish the budget, sponsor prices or phone number.
-- Does not publish the 1,356-lives promise.
-- Shows the 2023 ISF Half Marathon as a category win, while identifying 1:49:25 only as a 20.00 km Strava recording.
-- Gives official race times priority over Strava moving times.
-- Uses real Warsaw imagery without adding third-party logos or suggesting endorsement.
+## Project Structure
 
-## Updating the race archive
+```
+/
+├── index.html          # Home page
+├── mission.html        # Mission page
+├── proof.html          # Proof / Race archive
+├── founder.html        # Founder page
+├── partners.html       # Partnership funnel
+├── warsaw.html         # IRONMAN 70.3 Warsaw detail
+├── media.html          # Media resources
+├── 404.html            # Error page
+├── robots.txt          # Search engine directives
+├── sitemap.xml         # XML sitemap
+├── site.webmanifest    # PWA manifest
+├── favicon.svg         # Favicon
+├── vercel.json         # Vercel deployment config
+├── README.md           # This file
+├── MEDIA-INTEGRATION-GUIDE.md  # Media integration instructions
+└── assets/
+    ├── css/
+    │   └── site.css    # Complete stylesheet
+    ├── js/
+    │   ├── config.js   # Media configuration
+    │   ├── site.js     # Core interactions
+    │   ├── map.js      # Continent map
+    │   ├── proof.js    # Race archive filters
+    │   ├── gallery.js  # Lightbox gallery
+    │   ├── scroll-story.js  # Scroll animations
+    │   └── contact.js  # Contact form
+    └── img/            # All images (replaceable)
+```
 
-Edit `data/races.js` and keep the same object structure. Update `data/races.json` as the portable data copy. The race page loads 12 entries at a time and supports year, discipline, podium and text filters.
+## Media Integration
+
+See `MEDIA-INTEGRATION-GUIDE.md` for exact instructions on where to insert final videos and images.
+
+## Performance
+
+- Static HTML — no framework, no build step
+- Lazy loading for below-fold images
+- IntersectionObserver for scroll animations
+- `prefers-reduced-motion` respected
+- No blocking third-party scripts
+- No layout shift
+- No horizontal overflow
+
+## Accessibility
+
+- Semantic HTML landmarks
+- Logical heading hierarchy
+- Keyboard navigation
+- Focus trapping in dialogs
+- Visible focus indicators
+- Alt text on all images
+- Reduced motion support
+- Sufficient color contrast
+
+## Contact
+
+- Email: protoufic@gmail.com
+- Instagram: https://www.instagram.com/touficaa/
+- LinkedIn: https://www.linkedin.com/in/touficabouali
+- Strava: https://www.strava.com/athletes/109556347
+- Sira: https://siracareers.com
+
+## License
+
+© 2025–2026 Toufic Abou Ali. All rights reserved.

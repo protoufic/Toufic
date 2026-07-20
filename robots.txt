@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://touficabouali.com/sitemap.xml
