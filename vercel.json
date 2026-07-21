@@ -1,20 +1,77 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "headers": [
+  "rewrites": [
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        {"key":"Cache-Control","value":"public, max-age=31536000, immutable"}
-      ]
+      "source": "/mission",
+      "destination": "/index.html"
     },
+    {
+      "source": "/proof",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/founder",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/partners",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/warsaw",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/media",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/story",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/record",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/ironman",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {"key":"X-Content-Type-Options","value":"nosniff"},
-        {"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},
-        {"key":"Permissions-Policy","value":"camera=(), microphone=(), geolocation=()"}
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     }
   ]
