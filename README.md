@@ -1,54 +1,45 @@
-# Six Continents — Toufic Abou Ali
+# Toufic Abou Ali — Six Continents
 
-**6 Continents. 6 Full IRONMAN Races. 1 World-Record Attempt.**
+Static, Vercel-ready mission website. No CMS and no build step.
 
-## Quick Start
+## Deploy on Vercel
 
-```bash
-cd six-continents
-python3 -m http.server 8000
-# Open http://localhost:8000
-```
+1. Extract this folder.
+2. Upload it to a new GitHub repository, with `index.html` directly at the repository root.
+3. In Vercel, choose **Add New → Project** and import the repository.
+4. Framework preset: **Other**.
+5. Build command: leave empty.
+6. Output directory: leave empty.
+7. Deploy.
 
-## Deploy to Vercel
+Vercel reads `vercel.json`, serves clean URLs, applies long-term caching to media assets, and adds basic security headers.
 
-1. Push to GitHub
-2. Import at vercel.com/new
-3. Framework: **Other**
-4. Deploy
+## Before connecting a custom domain
 
-## Pages
+Update the URLs inside `sitemap.xml` from the current portfolio URL to the final custom domain. Also add absolute canonical and Open Graph URLs once the final domain is known.
 
-| Page | File |
-|---|---|
-| Home | `index.html` |
-| Mission | `mission.html` |
-| Proof | `proof.html` |
-| Founder | `founder.html` |
-| Partners | `partners.html` |
-| IRONMAN 70.3 Warsaw | `warsaw.html` |
-| Media | `media.html` |
-| 404 | `404.html` |
+## Main files
 
-## Key Features
+- `index.html` — mission and sponsor-conversion homepage
+- `warsaw.html` — IRONMAN 70.3 Warsaw origin story and proof
+- `record.html` — searchable, expandable race archive
+- `partners.html` — clear public partnership page without prices
+- `media.html` — media kit, bios, quotes and direct proof links
+- `story.html` — founder-athlete story
+- `data/races.js` and `data/races.json` — structured race archive
+- `assets/media/mission-scroll-1080.mp4` — scroll-linked desktop film
+- `assets/media/mission-scroll-720.mp4` — lighter mobile film
 
-- 50 documented races with Strava verification
-- 28 podium / top placements
-- Interactive continent map
-- Working countdown to deadline
-- Contact panel with mailto form
-- WhatsApp integration
-- Lightbox gallery
-- Race filtering and load-more
-- Scroll animations
-- Mobile responsive
-- JSON-LD structured data
-- Sitemap and robots.txt
+## Accuracy rules already applied
 
-## Contact
+- Uses `Founder & CEO of Sira` as the public title.
+- Uses `world-record attempt` and never claims Guinness approval.
+- Does not publish the budget, sponsor prices or phone number.
+- Does not publish the 1,356-lives promise.
+- Shows the 2023 ISF Half Marathon as a category win, while identifying 1:49:25 only as a 20.00 km Strava recording.
+- Gives official race times priority over Strava moving times.
+- Uses real Warsaw imagery without adding third-party logos or suggesting endorsement.
 
-- Email: protoufic@gmail.com
-- Instagram: @touficaa
-- LinkedIn: touficabouali
-- Strava: athletes/109556347
-- Sira: siracareers.com
+## Updating the race archive
+
+Edit `data/races.js` and keep the same object structure. Update `data/races.json` as the portable data copy. The race page loads 12 entries at a time and supports year, discipline, podium and text filters.
