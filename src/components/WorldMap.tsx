@@ -12,7 +12,7 @@ export function WorldMap() {
   return (
     <div className="mission-map-shell">
       <div className="mission-map" role="group" aria-label="Six target continents">
-        <img src={media.map} alt="World map showing the six target continents" />
+        <img src={media.map} alt="World map showing the six target continents" loading="lazy" decoding="async" />
         <div className="mission-map-shade" />
         <svg className="mission-map-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           {mission.continents.map((continent, index) => (

@@ -1,17 +1,18 @@
-# Final changes
+# Final performance changes
 
-- Integrated the three newest mission-video edits.
-- Ordered the videos by their actual visual content: standing, sprint, Lebanon/map.
-- Replaced normal MP4 seeking as the primary scroll system with canvas-rendered responsive frame sequences.
-- Added desktop and mobile frame sets with 904 total WebP frames.
-- Added small decoded-frame memory windows, background cache warming, neighbouring-frame blending, and MP4 fallback.
-- Scene 2 and Scene 3 begin with a slow pre-roll before reaching their full sticky position.
-- Increased copy weight, contrast, and safe positioning for all three scenes.
-- Moved the full film area below the fixed navigation so the menu no longer covers Toufic's face.
-- Added the Toufic mark to the header and favicon.
-- Updated the Mission cover using the final frame of the newest third video.
-- Kept the strongest Lebanese Warsaw finish photograph as the Partners cover.
-- Corrected six-continent marker coordinates.
-- Moved the map detail panel below the map so it cannot hide continent points.
-- Preserved the selected Warsaw, running, T1, founder, result, and gallery assets.
-- Replaced the repeated founder image in the lower Founder section with a running image.
+No public design, copy, page structure, or visual placement was intentionally changed.
+
+- Fixed the Marathon filter so it shows only OMT Beirut Marathon and Prague Marathon.
+- Reduced film sampling from 30 fps to 15 fps while keeping smooth canvas interpolation.
+- Reduced total responsive frame files from 904 to 454.
+- Removed the system that downloaded every film frame in the background.
+- Added directional, on-demand frame loading around the current scroll position.
+- Added sparse anchors for responsive fast scrolling without full-sequence downloads.
+- Reduced decoded-frame memory limits.
+- Re-encoded fallback MP4s into much smaller H.264 files with frequent keyframes.
+- Added low-bandwidth MP4 fallback for Data Saver and 2G-class connections.
+- Delayed Scene 2 and Scene 3 media loading until they approach the viewport.
+- Lazy-loaded non-critical backdrop and map images.
+- Split lightweight homepage metrics from the 52-entry race archive.
+- Added route preloading only when the visitor hovers, focuses, or touches a navigation link.
+- Versioned optimized frame and MP4 URLs to prevent browsers from serving the previous cached media.

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ContactPanel } from './ContactPanel';
 import { openContactPanel } from '../utils/contact';
 import { site } from '../data/mission';
+import { preloadRoute } from '../utils/preload';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -43,7 +44,7 @@ export function Header() {
 
           <div className="site-nav-links">
             {navLinks.map((link) => (
-              <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''}>
+              <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
                 {link.label}
               </Link>
             ))}
@@ -77,7 +78,7 @@ export function Header() {
           >
             <div className="mobile-menu-inner">
               {navLinks.map((link) => (
-                <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''}>
+                <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
                   {link.label}
                 </Link>
               ))}
@@ -107,9 +108,9 @@ export function Footer() {
         <div className="footer-links">
           <div>
             <h3>Website</h3>
-            {navLinks.map((link) => <Link key={link.href} to={link.href}>{link.label}</Link>)}
-            <Link to="/warsaw">IRONMAN 70.3 Warsaw</Link>
-            <Link to="/media">Media</Link>
+            {navLinks.map((link) => <Link key={link.href} to={link.href} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)}>{link.label}</Link>)}
+            <Link to="/warsaw" onPointerEnter={() => preloadRoute('/warsaw')} onFocus={() => preloadRoute('/warsaw')}>IRONMAN 70.3 Warsaw</Link>
+            <Link to="/media" onPointerEnter={() => preloadRoute('/media')} onFocus={() => preloadRoute('/media')}>Media</Link>
           </div>
           <div>
             <h3>Connect</h3>

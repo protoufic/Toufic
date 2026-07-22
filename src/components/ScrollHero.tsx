@@ -15,6 +15,13 @@ function smootherStep(value: number) {
 
 type FrameRecord = { image: HTMLImageElement; usedAt: number };
 
+type NetworkInformationLike = {
+  saveData?: boolean;
+  effectiveType?: string;
+  addEventListener?: (type: 'change', listener: () => void) => void;
+  removeEventListener?: (type: 'change', listener: () => void) => void;
+};
+
 type ChapterProps = {
   id: string;
   chapter: string;
@@ -52,10 +59,14 @@ function ScrollFrameChapter({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const targetRef = useRef(0);
+  const lastTargetRef = useRef(0);
+  const directionRef = useRef<1 | -1>(1);
   const renderedRef = useRef(0);
   const decodedRef = useRef(new Map<number, FrameRecord>());
   const inflightRef = useRef(new Set<number>());
   const rafRef = useRef<number | null>(null);
+  const updateRafRef = useRef<number | null>(null);
+  const headerHeightRef = useRef(76);
   const lastFrameRef = useRef(performance.now());
   const shouldRenderRef = useRef(priority);
   const failedFramesRef = useRef(0);
@@ -63,32 +74,40 @@ function ScrollFrameChapter({
   const [canvasReady, setCanvasReady] = useState(false);
   const [fallbackReady, setFallbackReady] = useState(false);
   const [useFallback, setUseFallback] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [mobileViewport, setMobileViewport] = useState(false);
-  const [saveData, setSaveData] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [mobileViewport, setMobileViewport] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches);
+  const [saveData, setSaveData] = useState(() => Boolean((navigator as Navigator & { connection?: NetworkInformationLike }).connection?.saveData));
+  const [constrainedNetwork, setConstrainedNetwork] = useState(() => {
+    const effectiveType = (navigator as Navigator & { connection?: NetworkInformationLike }).connection?.effectiveType || '';
+    return effectiveType === 'slow-2g' || effectiveType === '2g';
+  });
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const mobileQuery = window.matchMedia('(max-width: 900px)');
-    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection;
     const sync = () => {
+      const effectiveType = connection?.effectiveType || '';
       setReducedMotion(motionQuery.matches);
       setMobileViewport(mobileQuery.matches);
       setSaveData(Boolean(connection?.saveData));
+      setConstrainedNetwork(effectiveType === 'slow-2g' || effectiveType === '2g');
     };
     sync();
     motionQuery.addEventListener('change', sync);
     mobileQuery.addEventListener('change', sync);
+    connection?.addEventListener?.('change', sync);
     return () => {
       motionQuery.removeEventListener('change', sync);
       mobileQuery.removeEventListener('change', sync);
+      connection?.removeEventListener?.('change', sync);
     };
   }, []);
 
   const frameBase = useMemo(() => mobileViewport ? mobileFrames : desktopFrames, [desktopFrames, mobileFrames, mobileViewport]);
   const fallbackSource = useMemo(() => mobileViewport ? mobileVideo : desktopVideo, [desktopVideo, mobileVideo, mobileViewport]);
-  const fallbackMode = useFallback || saveData;
-  const decodedLimit = mobileViewport ? 24 : 34;
+  const fallbackMode = useFallback || saveData || constrainedNetwork;
+  const decodedLimit = mobileViewport ? 18 : 26;
 
   const frameUrl = useCallback((index: number) => `${frameBase}/frame-${String(index + 1).padStart(4, '0')}.webp`, [frameBase]);
 
@@ -109,14 +128,15 @@ function ScrollFrameChapter({
     }
   }, [decodedLimit, frameCount]);
 
-  const ensureFrame = useCallback((index: number) => {
+  const ensureFrame = useCallback((index: number, highPriority = false) => {
     const safeIndex = Math.max(0, Math.min(frameCount - 1, index));
     if (decodedRef.current.has(safeIndex) || inflightRef.current.has(safeIndex)) return;
     inflightRef.current.add(safeIndex);
     const image = new Image();
     image.decoding = 'async';
-    image.src = frameUrl(safeIndex);
-    image.onload = () => {
+    image.fetchPriority = highPriority ? 'high' : 'low';
+    image.onload = async () => {
+      try { await image.decode(); } catch { /* onload already confirms a usable image */ }
       inflightRef.current.delete(safeIndex);
       decodedRef.current.set(safeIndex, { image, usedAt: performance.now() });
       failedFramesRef.current = 0;
@@ -126,19 +146,30 @@ function ScrollFrameChapter({
     image.onerror = () => {
       inflightRef.current.delete(safeIndex);
       failedFramesRef.current += 1;
-      if (safeIndex === 0 || failedFramesRef.current >= 8) setUseFallback(true);
+      if (safeIndex === 0 || failedFramesRef.current >= 6) setUseFallback(true);
     };
+    image.src = frameUrl(safeIndex);
   }, [frameCount, frameUrl, trimDecoded]);
 
   const loadWindow = useCallback((center: number) => {
-    const radius = mobileViewport ? 10 : 14;
-    ensureFrame(center);
-    for (let distance = 1; distance <= radius; distance += 1) {
-      ensureFrame(center + distance);
-      ensureFrame(center - distance);
+    const direction = directionRef.current;
+    const behind = mobileViewport ? 3 : 4;
+    const ahead = mobileViewport ? 9 : 12;
+    const start = direction > 0 ? -behind : -ahead;
+    const end = direction > 0 ? ahead : behind;
+
+    ensureFrame(center, true);
+    for (let offset = start; offset <= end; offset += 1) {
+      if (offset !== 0) ensureFrame(center + offset, Math.abs(offset) <= 2);
     }
+
+    // A few sparse anchors keep fast jumps responsive without downloading the full film.
     ensureFrame(0);
     ensureFrame(frameCount - 1);
+    ensureFrame(Math.round((frameCount - 1) * 0.25));
+    ensureFrame(Math.round((frameCount - 1) * 0.5));
+    ensureFrame(Math.round((frameCount - 1) * 0.75));
+    ensureFrame(center + direction * (mobileViewport ? 14 : 18));
   }, [ensureFrame, frameCount, mobileViewport]);
 
   useEffect(() => {
@@ -148,19 +179,23 @@ function ScrollFrameChapter({
     setCanvasReady(false);
     setUseFallback(false);
     failedFramesRef.current = 0;
-    ensureFrame(0);
-    ensureFrame(frameCount - 1);
-  }, [ensureFrame, frameBase, frameCount]);
+    ensureFrame(0, priority);
+    if (priority) {
+      ensureFrame(1, true);
+      ensureFrame(2, true);
+      ensureFrame(3);
+    }
+  }, [ensureFrame, frameBase, priority]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
     const preloadObserver = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) setShouldLoad(true);
-    }, { rootMargin: '220% 0px 220% 0px', threshold: 0 });
+    }, { rootMargin: '135% 0px 135% 0px', threshold: 0 });
     const renderObserver = new IntersectionObserver(([entry]) => {
       shouldRenderRef.current = entry.isIntersecting;
-    }, { rootMargin: '80% 0px 80% 0px', threshold: 0 });
+    }, { rootMargin: '45% 0px 45% 0px', threshold: 0 });
     preloadObserver.observe(section);
     renderObserver.observe(section);
     return () => {
@@ -171,28 +206,8 @@ function ScrollFrameChapter({
 
   useEffect(() => {
     if (!shouldLoad || reducedMotion || fallbackMode) return;
-    const saveConnection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
     loadWindow(Math.round(targetRef.current * (frameCount - 1)));
-    if (saveConnection) return;
-
-    let cancelled = false;
-    const order = Array.from({ length: frameCount }, (_, index) => index);
-    let cursor = 0;
-    const worker = async () => {
-      while (!cancelled && cursor < order.length) {
-        const index = order[cursor++];
-        try {
-          const response = await fetch(frameUrl(index), { cache: 'force-cache', priority: priority ? 'high' : 'low' } as RequestInit);
-          if (response.ok) await response.arrayBuffer();
-        } catch {
-          // The decoded sliding window still works even when background warming is interrupted.
-        }
-      }
-    };
-    const workers = Array.from({ length: priority ? 5 : 3 }, () => worker());
-    void Promise.all(workers);
-    return () => { cancelled = true; };
-  }, [fallbackMode, frameCount, frameUrl, loadWindow, priority, reducedMotion, shouldLoad]);
+  }, [fallbackMode, frameCount, loadWindow, reducedMotion, shouldLoad]);
 
   useEffect(() => {
     if (!fallbackMode || reducedMotion || !shouldLoad) return;
@@ -213,6 +228,11 @@ function ScrollFrameChapter({
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
+      const context = canvas.getContext('2d', { alpha: false });
+      if (context) {
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+      }
     }
   }, [mobileViewport]);
 
@@ -223,12 +243,16 @@ function ScrollFrameChapter({
   }, [resizeCanvas]);
 
   useEffect(() => {
+    const readHeaderHeight = () => {
+      const styles = getComputedStyle(document.documentElement);
+      headerHeightRef.current = Number.parseFloat(styles.getPropertyValue('--header')) || 76;
+    };
+
     const update = () => {
       const section = sectionRef.current;
       if (!section) return;
       const rect = section.getBoundingClientRect();
-      const styles = getComputedStyle(document.documentElement);
-      const header = Number.parseFloat(styles.getPropertyValue('--header')) || 76;
+      const header = headerHeightRef.current;
       const viewportHeight = window.innerHeight;
       const availableHeight = Math.max(1, viewportHeight - header);
       const stickyStart = header;
@@ -250,19 +274,38 @@ function ScrollFrameChapter({
       }
 
       if (rect.bottom <= stickyStart + availableHeight * 0.02) progress = 1;
-      targetRef.current = clamp(progress);
-      section.style.setProperty('--film-progress', `${targetRef.current}`);
+      const nextTarget = clamp(progress);
+      const movement = nextTarget - lastTargetRef.current;
+      if (Math.abs(movement) > 0.00005) directionRef.current = movement >= 0 ? 1 : -1;
+      lastTargetRef.current = nextTarget;
+      targetRef.current = nextTarget;
+      section.style.setProperty('--film-progress', `${nextTarget}`);
       section.style.setProperty('--copy-reveal', `${copyReveal}`);
       section.style.setProperty('--copy-shift', `${(1 - copyReveal) * 18}px`);
-      if (shouldLoad && !fallbackMode) loadWindow(Math.round(targetRef.current * (frameCount - 1)));
+      if (shouldLoad && !fallbackMode) loadWindow(Math.round(nextTarget * (frameCount - 1)));
     };
 
+    const scheduleUpdate = () => {
+      if (updateRafRef.current !== null) return;
+      updateRafRef.current = requestAnimationFrame(() => {
+        updateRafRef.current = null;
+        update();
+      });
+    };
+
+    const handleResize = () => {
+      readHeaderHeight();
+      scheduleUpdate();
+    };
+
+    readHeaderHeight();
     update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', handleResize);
+      if (updateRafRef.current !== null) cancelAnimationFrame(updateRafRef.current);
     };
   }, [fallbackMode, frameCount, loadWindow, preRoll, priority, shouldLoad]);
 
@@ -363,7 +406,7 @@ function ScrollFrameChapter({
     >
       <div className="film-chapter-sticky">
         <div className="film-chapter-media" aria-hidden="true">
-          <img src={poster} alt="" className="film-chapter-poster" fetchPriority={priority ? 'high' : 'auto'} />
+          <img src={poster} alt="" className="film-chapter-poster" fetchPriority={priority ? 'high' : 'auto'} loading={priority ? 'eager' : 'lazy'} decoding="async" />
           {!reducedMotion && !fallbackMode && <canvas ref={canvasRef} className={`film-chapter-canvas ${canvasReady ? 'ready' : ''}`} />}
           {!reducedMotion && fallbackMode && shouldLoad && (
             <video

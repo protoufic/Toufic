@@ -2,33 +2,29 @@
 
 Production-ready Vite/React website for the private Six Continents sponsor preview.
 
-## Final media architecture
+## Performance-first mission media
 
-The homepage uses three separate mission chapters:
+The homepage keeps the exact same three mission chapters and visual structure:
 
 1. Standing and breathing
 2. Sprint
 3. Lebanon and six-continent reveal
 
-The latest supplied edits are integrated by **visual content**, because the first two Drive files were named in the opposite order from their actual scenes:
+The scroll experience still uses responsive WebP frame sequences on capable connections, with MP4 fallback on data-saving or very slow connections.
 
-- Scene 1 uses the standing/breathing footage.
-- Scene 2 uses the sprint footage.
-- Scene 3 uses the Lebanon/world-map footage.
+### Optimized frame delivery
 
-### Smooth scrolling method
+- Desktop frames: 1600 × 900
+- Mobile frames: 960 × 540
+- Frame sampling: 15 fps with neighbouring-frame blending
+- Scene 1: 69 frames per device class
+- Scene 2: 28 frames per device class
+- Scene 3: 130 frames per device class
+- Total frame files: 454
 
-The primary experience does not depend on repeatedly seeking through one normal MP4. Each video was exported into responsive WebP frame sequences:
+Only a small directional frame window is requested around the visitor's current scroll position. The website no longer downloads every frame in the background. Sparse anchor frames preserve fast-scroll responsiveness without consuming the entire sequence.
 
-- Desktop: 1600 × 900
-- Mobile: 960 × 540
-- Scene 1: 138 frames
-- Scene 2: 55 frames
-- Scene 3: 259 frames
-
-The browser draws the correct frames to a canvas, keeps only a small decoded frame window in memory, warms the compressed browser cache in the background, and softly blends neighbouring frames. This supports forward and reverse scrolling with less decoder stutter.
-
-High-quality all-intra H.264 MP4 files remain included as fallbacks for data-saving connections or frame-loading failure.
+Optimized H.264 MP4 files remain as fallbacks. They use frequent keyframes, local hosting, byte-range delivery, and separate desktop/mobile sizes.
 
 ## Local preview on Windows
 
@@ -56,8 +52,6 @@ npm.cmd run preview
 
 ## Vercel settings
 
-Use:
-
 ```text
 Framework Preset: Vite
 Root Directory: ./
@@ -67,7 +61,7 @@ Output Directory: dist
 Node.js Version: 22.x
 ```
 
-The `vercel.json` file includes clean-route rewrites and long-lived caching for frame and media assets.
+The optimized frame and video paths are versioned so browsers cannot reuse the older, heavier media files after deployment.
 
 ## Main routes
 
@@ -89,22 +83,11 @@ Legacy compatibility routes:
 /ironman
 ```
 
-## Brand assets
+## Proof filter correction
 
-The Toufic mark is used in the header and favicon:
+The Marathon filter now returns only the two full marathons:
 
-```text
-public/assets/img/brand/toufic-mark.svg
-```
+- OMT Beirut Marathon
+- Prague Marathon
 
-The mission cover uses the final frame from the updated third video. The Partners cover uses the strongest Lebanese IRONMAN 70.3 Warsaw finish image, so no new generated cover is required for this version.
-
-## Updating later
-
-Replace source media only through the configured paths in:
-
-```text
-src/data/mission.ts
-```
-
-Do not hotlink Google Drive files. Keep public website assets inside `public/assets`.
+Half marathons and shorter Beirut Marathon events are excluded.

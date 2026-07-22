@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
 import { ArrowRight, Search } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { ProofCard } from '../components/ProofCard';
-import { personalBests, raceMetrics, races } from '../data/races';
+import { races } from '../data/races';
+import { personalBests, raceMetrics } from '../data/metrics';
 import { media } from '../data/mission';
 
 const filters = [
@@ -25,7 +25,10 @@ export function ProofPage() {
     const text = `${race.name} ${race.location} ${race.country} ${race.distance} ${race.result}`.toLowerCase();
     if (query && !text.includes(query.toLowerCase())) return false;
     if (filter === 'triathlon') return /triathlon|multisport/i.test(race.discipline) || /ironman/i.test(race.name);
-    if (filter === 'marathon') return /marathon/i.test(race.distance) || race.distance === '42K';
+    if (filter === 'marathon') {
+      const distance = race.distance.trim().toLowerCase();
+      return distance === 'marathon' || /^42(?:\.195|\.2)?k(?:\s|$)/i.test(race.distance);
+    }
     if (filter === 'half') return /half/i.test(race.name) || /21K|21\.1K/i.test(race.distance);
     if (filter === 'short') return /10K|8\.5K|6K|6\.5K|5K|4K/i.test(race.distance) && !/half|marathon/i.test(race.name);
     if (filter === 'podium') return race.podium;

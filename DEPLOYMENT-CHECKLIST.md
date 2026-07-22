@@ -1,4 +1,4 @@
-# Deployment checklist
+# Deployment checklist — optimized version
 
 ## 1. Replace the connected GitHub repository
 
@@ -8,40 +8,40 @@
 4. Choose **Repository → Show in Explorer**.
 5. Delete the old visible project files. Never delete `.git`.
 6. Copy everything from the extracted final folder directly into the connected repository folder.
-7. Confirm `package.json`, `src`, and `public` are visible directly in the repository root.
+7. Confirm `package.json`, `src`, and `public` are directly in the repository root.
 8. Commit with:
 
 ```text
-Final smooth three-scene mission experience
+Optimize loading and fix marathon filter
 ```
 
-9. Click **Push origin**.
+9. Click **Push origin** and allow every file to finish uploading.
 
-The repository contains many frame files. Let GitHub Desktop finish completely before closing it.
-
-## 2. Confirm the required media reached GitHub
+## 2. Confirm optimized media reached GitHub
 
 Check these directories online:
 
 ```text
-public/assets/frames/scene-01/desktop
-public/assets/frames/scene-01/mobile
-public/assets/frames/scene-02/desktop
-public/assets/frames/scene-02/mobile
-public/assets/frames/scene-03/desktop
-public/assets/frames/scene-03/mobile
+public/assets/frames-opt-v2/scene-01/desktop
+public/assets/frames-opt-v2/scene-01/mobile
+public/assets/frames-opt-v2/scene-02/desktop
+public/assets/frames-opt-v2/scene-02/mobile
+public/assets/frames-opt-v2/scene-03/desktop
+public/assets/frames-opt-v2/scene-03/mobile
 public/assets/media
 ```
 
 Expected frame counts:
 
 ```text
-Scene 1: 138 desktop + 138 mobile
-Scene 2: 55 desktop + 55 mobile
-Scene 3: 259 desktop + 259 mobile
+Scene 1: 69 desktop + 69 mobile
+Scene 2: 28 desktop + 28 mobile
+Scene 3: 130 desktop + 130 mobile
 ```
 
-## 3. Configure Vercel
+The optimized MP4 names end in `-opt-v2.mp4`.
+
+## 3. Vercel settings
 
 ```text
 Framework Preset: Vite
@@ -52,74 +52,48 @@ Output Directory: dist
 Node.js Version: 22.x
 ```
 
-Pushes to `main` should trigger a new deployment.
+After pushing:
 
-If the old site appears:
+1. Open the newest Vercel deployment.
+2. Confirm it references the commit `Optimize loading and fix marathon filter`.
+3. Redeploy with build cache cleared if the old version appears.
+4. Open the new deployment in a private browser window.
 
-1. Open the latest Vercel deployment.
-2. Confirm it references the newest Git commit.
-3. Redeploy with the build cache cleared.
-4. Open the new deployment URL in a private window.
+The media paths are versioned, so the optimized files should not be confused with the old cached files.
 
-## 4. Test the production URL
+## 4. Production test
 
-Do not test by opening `index.html` directly.
+Test the HTTPS Vercel URL on desktop and mobile.
 
-Test the HTTPS Vercel URL on:
+Confirm:
 
-- Chrome desktop
-- Edge desktop
-- Safari on iPhone
-- Chrome on Android
-- one tablet or responsive browser view
+- Scene 1 starts immediately and remains smooth.
+- Scene 2 and Scene 3 load before they become active.
+- Scrolling down moves forward.
+- Scrolling up moves backward.
+- Fast scrolling does not create blank frames.
+- Navigation remains responsive while film chapters are active.
+- The Marathon filter shows only Prague Marathon and OMT Beirut Marathon.
 
-For each of the three film chapters, confirm:
-
-- the poster appears immediately;
-- scrolling down moves forward;
-- scrolling up moves backward;
-- Scene 2 begins slowly before it fully reaches the sticky position;
-- Scene 3 begins slowly before it fully reaches the sticky position;
-- the copy becomes fully visible and remains readable;
-- the video starts below the fixed header;
-- Toufic's face is not covered by the menu;
-- there are no blank frames;
-- fast scrolling catches up without freezing.
-
-## 5. Browser preferences
-
-When the operating system requests reduced motion, the website intentionally shows still cinematic frames instead of scrubbed motion.
-
-On Windows, test normal motion with:
-
-```text
-Settings → Accessibility → Visual effects → Animation effects: On
-```
-
-## 6. Network check
+## 5. Network test
 
 In browser developer tools:
 
 1. Open **Network**.
-2. Filter by `webp` and `mp4`.
-3. Scroll through all three chapters.
-4. Confirm frame and fallback assets return 200 or cached responses.
-5. Confirm there are no 404 responses.
+2. Enable **Disable cache** only for the first diagnostic test.
+3. Reload the page.
+4. Filter by `frame-`.
+5. Confirm the browser does not request all 454 frame files immediately.
+6. Scroll into Scene 2 and Scene 3 and confirm their files begin loading only as those scenes approach.
+7. Confirm no 404 errors.
+8. Repeat with cache enabled and confirm repeated visits use disk or memory cache.
 
-## 7. Final page review
+## 6. Local production test on Windows
 
-Check:
+```powershell
+npm.cmd install
+npm.cmd run build
+npm.cmd run preview
+```
 
-- Home
-- Mission
-- Proof
-- Founder
-- Partners
-- IRONMAN 70.3 Warsaw
-- Media
-- contact panel
-- WhatsApp link
-- email link
-- countdown including seconds
-- interactive map alignment
-- Toufic header mark and favicon
+Open the preview URL printed by Vite. Do not double-click `index.html`.
