@@ -1,103 +1,83 @@
-# Toufic Abou Ali — Six Continents Sponsor Website
+# Toufic Abou Ali — Six Continents
 
-Production-ready Vite/React website for the private Six Continents sponsor preview.
+Production source for the private sponsor-preview website.
 
-## Mission
+## Final structure
 
-**6 continents. 6 full IRONMAN races. 1 world-record attempt.**
+- Home
+- Mission
+- Proof
+- Founder
+- Partners
+- IRONMAN 70.3 Warsaw
+- Media resources
 
-- Main world-record target: November 27, 2027
-- Extreme target: complete all six before Toufic turns 21
-- One full IRONMAN: 3.8 km swim + 180 km bike + 42.2 km run = 226 km
-- Six races: 1,356 km
+## What changed in this polished build
 
-## Final architecture
+- The single combined hero film was replaced by three separate scroll-controlled video chapters.
+- The videos remain active on mobile instead of being hidden by CSS.
+- Every frame in every scroll video is an H.264 keyframe for precise forward and reverse seeking.
+- The Guinness World Records image was replaced with the supplied transparent logo.
+- The negative “what is not promised” partnership block was removed.
+- The Sira workshop screenshot was removed.
+- Both countdowns now show seconds.
+- The world map uses a purpose-built dark asset, corrected continent coordinates, larger interaction targets, hover/focus selection, and a clean mobile list.
+- Additional race and mission photography is used as dimmed editorial background atmosphere.
+- The source remains private-preview oriented with `noindex` headers.
 
-Primary pages:
+## Video architecture
 
-- `/` — sponsor-conversion homepage
-- `/mission` — scale, record target, route-control system, and urgency
-- `/proof` — searchable and expandable race/proof archive
-- `/founder` — founder-athlete credibility and Sira execution proof
-- `/partners` — partnership funnel and direct enquiry flow
-- `/warsaw` — detailed IRONMAN 70.3 Warsaw origin story
-- `/media` — media facts, bios, quotes, and contact
+The Home page uses three independent sticky scroll scenes:
 
-Legacy routes `/story`, `/record`, and `/ironman` remain compatible.
+1. `mission-scene-01-*` — standing, breathing, camera approach.
+2. `mission-scene-02-*` — movement into the sprint.
+3. `mission-scene-03-*` — Lebanon, flag, and six-continent reveal.
 
-## Scroll-film engineering
+Desktop files are 1920×1080. Mobile files are 1280×720. All files are H.264, 30 fps, muted, locally hosted, fast-start enabled, and encoded with every frame as a keyframe.
 
-The three approved source scenes were assembled into one seamless 15-second master. Two local delivery files are included:
+Scroll position maps directly to `video.currentTime`:
 
-- `public/assets/media/mission-scroll-1080.mp4`
-- `public/assets/media/mission-scroll-720.mp4`
+- scroll down → forward;
+- scroll up → reverse;
+- slow scroll → precise movement;
+- fast scroll → direct seek to the correct frame.
 
-Both are H.264, fast-start MP4 files with **every frame encoded as a keyframe**. This gives the browser a precise seek point for every 1/30 second of film. The page maps scroll position to `video.currentTime` using `requestAnimationFrame`:
+Posters remain visible while media loads. Reduced-motion visitors receive still-image scenes. A media error falls back to the poster instead of showing a blank section.
 
-- scroll down → film moves forward;
-- scroll up → film reverses;
-- fast scroll → target time updates immediately and eases to the correct frame;
-- mobile → lighter 720p master;
-- reduced motion or media failure → the premium poster remains visible and all copy stays available.
-
-This avoids hundreds of separate frame-network requests while retaining frame-level seeking and native hardware video decoding.
-
-## Local testing
-
-Do not double-click `index.html`. The site and video assets must be served over HTTP.
+## Local test
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite, normally `http://localhost:5173`.
+Open the localhost URL printed by Vite. Do not test by double-clicking `index.html`.
 
-Production build:
+## Production build
 
 ```bash
+npm install
 npm run build
 npm run preview
 ```
 
-## Vercel deployment
+The output folder is `dist`.
 
-Recommended project settings:
+## Vercel settings
 
-- Framework Preset: **Vite**
-- Root Directory: `./`
-- Install Command: `npm install` or Vercel default
-- Build Command: `npm run build`
-- Output Directory: `dist`
+- Framework preset: **Vite**
+- Root directory: `./`
+- Install command: `npm install`
+- Build command: `npm run build`
+- Output directory: `dist`
 
-`vercel.json` contains explicit SPA rewrites, immutable asset caching, security headers, and private-preview noindex headers.
+`vercel.json` includes clean routes, SPA rewrites, long-lived asset caching, inline MP4 handling, and range-response headers.
 
-## GitHub Desktop replacement
+## Private preview
 
-1. Extract the final ZIP.
-2. In GitHub Desktop, select the connected `Toufic` repository.
-3. Choose **Repository → Show in Explorer**.
-4. Delete the old visible files, but never delete `.git`.
-5. Copy the contents of this folder directly into the repository root.
-6. Confirm that `package.json`, `src`, `public`, `index.html`, and `vercel.json` are directly visible.
-7. Commit: `Launch final Six Continents sponsor website`.
-8. Click **Push origin**.
-9. Vercel will build the new commit automatically when the repository is connected.
+The project currently sends `noindex, nofollow, noarchive`. That discourages indexing but is not access control. Use Vercel Deployment Protection or a protected preview URL when needed.
 
-## Private-preview status
+## Main contact
 
-The project currently uses `noindex, nofollow, noarchive`. This reduces accidental search indexing but is **not password protection**. Use deployment access controls before sharing sensitive private material beyond the intended sponsor group.
-
-The Guinness World Records asset is displayed as a private-preview reference. The opening uses a restrained IRONMAN wordmark treatment and authentic race photography. Before a public launch, confirm current logo and trademark permissions and remove or replace any unapproved standalone brand treatment.
-
-## Contact flow
-
-Primary: WhatsApp. Secondary: email. The public page does not print the phone number. No fake form submission or Calendly URL is used.
-
-## Editing key facts
-
-Main facts and media paths live in:
-
-`src/data/mission.ts`
-
-Race data lives in the attached source data files under `src/data`.
+- Email: `protoufic@gmail.com`
+- WhatsApp: configured as a direct CTA without displaying the number in page text.

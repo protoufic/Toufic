@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { mission, media } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
+
+const origin = { x: 56.2, y: 47.8 };
 
 export function WorldMap() {
   const [selected, setSelected] = useState(mission.continents[0]);
@@ -16,19 +18,19 @@ export function WorldMap() {
           {mission.continents.map((continent, index) => (
             <motion.path
               key={continent.name}
-              d={`M 54 39 Q ${(54 + continent.x) / 2} ${Math.max(8, Math.min(39, continent.y) - 16 - index * 0.5)} ${continent.x} ${continent.y}`}
+              d={`M ${origin.x} ${origin.y} Q ${(origin.x + continent.x) / 2} ${Math.max(10, Math.min(origin.y, continent.y) - 10 - index * 0.35)} ${continent.x} ${continent.y}`}
               fill="none"
-              stroke="rgba(225, 29, 36, .58)"
-              strokeWidth=".34"
-              strokeDasharray="1.4 1.7"
+              stroke="rgba(236, 37, 43, .72)"
+              strokeWidth=".28"
+              strokeDasharray="1.2 1.25"
               initial={{ pathLength: 0, opacity: 0 }}
               whileInView={{ pathLength: 1, opacity: 1 }}
-              viewport={{ once: true, amount: 0.45 }}
-              transition={{ duration: 1.4, delay: index * 0.08 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 1.2, delay: index * 0.07, ease: 'easeOut' }}
             />
           ))}
         </svg>
-        <div className="map-origin" style={{ left: '54%', top: '39%' }} aria-label="Lebanon, mission origin">
+        <div className="map-origin" style={{ left: `${origin.x}%`, top: `${origin.y}%` }} aria-label="Lebanon, mission origin">
           <span />
           <small>LEBANON</small>
         </div>
@@ -38,6 +40,8 @@ export function WorldMap() {
             className={`map-node ${selected.name === continent.name ? 'active' : ''}`}
             style={{ left: `${continent.x}%`, top: `${continent.y}%` }}
             onClick={() => setSelected(continent)}
+            onMouseEnter={() => setSelected(continent)}
+            onFocus={() => setSelected(continent)}
             aria-pressed={selected.name === continent.name}
             aria-label={`${continent.name}: race selection in progress`}
           >
@@ -51,9 +55,10 @@ export function WorldMap() {
         <motion.div
           key={selected.name}
           className="map-detail"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          initial={{ opacity: 0, y: 10, scale: .985 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -7, scale: .985 }}
+          transition={{ duration: .24, ease: 'easeOut' }}
         >
           <div>
             <p className="eyebrow">TARGET CONTINENT</p>
@@ -73,7 +78,7 @@ export function WorldMap() {
       </div>
 
       <div className="map-next-step">
-        <p><strong>The mission must launch before the route can be secured.</strong> Race entries, travel, training, evidence, and recovery planning all move early.</p>
+        <p><strong>The campaign must move before the route is secured.</strong> Entry windows, travel, training, evidence, and recovery planning all begin early.</p>
         <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Discuss the first chapter <ArrowRight size={15} /></button>
       </div>
     </div>

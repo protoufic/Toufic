@@ -37,12 +37,12 @@ export const mission = {
   },
   recordStatus: 'Application and final rules pending',
   continents: [
-    { name: 'North America', x: 22.5, y: 34, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
-    { name: 'South America', x: 31, y: 66, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
-    { name: 'Europe', x: 49.5, y: 31, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
-    { name: 'Africa', x: 52.5, y: 59, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
-    { name: 'Asia', x: 72.5, y: 41, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
-    { name: 'Oceania', x: 85.5, y: 70, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
+    { name: 'North America', x: 21.5, y: 44.5, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
+    { name: 'South America', x: 30.5, y: 69, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
+    { name: 'Europe', x: 48.5, y: 38.5, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
+    { name: 'Africa', x: 52.5, y: 58.5, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
+    { name: 'Asia', x: 73.5, y: 43.5, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
+    { name: 'Oceania', x: 84.5, y: 72.5, summary: 'One full IRONMAN chapter. Race selection is being secured.' },
   ],
 };
 
@@ -89,19 +89,39 @@ export const quotes = [
 ];
 
 export const media = {
-  heroPoster: '/assets/img/mission/mission-first-frame.jpg',
-  heroFinal: '/assets/img/mission/mission-final-frame.jpg',
-  heroVideoDesktop: '/assets/media/mission-scroll-1080.mp4',
-  heroVideoMobile: '/assets/media/mission-scroll-720.mp4',
-  map: '/assets/img/mission/world-map-reference.png',
+  heroPoster: '/assets/img/mission/scene-01-poster.webp',
+  heroFinal: '/assets/img/mission/scene-03-final.webp',
+  sceneOne: {
+    desktop: '/assets/media/mission-scene-01-desktop.mp4',
+    mobile: '/assets/media/mission-scene-01-mobile.mp4',
+    poster: '/assets/img/mission/scene-01-poster.webp',
+  },
+  sceneTwo: {
+    desktop: '/assets/media/mission-scene-02-desktop.mp4',
+    mobile: '/assets/media/mission-scene-02-mobile.mp4',
+    poster: '/assets/img/mission/scene-02-poster.webp',
+  },
+  sceneThree: {
+    desktop: '/assets/media/mission-scene-03-desktop.mp4',
+    mobile: '/assets/media/mission-scene-03-mobile.mp4',
+    poster: '/assets/img/mission/scene-03-poster.webp',
+    final: '/assets/img/mission/scene-03-final.webp',
+  },
+  map: '/assets/img/mission/world-map-dark.webp',
   missionFinal: '/assets/img/mission/map-final.webp',
   missionWide: '/assets/img/mission/map-wide.webp',
   flag: '/assets/img/mission/flag-frame.webp',
   founder: '/assets/img/identity/headshot.webp',
   founderWarsaw: '/assets/img/identity/founder-warsaw.webp',
   founderRunning: '/assets/img/identity/running.webp',
-  siraWorkshops: '/assets/img/identity/sira-workshops.webp',
-  guinness: '/assets/img/brand/guinness-world-records.png',
+  guinness: '/assets/img/brand/guinness-world-records-transparent.png',
+  backgrounds: {
+    marathon: '/assets/img/races/2025-beirut-wide.webp',
+    podium: '/assets/img/races/2023-isf.webp',
+    warsaw: '/assets/img/warsaw/finish-wide.webp',
+    run: '/assets/img/warsaw/run-course.webp',
+    lebanon: '/assets/img/warsaw/post-flag.webp',
+  },
   warsaw: {
     finishLebanon: '/assets/img/warsaw/finish-lebanon.webp',
     finishWide: '/assets/img/warsaw/finish-wide.webp',

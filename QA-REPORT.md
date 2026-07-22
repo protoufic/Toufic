@@ -1,54 +1,55 @@
-# Final QA report
+# QA report — final polish
 
-## Passed
+## Root cause of the previous video issue
 
-- Production build: `npm run build`
-- TypeScript/React transformation: 2,219 modules
-- Route code splitting: Home, Mission, Proof, Founder, Partners, Warsaw, Media, and Not Found
-- Local route responses: `/`, `/mission`, `/proof`, `/founder`, `/partners`, `/warsaw`, `/media`, `/story`, `/record`, `/ironman`
-- Race archive: 52 unique race IDs
-- Local asset audit: 49 code-referenced assets, 0 missing
-- Public phone number: not printed; used only inside the WhatsApp URL
-- Public copy scan: no public sponsor prices, full budget, `1,356 lives`, “Warsaw was the audit”, “The map is public”, or internal correction labels
-- Proof-pending administrative notes: hidden from the public race details
-- Critical image review: hero start, hero map finish, founder portrait, Warsaw Lebanese finish, Sira workshop screenshot, and map reference
-- Vercel SPA routes: explicit rewrites for all production and legacy routes
-- Private-preview directives: `noindex`, `nofollow`, `noarchive`, and `robots.txt` disallow
+The prior build was not merely a Vercel publishing problem.
 
-## Scroll-film verification
+Two source-level issues existed:
 
-### Desktop master
+1. Home used one combined video rather than the requested three-section sequence.
+2. The mobile media query explicitly set the scroll video to `display: none`, so mobile visitors could only see the poster image.
 
-- File: `public/assets/media/mission-scroll-1080.mp4`
-- Codec: H.264
-- Size: 1920 × 1080
-- Rate: 30 fps
-- Duration: 15.0667 seconds
-- Frames: 452
-- Keyframes: 452
-- Seek/decode checks passed at 0, 2.5, 5.5, 8.5, 12, and 14.8 seconds
+The new build removes that rule and uses three separate video chapters.
 
-### Mobile master
+## Video checks completed
 
-- File: `public/assets/media/mission-scroll-720.mp4`
-- Codec: H.264
-- Size: 1280 × 720
-- Rate: 30 fps
-- Duration: 15.0667 seconds
-- Frames: 452
-- Keyframes: 452
-- Seek/decode checks passed at 0, 2.5, 5.5, 8.5, 12, and 14.8 seconds
+Six production video files were inspected:
 
-Every frame is independently seekable. Downward and upward scroll map to the film timeline through `requestAnimationFrame` and `video.currentTime`.
+- three 1920×1080 desktop files;
+- three 1280×720 mobile files.
 
-## Repository-size check
+All are:
 
-Largest individual file:
+- H.264;
+- 30 fps;
+- `yuv420p`;
+- fast-start enabled;
+- audio-free;
+- encoded with every frame as a keyframe.
 
-- `mission-scroll-1080.mp4`: approximately 36.14 MB
+Frame counts:
 
-No individual project file approaches GitHub’s normal 100 MiB per-file command-line limit.
+- Scene 1: 138 frames / 138 keyframes;
+- Scene 2: 51 frames / 51 keyframes;
+- Scene 3: 255 frames / 255 keyframes.
 
-## Remaining production check
+Beginning, midpoint, and near-end decoding succeeded for all six files. A local HTTP range request returned `206 Partial Content`, confirming the media format supports browser seeking.
 
-This sandbox blocks headless browsers from navigating to local HTTP addresses (`ERR_BLOCKED_BY_ADMINISTRATOR`), so a full rendered screenshot pass could not be completed here. The included `DEPLOYMENT-CHECKLIST.md` provides the exact final production checks for Chrome, Safari, iPhone, Android, and reverse scrolling after Vercel deployment.
+## Source checks completed
+
+- 21 TypeScript/TSX files passed syntax transpilation.
+- CSS parsed successfully with PostCSS.
+- 56 unique local asset paths were audited.
+- Missing local assets: 0.
+- Race records preserved: 52.
+- Old combined mission videos removed.
+- Old workshop screenshot removed from public assets.
+- Old Guinness logo replaced with the supplied transparent file.
+
+## Environment limitation
+
+A full automated Chromium visual run could not be completed in this sandbox because the system browser aborted when its GPU process was unavailable. This is an environment restriction, not a detected application error. Real desktop and iPhone/Safari checks must still be completed on the deployed Vercel URL using the included deployment checklist.
+
+## Build note
+
+The source is Vite-ready. Dependency installation could not be completed inside this sandbox because the package registry repeatedly returned temporary 503/DNS errors. The TypeScript syntax, CSS, assets, media encodes, paths, and deployment configuration were checked independently. Vercel should install dependencies during deployment.

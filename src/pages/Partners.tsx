@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Camera, Check, Globe2, Megaphone, PackageCheck, ShieldCheck, Users, X } from 'lucide-react';
+import { ArrowRight, Camera, Check, Globe2, Megaphone, PackageCheck, ShieldCheck, Users } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { media } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
@@ -104,17 +104,17 @@ export function PartnersPage() {
         </div>
       </section>
 
-      <section className="section partner-trust-section">
-        <div className="site-shell partner-trust-grid">
+      <section className="section partner-trust-section visual-backdrop-section">
+        <div className="section-backdrop section-backdrop-trust" aria-hidden="true"><img src={media.warsaw.postFlag} alt="" /></div>
+        <div className="site-shell partner-trust-single">
           <motion.div {...reveal} className="trust-column trust-column-positive">
-            <p className="eyebrow">WHAT CAN BE AGREED</p>
-            <h2>Professional execution.</h2>
-            {['Deliverables', 'Rights', 'Approvals', 'Owners and dates', 'Reports and asset delivery'].map((item) => <div key={item}><Check size={17} /><span>{item}</span></div>)}
-          </motion.div>
-          <motion.div {...reveal} className="trust-column">
-            <p className="eyebrow">WHAT IS NOT PROMISED</p>
-            <h2>Results nobody can guarantee.</h2>
-            {['A world record', 'Every race finish', 'Television or press coverage', 'Audience size or virality', 'Event or rights-holder approval'].map((item) => <div key={item}><X size={17} /><span>{item}</span></div>)}
+            <p className="eyebrow">CLEAR SCOPE. CLEAR DELIVERY.</p>
+            <h2>A serious campaign, built around the company goal.</h2>
+            <p className="trust-intro">The partnership is defined before launch so the company knows what it receives, when it receives it, and how it can use it.</p>
+            <div className="trust-deliverables">
+              {['Exact deliverables', 'Usage rights', 'Approvals', 'Owners and dates', 'Reports and asset delivery'].map((item) => <div key={item}><Check size={17} /><span>{item}</span></div>)}
+            </div>
+            <button className="button-primary" onClick={() => openContactPanel('partnership')}>Build the Right Package <ArrowRight size={16} /></button>
           </motion.div>
         </div>
       </section>

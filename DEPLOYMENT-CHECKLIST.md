@@ -1,52 +1,63 @@
-# Deployment verification checklist
+# Final deployment checklist
 
-After Vercel reports **Ready**, test the production URL in a private browser window.
+## Replace the repository files
 
-## Core pages
+1. Extract the final ZIP.
+2. Open GitHub Desktop.
+3. Select the connected `Toufic` repository on `main`.
+4. Choose **Repository → Show in Explorer**.
+5. Turn hidden items off.
+6. Delete the old visible project files. Never delete `.git`.
+7. Copy the contents of the extracted folder directly into the repository root.
+8. Confirm the root directly contains `package.json`, `index.html`, `src`, `public`, `vite.config.ts`, and `vercel.json`.
+9. Commit with: `Polish final Six Continents sponsor website`.
+10. Click **Push origin**.
 
-- [ ] `/`
-- [ ] `/mission`
-- [ ] `/proof`
-- [ ] `/founder`
-- [ ] `/partners`
-- [ ] `/warsaw`
-- [ ] `/media`
+## Vercel
 
-## Scroll film
+Use:
 
-- [ ] First poster appears immediately
-- [ ] Film begins moving with the first meaningful scroll
-- [ ] Slow downward scroll moves forward smoothly
-- [ ] Upward scroll reverses smoothly
-- [ ] Fast scroll catches the correct point without a blank frame
-- [ ] Final world-map frame remains stable
-- [ ] Mobile uses the lighter film
-- [ ] Reduced-motion mode preserves all messages
+- Framework preset: `Vite`
+- Root directory: `./`
+- Install command: `npm install`
+- Build command: `npm run build`
+- Output directory: `dist`
 
-## Conversion
+Wait for the deployment status to become **Ready**.
 
-- [ ] Header partnership CTA opens the contact panel
-- [ ] WhatsApp opens with a prepared message
-- [ ] Email opens with a prepared formal brief
-- [ ] Mobile menu opens, closes, and does not trap the page incorrectly
+## Video verification after deployment
 
-## Proof
+Test the deployed HTTPS URL, not a local file.
 
-- [ ] Filters work
-- [ ] Race cards expand
-- [ ] Load more works
-- [ ] Strava and proof links open
-- [ ] Warsaw official result and all three activities open
+Desktop:
 
-## Visual checks
+1. Hard refresh with `Ctrl + Shift + R`.
+2. Confirm Scene 1 moves from the first scroll.
+3. Scroll backward and confirm it reverses.
+4. Continue to Scene 2 and Scene 3.
+5. Scroll rapidly across each scene and confirm no blank frames appear.
 
-- [ ] No horizontal scrolling at 360 px
-- [ ] Founder face is not cut
-- [ ] Warsaw finish is framed correctly
-- [ ] Sira workshop screenshot is fully visible
-- [ ] Continent markers stay on their continents
-- [ ] No repeated hero image appears by mistake
+Mobile:
 
-## Cache
+1. Open the Vercel URL in Safari or Chrome.
+2. Touch and scroll through all three scenes.
+3. Confirm video appears rather than only the poster.
+4. Scroll backward.
+5. Rotate once and confirm the layout recovers.
 
-If the old website appears, hard refresh with `Ctrl + Shift + R` or open the deployment in a private window.
+Network:
+
+- Each MP4 request should return `video/mp4`.
+- Seeking should produce HTTP `206 Partial Content` range responses.
+- No video should be requested from Google Drive.
+
+## Other visual checks
+
+- Countdown shows days, hours, minutes, and seconds.
+- Guinness World Records logo has a transparent background.
+- Sira workshop screenshot is absent.
+- No negative promise section appears on Partners.
+- All six map markers sit on the correct continent.
+- Hover, keyboard focus, click, and mobile continent list all change the map detail.
+- Founder image is not cropped through the face.
+- No horizontal overflow at 360 px.

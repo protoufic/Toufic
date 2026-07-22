@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { mission } from '../data/mission';
 
 function diff(target: string) {
@@ -7,13 +7,14 @@ function diff(target: string) {
     days: Math.floor(remaining / 86400000),
     hours: Math.floor((remaining % 86400000) / 3600000),
     minutes: Math.floor((remaining % 3600000) / 60000),
+    seconds: Math.floor((remaining % 60000) / 1000),
   };
 }
 
 function CountdownBlock({ target, label, emphasis = false }: { target: string; label: string; emphasis?: boolean }) {
   const [value, setValue] = useState(() => diff(target));
   useEffect(() => {
-    const timer = window.setInterval(() => setValue(diff(target)), 30000);
+    const timer = window.setInterval(() => setValue(diff(target)), 1000);
     return () => window.clearInterval(timer);
   }, [target]);
   return (
@@ -23,6 +24,7 @@ function CountdownBlock({ target, label, emphasis = false }: { target: string; l
         <span><strong>{value.days}</strong><small>days</small></span>
         <span><strong>{String(value.hours).padStart(2, '0')}</strong><small>hours</small></span>
         <span><strong>{String(value.minutes).padStart(2, '0')}</strong><small>minutes</small></span>
+        <span><strong>{String(value.seconds).padStart(2, '0')}</strong><small>seconds</small></span>
       </div>
       <time dateTime={target}>{new Date(target).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
     </div>

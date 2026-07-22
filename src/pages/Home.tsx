@@ -68,7 +68,8 @@ function WhyNowSection() {
     { icon: Globe2, title: 'The founding position exists now', copy: 'A partner joining before the first full race is secured becomes part of the origin, not only the result.' },
   ];
   return (
-    <section className="section urgency-section">
+    <section className="section urgency-section visual-backdrop-section">
+      <div className="section-backdrop" aria-hidden="true"><img src={media.warsaw.bikeCourse} alt="" /></div>
       <div className="site-shell urgency-grid">
         <motion.div {...reveal} className="urgency-lead">
           <p className="eyebrow">WHY THE MISSION MUST LAUNCH NOW</p>
@@ -92,7 +93,8 @@ function WhyNowSection() {
 
 function RecordSection() {
   return (
-    <section className="section record-section">
+    <section className="section record-section visual-backdrop-section">
+      <div className="section-backdrop section-backdrop-map" aria-hidden="true"><img src={media.missionWide} alt="" /></div>
       <div className="site-shell">
         <motion.div {...reveal} className="record-panel">
           <div className="record-copy">
@@ -201,9 +203,6 @@ function FounderSection() {
           <Link className="button-quiet" to="/founder">Meet Toufic <ArrowRight size={16} /></Link>
         </motion.div>
       </div>
-      <div className="site-shell workshop-proof">
-        <img src={media.siraWorkshops} alt="Sira workshops shown on the Sira website" loading="lazy" />
-      </div>
     </section>
   );
 }
@@ -216,7 +215,8 @@ function PartnersSection() {
     { icon: Globe2, title: 'Brand position', copy: 'Endurance, execution, Lebanon, and international ambition in one campaign.' },
   ];
   return (
-    <section className="section partners-home-section">
+    <section className="section partners-home-section visual-backdrop-section">
+      <div className="section-backdrop section-backdrop-partners" aria-hidden="true"><img src={media.warsaw.finishWide} alt="" /></div>
       <div className="site-shell partners-home-grid">
         <motion.div {...reveal} className="partners-home-copy">
           <p className="eyebrow">THE PARTNERSHIP OPPORTUNITY</p>
@@ -241,7 +241,8 @@ function PartnersSection() {
 
 function FinalCta() {
   return (
-    <section className="final-cta">
+    <section className="final-cta visual-backdrop-section">
+      <div className="section-backdrop section-backdrop-final" aria-hidden="true"><img src={media.warsaw.postFlag} alt="" /></div>
       <div className="site-shell final-cta-inner">
         <div>
           <p className="eyebrow">START WITH THE COMPANY GOAL</p>

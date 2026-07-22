@@ -74,10 +74,6 @@ export function FounderPage() {
               </motion.div>
             ))}
           </div>
-          <motion.figure {...reveal} className="browser-proof-frame">
-            <div className="browser-proof-bar"><span /><span /><span /><small>siracareers.com</small></div>
-            <img src={media.siraWorkshops} alt="Sira onsite workshops shown on the Sira website" loading="lazy" />
-          </motion.figure>
           <a className="button-quiet" href={site.sira} target="_blank" rel="noreferrer">Visit Sira <ArrowRight size={16} /></a>
         </div>
       </section>
