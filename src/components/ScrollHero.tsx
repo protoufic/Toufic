@@ -68,6 +68,7 @@ function ScrollFrameChapter({
   const updateRafRef = useRef<number | null>(null);
   const headerHeightRef = useRef(76);
   const lastFrameRef = useRef(performance.now());
+  const lastWindowCenterRef = useRef(-1);
   const shouldRenderRef = useRef(priority);
   const failedFramesRef = useRef(0);
   const [shouldLoad, setShouldLoad] = useState(priority);
@@ -107,7 +108,7 @@ function ScrollFrameChapter({
   const frameBase = useMemo(() => mobileViewport ? mobileFrames : desktopFrames, [desktopFrames, mobileFrames, mobileViewport]);
   const fallbackSource = useMemo(() => mobileViewport ? mobileVideo : desktopVideo, [desktopVideo, mobileVideo, mobileViewport]);
   const fallbackMode = useFallback || saveData || constrainedNetwork;
-  const decodedLimit = mobileViewport ? 18 : 26;
+  const decodedLimit = mobileViewport ? 24 : 30;
 
   const frameUrl = useCallback((index: number) => `${frameBase}/frame-${String(index + 1).padStart(4, '0')}.webp`, [frameBase]);
 
@@ -153,8 +154,8 @@ function ScrollFrameChapter({
 
   const loadWindow = useCallback((center: number) => {
     const direction = directionRef.current;
-    const behind = mobileViewport ? 3 : 4;
-    const ahead = mobileViewport ? 9 : 12;
+    const behind = mobileViewport ? 4 : 5;
+    const ahead = mobileViewport ? 13 : 17;
     const start = direction > 0 ? -behind : -ahead;
     const end = direction > 0 ? ahead : behind;
 
@@ -181,11 +182,12 @@ function ScrollFrameChapter({
     failedFramesRef.current = 0;
     ensureFrame(0, priority);
     if (priority) {
-      ensureFrame(1, true);
-      ensureFrame(2, true);
-      ensureFrame(3);
+      // Keep roughly the first second ready before the visitor starts scrolling.
+      for (let index = 1; index <= Math.min(frameCount - 1, mobileViewport ? 12 : 16); index += 1) {
+        ensureFrame(index, index <= 6);
+      }
     }
-  }, [ensureFrame, frameBase, priority]);
+  }, [ensureFrame, frameBase, frameCount, mobileViewport, priority]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -237,9 +239,15 @@ function ScrollFrameChapter({
   }, [mobileViewport]);
 
   useEffect(() => {
+    const canvas = canvasRef.current;
     resizeCanvas();
+    const observer = canvas && 'ResizeObserver' in window ? new ResizeObserver(resizeCanvas) : null;
+    if (canvas && observer) observer.observe(canvas);
     window.addEventListener('resize', resizeCanvas);
-    return () => window.removeEventListener('resize', resizeCanvas);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', resizeCanvas);
+    };
   }, [resizeCanvas]);
 
   useEffect(() => {
@@ -340,7 +348,7 @@ function ScrollFrameChapter({
       lastFrameRef.current = now;
       if (shouldRenderRef.current) {
         const delta = targetRef.current - renderedRef.current;
-        const response = 11 + Math.min(28, Math.abs(delta) * 95);
+        const response = 18 + Math.min(40, Math.abs(delta) * 120);
         const alpha = 1 - Math.exp(-response * dt);
         renderedRef.current += delta * alpha;
         if (Math.abs(delta) < 0.0002) renderedRef.current = targetRef.current;
@@ -357,11 +365,14 @@ function ScrollFrameChapter({
           const canvas = canvasRef.current;
           const context = canvas?.getContext('2d', { alpha: false });
           if (canvas && context) {
-            resizeCanvas();
             const frameFloat = renderedRef.current * (frameCount - 1);
             const lowerIndex = Math.floor(frameFloat);
             const upperIndex = Math.min(frameCount - 1, lowerIndex + 1);
-            loadWindow(Math.round(frameFloat));
+            const windowCenter = Math.round(frameFloat);
+            if (windowCenter !== lastWindowCenterRef.current) {
+              lastWindowCenterRef.current = windowCenter;
+              loadWindow(windowCenter);
+            }
             const lower = nearestDecoded(lowerIndex);
             const upper = decodedRef.current.get(upperIndex);
             if (lower) {
@@ -369,10 +380,10 @@ function ScrollFrameChapter({
               context.fillStyle = '#000';
               context.fillRect(0, 0, canvas.width, canvas.height);
               drawImageContained(context, lower.image, 1);
-              const blend = frameFloat - lowerIndex;
-              if (upper && upper !== lower && blend > 0.06) {
+              const blend = smootherStep(frameFloat - lowerIndex);
+              if (upper && upper !== lower && blend > 0.01) {
                 upper.usedAt = now;
-                drawImageContained(context, upper.image, Math.min(0.78, blend));
+                drawImageContained(context, upper.image, blend);
               }
               trimDecoded(Math.round(frameFloat));
             }
