@@ -1,83 +1,110 @@
 # Toufic Abou Ali — Six Continents
 
-Production source for the private sponsor-preview website.
+Production-ready Vite/React website for the private Six Continents sponsor preview.
 
-## Final structure
+## Final media architecture
 
-- Home
-- Mission
-- Proof
-- Founder
-- Partners
-- IRONMAN 70.3 Warsaw
-- Media resources
+The homepage uses three separate mission chapters:
 
-## What changed in this polished build
+1. Standing and breathing
+2. Sprint
+3. Lebanon and six-continent reveal
 
-- The single combined hero film was replaced by three separate scroll-controlled video chapters.
-- The videos remain active on mobile instead of being hidden by CSS.
-- Every frame in every scroll video is an H.264 keyframe for precise forward and reverse seeking.
-- The Guinness World Records image was replaced with the supplied transparent logo.
-- The negative “what is not promised” partnership block was removed.
-- The Sira workshop screenshot was removed.
-- Both countdowns now show seconds.
-- The world map uses a purpose-built dark asset, corrected continent coordinates, larger interaction targets, hover/focus selection, and a clean mobile list.
-- Additional race and mission photography is used as dimmed editorial background atmosphere.
-- The source remains private-preview oriented with `noindex` headers.
+The latest supplied edits are integrated by **visual content**, because the first two Drive files were named in the opposite order from their actual scenes:
 
-## Video architecture
+- Scene 1 uses the standing/breathing footage.
+- Scene 2 uses the sprint footage.
+- Scene 3 uses the Lebanon/world-map footage.
 
-The Home page uses three independent sticky scroll scenes:
+### Smooth scrolling method
 
-1. `mission-scene-01-*` — standing, breathing, camera approach.
-2. `mission-scene-02-*` — movement into the sprint.
-3. `mission-scene-03-*` — Lebanon, flag, and six-continent reveal.
+The primary experience does not depend on repeatedly seeking through one normal MP4. Each video was exported into responsive WebP frame sequences:
 
-Desktop files are 1920×1080. Mobile files are 1280×720. All files are H.264, 30 fps, muted, locally hosted, fast-start enabled, and encoded with every frame as a keyframe.
+- Desktop: 1600 × 900
+- Mobile: 960 × 540
+- Scene 1: 138 frames
+- Scene 2: 55 frames
+- Scene 3: 259 frames
 
-Scroll position maps directly to `video.currentTime`:
+The browser draws the correct frames to a canvas, keeps only a small decoded frame window in memory, warms the compressed browser cache in the background, and softly blends neighbouring frames. This supports forward and reverse scrolling with less decoder stutter.
 
-- scroll down → forward;
-- scroll up → reverse;
-- slow scroll → precise movement;
-- fast scroll → direct seek to the correct frame.
+High-quality all-intra H.264 MP4 files remain included as fallbacks for data-saving connections or frame-loading failure.
 
-Posters remain visible while media loads. Reduced-motion visitors receive still-image scenes. A media error falls back to the poster instead of showing a blank section.
+## Local preview on Windows
 
-## Local test
+Open PowerShell inside this folder and run:
 
-```bash
-npm install
-npm run dev
+```powershell
+npm.cmd install
+npm.cmd run dev
 ```
 
-Open the localhost URL printed by Vite. Do not test by double-clicking `index.html`.
+Open the localhost URL printed by Vite, usually:
 
-## Production build
-
-```bash
-npm install
-npm run build
-npm run preview
+```text
+http://localhost:5173
 ```
 
-The output folder is `dist`.
+Do not double-click `index.html`. This is a Vite project and must be served through Vite or Vercel.
+
+To test the production build locally:
+
+```powershell
+npm.cmd run build
+npm.cmd run preview
+```
 
 ## Vercel settings
 
-- Framework preset: **Vite**
-- Root directory: `./`
-- Install command: `npm install`
-- Build command: `npm run build`
-- Output directory: `dist`
+Use:
 
-`vercel.json` includes clean routes, SPA rewrites, long-lived asset caching, inline MP4 handling, and range-response headers.
+```text
+Framework Preset: Vite
+Root Directory: ./
+Install Command: npm install
+Build Command: npm run build
+Output Directory: dist
+Node.js Version: 22.x
+```
 
-## Private preview
+The `vercel.json` file includes clean-route rewrites and long-lived caching for frame and media assets.
 
-The project currently sends `noindex, nofollow, noarchive`. That discourages indexing but is not access control. Use Vercel Deployment Protection or a protected preview URL when needed.
+## Main routes
 
-## Main contact
+```text
+/
+/mission
+/proof
+/founder
+/partners
+/warsaw
+/media
+```
 
-- Email: `protoufic@gmail.com`
-- WhatsApp: configured as a direct CTA without displaying the number in page text.
+Legacy compatibility routes:
+
+```text
+/story
+/record
+/ironman
+```
+
+## Brand assets
+
+The Toufic mark is used in the header and favicon:
+
+```text
+public/assets/img/brand/toufic-mark.svg
+```
+
+The mission cover uses the final frame from the updated third video. The Partners cover uses the strongest Lebanese IRONMAN 70.3 Warsaw finish image, so no new generated cover is required for this version.
+
+## Updating later
+
+Replace source media only through the configured paths in:
+
+```text
+src/data/mission.ts
+```
+
+Do not hotlink Google Drive files. Keep public website assets inside `public/assets`.

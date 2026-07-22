@@ -31,14 +31,18 @@ const routes = [
 export function PartnersPage() {
   return (
     <Layout>
-      <section className="page-hero partners-page-hero">
-        <img src={media.flag} alt="Toufic Abou Ali with Lebanese flag energy" />
-        <div className="page-hero-overlay" />
-        <div className="site-shell page-hero-content">
-          <p className="eyebrow">PARTNERSHIP OPPORTUNITY</p>
-          <h1>Partner with a global Lebanese world-record attempt.</h1>
-          <p>Six full IRONMAN races. Six continents. One campaign built around endurance, execution, original content, and Lebanon.</p>
-          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Request a Tailored Proposal <ArrowRight size={16} /></button>
+      <section className="partners-hero-split">
+        <div className="site-shell partners-hero-grid">
+          <div className="partners-hero-copy">
+            <p className="eyebrow">PARTNERSHIP OPPORTUNITY</p>
+            <h1>Partner with a global Lebanese world-record attempt.</h1>
+            <p>Six full IRONMAN races. Six continents. One campaign built around endurance, execution, original content, and Lebanon.</p>
+            <button className="button-primary" onClick={() => openContactPanel('partnership')}>Request a Tailored Proposal <ArrowRight size={16} /></button>
+          </div>
+          <figure className="partners-hero-media">
+            <img src={media.partnerCover} alt="Toufic Abou Ali crossing the IRONMAN 70.3 Warsaw finish with the Lebanese flag" />
+            <figcaption><span>REAL PROOF</span><strong>IRONMAN 70.3 WARSAW</strong><small>LEBANON · BIB 760</small></figcaption>
+          </figure>
         </div>
       </section>
 

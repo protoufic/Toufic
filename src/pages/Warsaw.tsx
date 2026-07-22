@@ -73,12 +73,12 @@ export function WarsawPage() {
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading"><p className="eyebrow">THE RACE IN FRAMES</p><h2>One finish. Different moments.</h2></motion.div>
           <div className="warsaw-gallery">
-            <img src={media.warsaw.swimFocus} alt="Before the swim start" loading="lazy" />
-            <img src={media.warsaw.t1} alt="Running into transition" loading="lazy" />
-            <img src={media.warsaw.bikeCity} alt="Cycling through Warsaw" loading="lazy" />
-            <img src={media.warsaw.finishUp} alt="Looking up after the finish" loading="lazy" />
-            <img src={media.warsaw.finishDown} alt="Looking down after the finish" loading="lazy" />
-            <img src={media.warsaw.postFlag} alt="After the finish with the Lebanese flag" loading="lazy" />
+            <img src={media.warsaw.preBikeStand} alt="Toufic standing with the triathlon bike before IRONMAN 70.3 Warsaw" loading="lazy" />
+            <img src={media.warsaw.preBikeHold} alt="Toufic holding the triathlon bike in Warsaw" loading="lazy" />
+            <img src={media.warsaw.t1} alt="Toufic running into transition" loading="lazy" />
+            <img src={media.warsaw.finishLebanon} alt="Toufic finishing IRONMAN 70.3 Warsaw with the Lebanese flag" loading="lazy" />
+            <img src={media.warsaw.finishUp} alt="Toufic looking up after the finish" loading="lazy" />
+            <img src={media.warsaw.postFlag} alt="Toufic after the finish with the Lebanese flag" loading="lazy" />
           </div>
         </div>
       </section>

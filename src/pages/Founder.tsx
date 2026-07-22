@@ -30,7 +30,7 @@ export function FounderPage() {
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss the Campaign <ArrowRight size={16} /></button>
           </div>
           <figure className="founder-main-portrait">
-            <img src={media.founder} alt="Toufic Abou Ali" />
+            <img src={media.founderWarsaw} alt="Toufic Abou Ali in Warsaw" />
             <figcaption><span>LEBANON</span><strong>FOUNDER & CEO</strong><small>ENDURANCE ATHLETE</small></figcaption>
           </figure>
         </div>
@@ -81,7 +81,7 @@ export function FounderPage() {
       <section className="section founder-sport-section">
         <div className="site-shell founder-sport-grid">
           <motion.figure {...reveal}>
-            <img src={media.founderWarsaw} alt="Toufic Abou Ali in Warsaw before IRONMAN 70.3" loading="lazy" />
+            <img src={media.founderRunning} alt="Toufic Abou Ali running" loading="lazy" />
           </motion.figure>
           <motion.div {...reveal}>
             <p className="eyebrow">FOUNDER × ATHLETE</p>

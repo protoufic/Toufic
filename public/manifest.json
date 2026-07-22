@@ -1,9 +1,16 @@
 {
-  "name": "Toufic Abou Ali — Six Continents",
+  "name": "Toufic Abou Ali \u2014 Six Continents",
   "short_name": "Six Continents",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#050505",
-  "icons": []
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

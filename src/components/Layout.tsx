@@ -34,7 +34,7 @@ export function Header() {
       <div className="site-shell">
         <nav className="site-nav" aria-label="Primary navigation">
           <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents home">
-            <span className="site-brand-mark">TA</span>
+            <span className="site-brand-mark"><img src="/assets/img/brand/toufic-mark.svg" alt="" /></span>
             <span className="site-brand-copy">
               <strong>Toufic Abou Ali</strong>
               <small>Six Continents</small>

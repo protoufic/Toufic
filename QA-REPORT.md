@@ -1,55 +1,39 @@
-# QA report — final polish
+# QA report
 
-## Root cause of the previous video issue
+## Completed checks
 
-The prior build was not merely a Vercel publishing problem.
+- 21 TypeScript/TSX source files parsed with zero syntax diagnostics.
+- CSS opening and closing braces are balanced.
+- 63 direct local asset references were audited.
+- Missing direct local assets: 0.
+- All expected frame filenames exist without gaps.
+- Scene 1: 138 desktop frames and 138 mobile frames.
+- Scene 2: 55 desktop frames and 55 mobile frames.
+- Scene 3: 259 desktop frames and 259 mobile frames.
+- Representative beginning, middle, and final WebP frames decoded successfully for every scene.
+- Desktop and mobile H.264 fallback files decoded successfully.
+- Fallback files contain the correct frame counts and durations.
+- Header logo and favicon asset added.
+- Mission cover replaced by the updated third-video final frame.
+- Partners cover retained as the strongest Lebanese Warsaw finish image.
+- Founder page duplicate Warsaw image replaced by a running image.
+- Interactive-map coordinates were corrected against the actual 16:9 map artwork.
+- Map detail panel moved below the map so it no longer covers continent markers.
+- Frame assets receive immutable cache headers through `vercel.json`.
 
-Two source-level issues existed:
+## Compatibility design
 
-1. Home used one combined video rather than the requested three-section sequence.
-2. The mobile media query explicitly set the scroll video to `display: none`, so mobile visitors could only see the poster image.
+- Canvas frame sequence is the primary scroll-rendering method.
+- Desktop and mobile use separate frame resolutions.
+- Only a limited decoded-frame window is held in memory.
+- Compressed frames are warmed in the browser cache before their chapter is reached.
+- Neighbouring frames are blended to reduce visible stepping.
+- MP4 fallback is used for data-saving connections or frame-load failure.
+- Reduced-motion users receive stable posters and full copy.
+- The film begins below the fixed header.
 
-The new build removes that rule and uses three separate video chapters.
+## Not completed in this environment
 
-## Video checks completed
+A full Vite production build could not be run because the sandbox package registry repeatedly returned a temporary 503 response during dependency installation. This is an environment dependency-download failure, not a detected source-code failure.
 
-Six production video files were inspected:
-
-- three 1920×1080 desktop files;
-- three 1280×720 mobile files.
-
-All are:
-
-- H.264;
-- 30 fps;
-- `yuv420p`;
-- fast-start enabled;
-- audio-free;
-- encoded with every frame as a keyframe.
-
-Frame counts:
-
-- Scene 1: 138 frames / 138 keyframes;
-- Scene 2: 51 frames / 51 keyframes;
-- Scene 3: 255 frames / 255 keyframes.
-
-Beginning, midpoint, and near-end decoding succeeded for all six files. A local HTTP range request returned `206 Partial Content`, confirming the media format supports browser seeking.
-
-## Source checks completed
-
-- 21 TypeScript/TSX files passed syntax transpilation.
-- CSS parsed successfully with PostCSS.
-- 56 unique local asset paths were audited.
-- Missing local assets: 0.
-- Race records preserved: 52.
-- Old combined mission videos removed.
-- Old workshop screenshot removed from public assets.
-- Old Guinness logo replaced with the supplied transparent file.
-
-## Environment limitation
-
-A full automated Chromium visual run could not be completed in this sandbox because the system browser aborted when its GPU process was unavailable. This is an environment restriction, not a detected application error. Real desktop and iPhone/Safari checks must still be completed on the deployed Vercel URL using the included deployment checklist.
-
-## Build note
-
-The source is Vite-ready. Dependency installation could not be completed inside this sandbox because the package registry repeatedly returned temporary 503/DNS errors. The TypeScript syntax, CSS, assets, media encodes, paths, and deployment configuration were checked independently. Vercel should install dependencies during deployment.
+A complete physical-device browser matrix was therefore not claimed. Run `npm.cmd install`, `npm.cmd run build`, and the deployment checklist on the connected computer/Vercel project before sponsor distribution.

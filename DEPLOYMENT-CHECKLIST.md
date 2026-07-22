@@ -1,63 +1,125 @@
-# Final deployment checklist
+# Deployment checklist
 
-## Replace the repository files
+## 1. Replace the connected GitHub repository
 
 1. Extract the final ZIP.
 2. Open GitHub Desktop.
-3. Select the connected `Toufic` repository on `main`.
+3. Select the connected `Toufic` repository and branch `main`.
 4. Choose **Repository → Show in Explorer**.
-5. Turn hidden items off.
-6. Delete the old visible project files. Never delete `.git`.
-7. Copy the contents of the extracted folder directly into the repository root.
-8. Confirm the root directly contains `package.json`, `index.html`, `src`, `public`, `vite.config.ts`, and `vercel.json`.
-9. Commit with: `Polish final Six Continents sponsor website`.
-10. Click **Push origin**.
+5. Delete the old visible project files. Never delete `.git`.
+6. Copy everything from the extracted final folder directly into the connected repository folder.
+7. Confirm `package.json`, `src`, and `public` are visible directly in the repository root.
+8. Commit with:
 
-## Vercel
+```text
+Final smooth three-scene mission experience
+```
 
-Use:
+9. Click **Push origin**.
 
-- Framework preset: `Vite`
-- Root directory: `./`
-- Install command: `npm install`
-- Build command: `npm run build`
-- Output directory: `dist`
+The repository contains many frame files. Let GitHub Desktop finish completely before closing it.
 
-Wait for the deployment status to become **Ready**.
+## 2. Confirm the required media reached GitHub
 
-## Video verification after deployment
+Check these directories online:
 
-Test the deployed HTTPS URL, not a local file.
+```text
+public/assets/frames/scene-01/desktop
+public/assets/frames/scene-01/mobile
+public/assets/frames/scene-02/desktop
+public/assets/frames/scene-02/mobile
+public/assets/frames/scene-03/desktop
+public/assets/frames/scene-03/mobile
+public/assets/media
+```
 
-Desktop:
+Expected frame counts:
 
-1. Hard refresh with `Ctrl + Shift + R`.
-2. Confirm Scene 1 moves from the first scroll.
-3. Scroll backward and confirm it reverses.
-4. Continue to Scene 2 and Scene 3.
-5. Scroll rapidly across each scene and confirm no blank frames appear.
+```text
+Scene 1: 138 desktop + 138 mobile
+Scene 2: 55 desktop + 55 mobile
+Scene 3: 259 desktop + 259 mobile
+```
 
-Mobile:
+## 3. Configure Vercel
 
-1. Open the Vercel URL in Safari or Chrome.
-2. Touch and scroll through all three scenes.
-3. Confirm video appears rather than only the poster.
-4. Scroll backward.
-5. Rotate once and confirm the layout recovers.
+```text
+Framework Preset: Vite
+Root Directory: ./
+Install Command: npm install
+Build Command: npm run build
+Output Directory: dist
+Node.js Version: 22.x
+```
 
-Network:
+Pushes to `main` should trigger a new deployment.
 
-- Each MP4 request should return `video/mp4`.
-- Seeking should produce HTTP `206 Partial Content` range responses.
-- No video should be requested from Google Drive.
+If the old site appears:
 
-## Other visual checks
+1. Open the latest Vercel deployment.
+2. Confirm it references the newest Git commit.
+3. Redeploy with the build cache cleared.
+4. Open the new deployment URL in a private window.
 
-- Countdown shows days, hours, minutes, and seconds.
-- Guinness World Records logo has a transparent background.
-- Sira workshop screenshot is absent.
-- No negative promise section appears on Partners.
-- All six map markers sit on the correct continent.
-- Hover, keyboard focus, click, and mobile continent list all change the map detail.
-- Founder image is not cropped through the face.
-- No horizontal overflow at 360 px.
+## 4. Test the production URL
+
+Do not test by opening `index.html` directly.
+
+Test the HTTPS Vercel URL on:
+
+- Chrome desktop
+- Edge desktop
+- Safari on iPhone
+- Chrome on Android
+- one tablet or responsive browser view
+
+For each of the three film chapters, confirm:
+
+- the poster appears immediately;
+- scrolling down moves forward;
+- scrolling up moves backward;
+- Scene 2 begins slowly before it fully reaches the sticky position;
+- Scene 3 begins slowly before it fully reaches the sticky position;
+- the copy becomes fully visible and remains readable;
+- the video starts below the fixed header;
+- Toufic's face is not covered by the menu;
+- there are no blank frames;
+- fast scrolling catches up without freezing.
+
+## 5. Browser preferences
+
+When the operating system requests reduced motion, the website intentionally shows still cinematic frames instead of scrubbed motion.
+
+On Windows, test normal motion with:
+
+```text
+Settings → Accessibility → Visual effects → Animation effects: On
+```
+
+## 6. Network check
+
+In browser developer tools:
+
+1. Open **Network**.
+2. Filter by `webp` and `mp4`.
+3. Scroll through all three chapters.
+4. Confirm frame and fallback assets return 200 or cached responses.
+5. Confirm there are no 404 responses.
+
+## 7. Final page review
+
+Check:
+
+- Home
+- Mission
+- Proof
+- Founder
+- Partners
+- IRONMAN 70.3 Warsaw
+- Media
+- contact panel
+- WhatsApp link
+- email link
+- countdown including seconds
+- interactive map alignment
+- Toufic header mark and favicon
