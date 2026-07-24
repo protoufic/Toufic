@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { HomePage } from './pages/Home';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { applyRouteSeo } from './utils/seo';
 
+const HomePage = lazy(() => import('./pages/Home').then((module) => ({ default: module.HomePage })));
 const MissionPage = lazy(() => import('./pages/Mission').then((module) => ({ default: module.MissionPage })));
 const WarsawPage = lazy(() => import('./pages/Warsaw').then((module) => ({ default: module.WarsawPage })));
 const ProofPage = lazy(() => import('./pages/Proof').then((module) => ({ default: module.ProofPage })));

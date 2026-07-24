@@ -402,10 +402,8 @@ function ScrollFrameChapter({
   const style = {
     '--chapter-height': `${heightVh}vh`,
     '--chapter-layer': layer,
-    // Reduced-motion chapters are static editorial sections. Their copy must
-    // never depend on scroll progress or an animation state to become visible.
-    '--copy-reveal': reducedMotion ? 1 : priority ? 1 : 0,
-    '--copy-shift': reducedMotion || priority ? '0px' : '18px',
+    '--copy-reveal': priority ? 1 : 0,
+    '--copy-shift': priority ? '0px' : '18px',
   } as CSSProperties;
 
   return (

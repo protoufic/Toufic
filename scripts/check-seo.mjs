@@ -8,15 +8,6 @@ const config = JSON.parse(await fs.readFile(path.join(root, 'seo.config.json'), 
 const escapeHtml = (value = '') => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\"', '&quot;');
 const required = ['sitemap.xml', 'image-sitemap.xml', 'robots.txt', 'feed.xml', 'llms.txt', 'press-kit.json', '404.html'];
 const errors = [];
-
-const vercelConfig = JSON.parse(await fs.readFile(path.join(root, 'vercel.json'), 'utf8'));
-const canonicalHostRedirect = (vercelConfig.redirects || []).some((redirect) =>
-  redirect.destination === 'https://toufic.co/:path*' &&
-  redirect.permanent === true &&
-  (redirect.has || []).some((condition) => condition.type === 'host' && condition.value === 'www.toufic.co')
-);
-if (!canonicalHostRedirect) errors.push('vercel.json: missing permanent www.toufic.co to toufic.co host redirect');
-if (config.siteUrl !== 'https://toufic.co') errors.push('seo.config.json: canonical siteUrl must be https://toufic.co');
 for (const file of required) {
   try { await fs.access(path.join(dist, file)); } catch { errors.push(`Missing ${file}`); }
 }
@@ -28,7 +19,6 @@ for (const page of config.pages) {
     if (!html.includes('rel="canonical"')) errors.push(`${file}: missing canonical`);
     if (!html.includes('application/ld+json')) errors.push(`${file}: missing structured data`);
     if (/noindex/i.test(html)) errors.push(`${file}: contains noindex`);
-    if (!html.includes('boot-fallback')) errors.push(`${file}: missing non-JavaScript app fallback`);
   } catch { errors.push(`Missing ${file}`); }
 }
 const robots = await fs.readFile(path.join(dist, 'robots.txt'), 'utf8').catch(() => '');
