@@ -6,22 +6,6 @@
     <meta name="theme-color" content="#050505" />
     <meta name="color-scheme" content="dark" />
 
-    <style id="critical-app-shell">
-      html, body { min-height: 100%; background: #050505; }
-      #root { min-height: 100svh; background: #050505; }
-      #root:empty {
-        min-height: 100svh;
-        background:
-          linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.08) 55%, rgba(0,0,0,.28)),
-          #050505 url("/assets/img/mission/scene-01-poster.webp") center top / contain no-repeat;
-      }
-      .app-error-fallback { min-height: 100svh; display: grid; place-items: center; padding: 80px 22px; background: #050505; }
-      .app-error-card { width: min(760px, 100%); padding: clamp(28px, 5vw, 56px); border: 1px solid rgba(255,255,255,.14); background: #0b0b0b; }
-      .app-error-card h1 { margin-top: 14px; font-size: clamp(40px, 6vw, 72px); }
-      .app-error-card > p:not(.eyebrow) { margin-top: 20px; color: #aaa; font-size: 18px; }
-      .app-error-actions { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 12px; }
-    </style>
-
     <!-- SEO_HEAD_START -->
     <title>Toufic Abou Ali | Six Continents IRONMAN Record Attempt</title>
     <meta name="description" content="Lebanese founder-athlete Toufic Abou Ali is preparing six full IRONMAN races across six continents in a world-record attempt. View the mission, proof and partnership opportunity." />
@@ -76,21 +60,6 @@
       </main>
     </noscript>
     <div id="root"></div>
-    <script>
-      (() => {
-        const key = 'toufic-empty-root-reload-at';
-        window.setTimeout(() => {
-          const root = document.getElementById('root');
-          if (!root || root.childElementCount > 0) return;
-          const now = Date.now();
-          const previous = Number(sessionStorage.getItem(key) || 0);
-          if (!Number.isFinite(previous) || now - previous > 30000) {
-            sessionStorage.setItem(key, String(now));
-            window.location.reload();
-          }
-        }, 8000);
-      })();
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

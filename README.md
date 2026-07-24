@@ -1,20 +1,54 @@
 # Toufic Abou Ali — Six Continents
 
-Final Vite/React website for `https://toufic.co`.
+Production-ready Vite/React website for the private Six Continents sponsor preview.
 
-This package preserves the existing design, content, videos, proof archive, SEO pages and performance architecture. It adds the reliability fixes required for direct visits from Google, Instagram and other in-app browsers, plus a safe static layout when Reduced Motion is enabled.
+## Performance-first mission media
 
-## Required local test on Windows
+The homepage keeps the exact same three mission chapters and visual structure:
+
+1. Standing and breathing
+2. Sprint
+3. Lebanon and six-continent reveal
+
+The scroll experience still uses responsive WebP frame sequences on capable connections, with MP4 fallback on data-saving or very slow connections.
+
+### Optimized frame delivery
+
+- Desktop frames: 1600 × 900
+- Mobile frames: 960 × 540
+- Frame sampling: 15 fps with neighbouring-frame blending
+- Scene 1: 69 frames per device class
+- Scene 2: 28 frames per device class
+- Scene 3: 130 frames per device class
+- Total frame files: 454
+
+Only a small directional frame window is requested around the visitor's current scroll position. The website no longer downloads every frame in the background. Sparse anchor frames preserve fast-scroll responsiveness without consuming the entire sequence.
+
+Optimized H.264 MP4 files remain as fallbacks. They use frequent keyframes, local hosting, byte-range delivery, and separate desktop/mobile sizes.
+
+## Local preview on Windows
 
 Open PowerShell inside this folder and run:
 
 ```powershell
 npm.cmd install
+npm.cmd run dev
+```
+
+Open the localhost URL printed by Vite, usually:
+
+```text
+http://localhost:5173
+```
+
+Do not double-click `index.html`. This is a Vite project and must be served through Vite or Vercel.
+
+To test the production build locally:
+
+```powershell
 npm.cmd run build
 npm.cmd run preview
 ```
-
-Open the preview URL printed by Vite. Do not open `index.html` directly.
 
 ## Vercel settings
 
@@ -27,27 +61,7 @@ Output Directory: dist
 Node.js Version: 22.x
 ```
 
-Production environment variables:
-
-```text
-VITE_SITE_URL=https://toufic.co
-SITE_URL=https://toufic.co
-```
-
-## Canonical domain
-
-- `https://toufic.co` is the canonical website.
-- `https://www.toufic.co` permanently redirects to the same path on `https://toufic.co`.
-- Only `toufic.co` URLs belong in sitemaps, canonical tags and indexing requests.
-
-## Reliability protections
-
-- Homepage code is included in the main bundle instead of being a second lazy chunk.
-- Stale Vite chunks trigger one guarded refresh rather than a black screen or reload loop.
-- A visible route-specific HTML fallback exists before React mounts.
-- A React error boundary provides a recovery screen for unexpected rendering failures.
-- Canonical page HTML is revalidated after each deployment while hashed assets remain cached for one year.
-- Reduced Motion uses a separate static editorial layout that preserves all text in all three film chapters.
+The optimized frame and video paths are versioned so browsers cannot reuse the older, heavier media files after deployment.
 
 ## Main routes
 
@@ -61,4 +75,54 @@ SITE_URL=https://toufic.co
 /media
 ```
 
-The Marathon filter returns only OMT Beirut Marathon and Prague Marathon.
+Legacy compatibility routes:
+
+```text
+/story
+/record
+/ironman
+```
+
+## Proof filter correction
+
+The Marathon filter now returns only the two full marathons:
+
+- OMT Beirut Marathon
+- Prague Marathon
+
+Half marathons and shorter Beirut Marathon events are excluded.
+
+## Search-engine configuration
+
+The production build generates page-specific HTML metadata, structured data, canonical URLs, sitemaps, an image sitemap, RSS discovery feed, `llms.txt`, `press-kit.json`, and IndexNow support.
+
+Set these Vercel Production environment variables:
+
+```text
+VITE_SITE_URL=https://toufic.co
+SITE_URL=https://toufic.co
+```
+
+Optional webmaster verification variables:
+
+```text
+GOOGLE_SITE_VERIFICATION=
+BING_SITE_VERIFICATION=
+YANDEX_SITE_VERIFICATION=
+```
+
+Build and validate:
+
+```powershell
+npm.cmd install
+npm.cmd run build
+npm.cmd run preview
+```
+
+After the production deployment, notify Bing and other IndexNow engines:
+
+```powershell
+npm.cmd run indexnow
+```
+
+Read `SEO-LAUNCH-CHECKLIST.md` before submitting the site to search engines.

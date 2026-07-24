@@ -183,7 +183,6 @@ function noscriptMarkup(page) {
   return `<noscript><main><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p><nav>${links}</nav><p>Media and partnership enquiries: <a href="mailto:${escapeHtml(config.email)}">${escapeHtml(config.email)}</a></p></main></noscript>`;
 }
 
-
 function renderPage(template, page, noindex = false) {
   const headRegex = /<!-- SEO_HEAD_START -->[\s\S]*?<!-- SEO_HEAD_END -->/;
   const schemaRegex = /<!-- STRUCTURED_DATA_START -->[\s\S]*?<!-- STRUCTURED_DATA_END -->/;
