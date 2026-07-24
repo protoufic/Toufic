@@ -718,38 +718,147 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .film-chapter { height: auto !important; min-height: calc(100vh - var(--header)); min-height: calc(100svh - var(--header)); }
-  .film-chapter-sticky { position: relative; top: auto; height: auto; min-height: calc(100vh - var(--header)); min-height: calc(100svh - var(--header)); }
-  .film-chapter-video, .film-chapter-canvas { display: none; }
-  .film-step { display: none; }
-  .film-step:first-child { display: block; opacity: 1; pointer-events: auto; }
-}
 
-/* The previous reduced-motion rule removed translateY(-50%), leaving desktop copy at top:50% and clipping it. */
-@media (prefers-reduced-motion: reduce) and (min-width: 901px) {
-  .film-step-left:first-child,
-  .film-step-right:first-child { transform: translateY(-50%); }
-  .film-step-final:first-child { transform: none; }
-}
+  /*
+   * Reduced-motion is a complete static layout, not the animated layout with
+   * movement removed. This prevents hidden copy, top/bottom clipping and
+   * position drift in short windows and embedded browsers.
+   */
+  .film-chapter {
+    --copy-reveal: 1 !important;
+    --copy-shift: 0px !important;
+    height: auto !important;
+    min-height: 0;
+  }
 
-/* In short embedded mobile viewports, let the static fallback grow instead of clipping the bottom of the panel. */
-@media (prefers-reduced-motion: reduce) and (max-width: 900px) {
-  .film-chapter-sticky { overflow: visible; }
+  .film-chapter-sticky {
+    position: relative;
+    top: auto;
+    display: grid;
+    grid-template: 1fr / 1fr;
+    height: auto;
+    min-height: max(620px, calc(100vh - var(--header)));
+    min-height: max(620px, calc(100svh - var(--header)));
+    overflow: hidden;
+  }
+
+  .film-chapter-media,
+  .film-chapter-ui {
+    grid-area: 1 / 1;
+  }
+
+  .film-chapter-media {
+    position: relative;
+    inset: auto;
+    min-height: inherit;
+    height: auto;
+  }
+
+  .film-chapter-video,
+  .film-chapter-canvas {
+    display: none;
+  }
+
   .film-chapter-ui {
     position: relative;
     inset: auto;
-    width: calc(100% - 28px);
-    width: min(100% - 28px, var(--shell));
-    min-height: calc(100vh - var(--header));
-    min-height: calc(100svh - var(--header));
-    padding-top: min(calc(56.25vw + 14px), 49vh);
-    padding-top: min(calc(56.25vw + 14px), 49svh);
-    padding-bottom: max(48px, env(safe-area-inset-bottom));
-    display: flex;
-    align-items: flex-start;
+    width: min(var(--shell), calc(100% - 48px));
+    height: auto;
+    min-height: inherit;
+    margin: 0 auto;
+    padding: clamp(48px, 7vh, 88px) 0;
+    display: grid;
+    align-items: center;
+    box-sizing: border-box;
   }
-  .film-step:first-child { position: static; inset: auto; width: 100%; max-width: 100%; transform: none; }
-  .film-chapter-index { bottom: 12px; bottom: max(12px, env(safe-area-inset-bottom)); }
+
+  .film-step,
+  .film-step-left,
+  .film-step-right,
+  .film-step-final,
+  .film-step-hero {
+    display: block !important;
+    position: relative;
+    inset: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+
+  .film-copy-panel {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #mission-film-one .film-step,
+  #mission-film-three .film-step {
+    justify-self: start;
+  }
+
+  #mission-film-two .film-step {
+    justify-self: end;
+  }
+}
+
+/* Keep every static desktop panel inside a safe reading width. The grid row
+   grows when necessary, so no line can be clipped by a short viewport. */
+@media (prefers-reduced-motion: reduce) and (min-width: 901px) {
+  #mission-film-one .film-step { width: min(570px, 47vw); }
+  #mission-film-two .film-step { width: min(440px, 36vw); }
+  #mission-film-three .film-step { width: min(600px, 49vw); }
+}
+
+/* On phones and embedded browsers, stack the complete copy below the 16:9
+   poster. This is intentionally normal document flow: Instagram, Safari and
+   reduced-motion users can never lose text outside a fixed-height viewport. */
+@media (prefers-reduced-motion: reduce) and (max-width: 900px) {
+  .film-chapter-sticky {
+    grid-template: auto auto / 1fr;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .film-chapter-media {
+    grid-area: 1 / 1;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+
+  .film-chapter-ui {
+    grid-area: 2 / 1;
+    width: min(var(--shell), calc(100% - 28px));
+    min-height: 0;
+    padding: 0 0 max(64px, env(safe-area-inset-bottom));
+    display: block;
+  }
+
+  .film-step,
+  .film-step-left,
+  .film-step-right,
+  .film-step-final,
+  .film-step-hero {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .film-copy-panel {
+    width: 100%;
+    margin: 0;
+    border-top: 0;
+  }
+
+  .film-chapter-index {
+    bottom: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+  }
 }
 .route-loader { min-height: 100svh; display: grid; place-items: center; background: #050505; }
 .route-loader span { width: 34px; height: 34px; border: 2px solid rgba(255,255,255,.14); border-top-color: #e11d24; border-radius: 50%; animation: route-spin .8s linear infinite; }

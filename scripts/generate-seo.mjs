@@ -183,6 +183,26 @@ function noscriptMarkup(page) {
   return `<noscript><main><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p><nav>${links}</nav><p>Media and partnership enquiries: <a href="mailto:${escapeHtml(config.email)}">${escapeHtml(config.email)}</a></p></main></noscript>`;
 }
 
+
+function appFallbackMarkup(page) {
+  const label = page.path === '/' ? 'Toufic Abou Ali · Lebanese Founder-Athlete' : 'Toufic Abou Ali · Six Continents';
+  const links = config.pages
+    .filter((entry) => entry.path !== page.path)
+    .slice(0, 6)
+    .map((entry) => `<a href="${entry.path}">${escapeHtml(entry.path === '/' ? 'Home' : entry.path.slice(1).replaceAll('-', ' '))}</a>`)
+    .join('');
+  return `<!-- APP_FALLBACK_START -->
+      <main class="boot-fallback" aria-label="${escapeHtml(page.title)}">
+        <section class="boot-fallback-card">
+          <p class="boot-fallback-eyebrow">${escapeHtml(label)}</p>
+          <h1>${escapeHtml(page.title.split('|')[0].trim())}</h1>
+          <p>${escapeHtml(page.description)}</p>
+          <nav class="boot-fallback-nav" aria-label="Main pages">${links}</nav>
+        </section>
+      </main>
+      <!-- APP_FALLBACK_END -->`;
+}
+
 function renderPage(template, page, noindex = false) {
   const headRegex = /<!-- SEO_HEAD_START -->[\s\S]*?<!-- SEO_HEAD_END -->/;
   const schemaRegex = /<!-- STRUCTURED_DATA_START -->[\s\S]*?<!-- STRUCTURED_DATA_END -->/;
@@ -190,7 +210,8 @@ function renderPage(template, page, noindex = false) {
   return template
     .replace(headRegex, headMarkup(page, noindex))
     .replace(schemaRegex, `<!-- STRUCTURED_DATA_START -->\n    <script id="route-structured-data" type="application/ld+json">${JSON.stringify(structuredData(page))}</script>\n    <!-- STRUCTURED_DATA_END -->`)
-    .replace(/<noscript>[\s\S]*?<\/noscript>/, noscriptMarkup(page));
+    .replace(/<noscript>[\s\S]*?<\/noscript>/, noscriptMarkup(page))
+    .replace(/<!-- APP_FALLBACK_START -->[\s\S]*?<!-- APP_FALLBACK_END -->/, appFallbackMarkup(page));
 }
 
 const template = await fs.readFile(path.join(dist, 'index.html'), 'utf8');

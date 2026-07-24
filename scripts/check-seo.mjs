@@ -28,6 +28,7 @@ for (const page of config.pages) {
     if (!html.includes('rel="canonical"')) errors.push(`${file}: missing canonical`);
     if (!html.includes('application/ld+json')) errors.push(`${file}: missing structured data`);
     if (/noindex/i.test(html)) errors.push(`${file}: contains noindex`);
+    if (!html.includes('boot-fallback')) errors.push(`${file}: missing non-JavaScript app fallback`);
   } catch { errors.push(`Missing ${file}`); }
 }
 const robots = await fs.readFile(path.join(dist, 'robots.txt'), 'utf8').catch(() => '');
