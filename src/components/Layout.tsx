@@ -126,7 +126,7 @@ export function Footer() {
 
       <div className="site-shell footer-bottom">
         <p>© {new Date().getFullYear()} Toufic Abou Ali.</p>
-        <p>Independent private-preview campaign. Record application, final rules, and verification remain subject to confirmation. No endorsement is implied.</p>
+        <p>Independent campaign. Record application, final rules, and verification remain subject to confirmation. No endorsement is implied.</p>
       </div>
     </footer>
   );

@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://toufic.co/sitemap.xml
+Sitemap: https://toufic.co/image-sitemap.xml

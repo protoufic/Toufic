@@ -97,3 +97,15 @@ npm.cmd run preview
 ```
 
 Open the preview URL printed by Vite. Do not double-click `index.html`.
+
+## 7. SEO production requirements
+
+Before requesting indexing:
+
+1. Connect the final canonical domain, preferably `https://toufic.co`.
+2. Set `VITE_SITE_URL` and `SITE_URL` to that exact production origin in Vercel.
+3. Confirm the production response does not contain `X-Robots-Tag: noindex`.
+4. Open `/robots.txt`, `/sitemap.xml`, and `/image-sitemap.xml` successfully.
+5. Follow every step in `SEO-LAUNCH-CHECKLIST.md`.
+6. Submit the canonical pages through Google Search Console and Bing Webmaster Tools.
+7. Run `npm.cmd run indexnow` only after the production deployment is live.

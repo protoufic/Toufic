@@ -91,3 +91,38 @@ The Marathon filter now returns only the two full marathons:
 - Prague Marathon
 
 Half marathons and shorter Beirut Marathon events are excluded.
+
+## Search-engine configuration
+
+The production build generates page-specific HTML metadata, structured data, canonical URLs, sitemaps, an image sitemap, RSS discovery feed, `llms.txt`, `press-kit.json`, and IndexNow support.
+
+Set these Vercel Production environment variables:
+
+```text
+VITE_SITE_URL=https://toufic.co
+SITE_URL=https://toufic.co
+```
+
+Optional webmaster verification variables:
+
+```text
+GOOGLE_SITE_VERIFICATION=
+BING_SITE_VERIFICATION=
+YANDEX_SITE_VERIFICATION=
+```
+
+Build and validate:
+
+```powershell
+npm.cmd install
+npm.cmd run build
+npm.cmd run preview
+```
+
+After the production deployment, notify Bing and other IndexNow engines:
+
+```powershell
+npm.cmd run indexnow
+```
+
+Read `SEO-LAUNCH-CHECKLIST.md` before submitting the site to search engines.
