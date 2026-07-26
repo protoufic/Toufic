@@ -20,66 +20,73 @@
   "pages": [
     {
       "path": "/",
-      "title": "Toufic Abou Ali | Six Continents IRONMAN Record Attempt",
-      "description": "Lebanese founder-athlete Toufic Abou Ali is preparing six full IRONMAN races across six continents in a world-record attempt. View the mission, proof and partnership opportunity.",
+      "title": "Toufic Abou Ali | Six Continents IRONMAN World-Record Mission",
+      "description": "Official website of Lebanese founder-athlete and Sira CEO Toufic Abou Ali. Explore the Six Continents IRONMAN world-record mission, verified race proof, media kit and partnership opportunities.",
       "image": "/assets/img/social/home.jpg",
       "imageAlt": "Toufic Abou Ali and the Six Continents IRONMAN world-record mission",
       "schemaType": "WebSite",
-      "priority": 1.0
+      "priority": 1.0,
+      "lastModified": "2026-07-26"
     },
     {
       "path": "/mission",
-      "title": "Six Continents IRONMAN World Record Mission | Toufic Abou Ali",
-      "description": "Explore Toufic Abou Ali's plan to complete six full IRONMAN races across six continents before November 27, 2027, including the 1,356 km scale and record target.",
+      "title": "Six Continents IRONMAN World-Record Mission | Toufic Abou Ali",
+      "description": "Explore Toufic Abou Ali's mission to complete six full IRONMAN races across six continents: 1,356 km, a November 27, 2027 target, preparation plan and record context.",
       "image": "/assets/img/social/mission.jpg",
       "imageAlt": "Toufic Abou Ali in front of the Six Continents mission map",
       "schemaType": "AboutPage",
-      "priority": 0.9
+      "priority": 0.9,
+      "lastModified": "2026-07-26"
     },
     {
       "path": "/proof",
-      "title": "Race Results & Athletic Record | Toufic Abou Ali",
-      "description": "View Toufic Abou Ali's documented endurance record, including IRONMAN 70.3 Warsaw, marathons, half marathons, 10K races, podiums, Strava activities and official proof.",
+      "title": "Toufic Abou Ali Race Results, Podiums & Athletic Proof",
+      "description": "Explore Toufic Abou Ali's documented endurance record: IRONMAN 70.3 Warsaw, Prague and Beirut marathons, half marathons, 10K results, podiums, Strava activities and official proof.",
       "image": "/assets/img/social/proof.jpg",
       "imageAlt": "Toufic Abou Ali's marathon and endurance race proof",
       "schemaType": "CollectionPage",
-      "priority": 0.85
+      "priority": 0.85,
+      "lastModified": "2026-07-26"
     },
     {
       "path": "/founder",
       "title": "Toufic Abou Ali | Lebanese Founder-Athlete & Sira CEO",
-      "description": "Meet Toufic Abou Ali, Lebanese founder-athlete and Founder & CEO of Sira, combining company building, university and endurance sport in a global record mission.",
+      "description": "Official profile of Toufic Abou Ali, Lebanese founder-athlete and Founder & CEO of Sira, combining entrepreneurship, university and endurance sport in a global record mission.",
       "image": "/assets/img/social/founder.jpg",
       "imageAlt": "Portrait of Lebanese founder-athlete Toufic Abou Ali",
       "schemaType": "ProfilePage",
-      "priority": 0.85
+      "priority": 0.85,
+      "lastModified": "2026-07-26"
     },
     {
       "path": "/partners",
-      "title": "Sponsor Six Continents | Partnership Opportunities",
-      "description": "Partner with Toufic Abou Ali's Six Continents campaign: six full IRONMAN races, original global content, real product use, activations and a Lebanese world-record story.",
+      "title": "Sponsor Toufic Abou Ali | Six Continents Partnerships",
+      "description": "Partner with Toufic Abou Ali's Six Continents campaign through global storytelling, real product use, brand activations and a Lebanese IRONMAN world-record mission.",
       "image": "/assets/img/social/partners.jpg",
       "imageAlt": "Toufic Abou Ali carrying the Lebanese flag at an IRONMAN finish",
       "schemaType": "WebPage",
-      "priority": 0.9
+      "priority": 0.9,
+      "lastModified": "2026-07-26"
     },
     {
       "path": "/warsaw",
       "title": "IRONMAN 70.3 Warsaw Result & Story | Toufic Abou Ali",
-      "description": "Toufic Abou Ali completed IRONMAN 70.3 Warsaw at 19 in 6:08:15. See the official splits, race photographs, Strava activities, lessons and the origin of Six Continents.",
+      "description": "Toufic Abou Ali completed IRONMAN 70.3 Warsaw at age 19 in 6:08:15. View official splits, race photographs, Strava activities, lessons and the origin of Six Continents.",
       "image": "/assets/img/social/warsaw.jpg",
       "imageAlt": "Toufic Abou Ali at the IRONMAN 70.3 Warsaw finish line",
       "schemaType": "Article",
-      "priority": 0.9
+      "priority": 0.9,
+      "lastModified": "2026-07-26"
     },
     {
       "path": "/media",
       "title": "Toufic Abou Ali Media Kit | Bio, Facts, Photos & Contact",
-      "description": "Media resources for Toufic Abou Ali and the Six Continents mission: approved bios, verified facts, quotes, race results, story angles, photographs and interview contact.",
+      "description": "Official media kit for Toufic Abou Ali and Six Continents: approved biography, verified facts, quotes, race results, story angles, press photographs and interview contact.",
       "image": "/assets/img/social/media.jpg",
       "imageAlt": "Toufic Abou Ali media kit for the Six Continents mission",
       "schemaType": "CollectionPage",
-      "priority": 0.85
+      "priority": 0.85,
+      "lastModified": "2026-07-26"
     }
   ],
   "redirects": {

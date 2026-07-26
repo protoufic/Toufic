@@ -7,6 +7,7 @@ const dist = path.join(root, 'dist');
 const config = JSON.parse(await fs.readFile(path.join(root, 'seo.config.json'), 'utf8'));
 const siteUrl = (process.env.SITE_URL || process.env.VITE_SITE_URL || config.siteUrl).replace(/\/$/, '');
 const buildDate = process.env.SEO_LASTMOD || new Date().toISOString().slice(0, 10);
+const pageLastModified = (page) => page.lastModified || buildDate;
 
 const escapeHtml = (value = '') => String(value)
   .replaceAll('&', '&amp;')
@@ -52,6 +53,7 @@ function structuredData(page) {
       url: `${siteUrl}/`,
       name: config.siteName,
       description: page.description,
+      alternateName: ['Toufic Abou Ali', 'Six Continents'],
       inLanguage: config.language,
       publisher: { '@id': person['@id'] },
     });
@@ -63,7 +65,8 @@ function structuredData(page) {
       description: page.description,
       isPartOf: { '@id': websiteId },
       about: { '@id': person['@id'] },
-      primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(page.image) },
+      primaryImageOfPage: { '@type': 'ImageObject', '@id': `${canonical}#primaryimage`, url: absolute(page.image), contentUrl: absolute(page.image), width: 1200, height: 630 },
+      dateModified: pageLastModified(page),
       inLanguage: config.language,
     });
   } else {
@@ -73,6 +76,7 @@ function structuredData(page) {
       '@id': websiteId,
       url: `${siteUrl}/`,
       name: config.siteName,
+      alternateName: ['Toufic Abou Ali', 'Six Continents'],
       inLanguage: config.language,
       publisher: { '@id': person['@id'] },
     });
@@ -95,7 +99,8 @@ function structuredData(page) {
         mainEntity: { '@id': person['@id'] },
         isPartOf: { '@id': websiteId },
         breadcrumb: { '@id': breadcrumbId },
-        primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(page.image) },
+        primaryImageOfPage: { '@type': 'ImageObject', '@id': `${canonical}#primaryimage`, url: absolute(page.image), contentUrl: absolute(page.image), width: 1200, height: 630 },
+        dateModified: pageLastModified(page),
         inLanguage: config.language,
       });
     } else if (page.schemaType === 'Article') {
@@ -105,9 +110,9 @@ function structuredData(page) {
         mainEntityOfPage: canonical,
         headline: 'IRONMAN 70.3 Warsaw: Toufic Abou Ali’s First IRONMAN 70.3',
         description: page.description,
-        image: [absolute(page.image)],
+        image: [{ '@type': 'ImageObject', url: absolute(page.image), width: 1200, height: 630 }],
         datePublished: '2026-06-07',
-        dateModified: buildDate,
+        dateModified: pageLastModified(page),
         author: { '@id': person['@id'] },
         publisher: { '@id': person['@id'] },
         about: ['IRONMAN 70.3 Warsaw', 'Toufic Abou Ali', 'Lebanese endurance athlete'],
@@ -124,7 +129,8 @@ function structuredData(page) {
         isPartOf: { '@id': websiteId },
         about: { '@id': person['@id'] },
         breadcrumb: { '@id': breadcrumbId },
-        primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(page.image) },
+        primaryImageOfPage: { '@type': 'ImageObject', '@id': `${canonical}#primaryimage`, url: absolute(page.image), contentUrl: absolute(page.image), width: 1200, height: 630 },
+        dateModified: pageLastModified(page),
         inLanguage: config.language,
       });
     }
@@ -211,7 +217,7 @@ await fs.writeFile(path.join(dist, '404.html'), renderPage(template, notFoundPag
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${config.pages.map((page) => `  <url><loc>${escapeXml(absolute(page.path))}</loc><lastmod>${buildDate}</lastmod><priority>${page.priority.toFixed(2)}</priority></url>`).join('\n')}
+${config.pages.map((page) => `  <url><loc>${escapeXml(absolute(page.path))}</loc><lastmod>${pageLastModified(page)}</lastmod></url>`).join('\n')}
 </urlset>\n`;
 await fs.writeFile(path.join(dist, 'sitemap.xml'), sitemap, 'utf8');
 
@@ -265,7 +271,7 @@ await fs.writeFile(path.join(dist, 'robots.txt'), robots, 'utf8');
 const rssItems = config.pages.filter((page) => ['/', '/mission', '/warsaw', '/founder', '/media'].includes(page.path));
 const feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel><title>${escapeXml(config.siteName)}</title><link>${escapeXml(`${siteUrl}/`)}</link><description>${escapeXml(config.pages[0].description)}</description><language>en</language><lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-${rssItems.map((page) => `<item><title>${escapeXml(page.title)}</title><link>${escapeXml(absolute(page.path))}</link><guid isPermaLink="true">${escapeXml(absolute(page.path))}</guid><description>${escapeXml(page.description)}</description><pubDate>${new Date(`${buildDate}T12:00:00Z`).toUTCString()}</pubDate></item>`).join('\n')}
+${rssItems.map((page) => `<item><title>${escapeXml(page.title)}</title><link>${escapeXml(absolute(page.path))}</link><guid isPermaLink="true">${escapeXml(absolute(page.path))}</guid><description>${escapeXml(page.description)}</description><pubDate>${new Date(`${pageLastModified(page)}T12:00:00Z`).toUTCString()}</pubDate></item>`).join('\n')}
 </channel></rss>\n`;
 await fs.writeFile(path.join(dist, 'feed.xml'), feed, 'utf8');
 

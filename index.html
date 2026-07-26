@@ -46,8 +46,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="preload" href="/assets/img/mission/scene-01-poster.webp" as="image" fetchpriority="high" />
-    <link rel="preload" href="/assets/frames-opt-v2/scene-01/desktop/frame-0001.webp" as="image" media="(min-width: 901px)" />
-    <link rel="preload" href="/assets/frames-opt-v2/scene-01/mobile/frame-0001.webp" as="image" media="(max-width: 900px)" />
+    <link rel="preload" href="/assets/frames-opt-v2/scene-01/desktop/frame-0001.webp" as="image" fetchpriority="high" media="(min-width: 901px)" />
+    <link rel="preload" href="/assets/frames-opt-v2/scene-01/mobile/frame-0001.webp" as="image" fetchpriority="high" media="(max-width: 900px)" />
     <link rel="preload" href="/assets/frames-opt-v2/scene-01/desktop/frame-0002.webp" as="image" media="(min-width: 901px)" />
     <link rel="preload" href="/assets/frames-opt-v2/scene-01/mobile/frame-0002.webp" as="image" media="(max-width: 900px)" />
   </head>
@@ -60,6 +60,16 @@
       </main>
     </noscript>
     <div id="root"></div>
+    <script>
+      window.addEventListener('vite:preloadError', function () {
+        var key = 'toufic-vite-reload';
+        var last = Number(sessionStorage.getItem(key) || 0);
+        if (Date.now() - last > 15000) {
+          sessionStorage.setItem(key, String(Date.now()));
+          window.location.reload();
+        }
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
