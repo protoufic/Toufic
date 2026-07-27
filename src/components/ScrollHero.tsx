@@ -70,6 +70,7 @@ function ScrollFrameChapter({
   const lastFrameRef = useRef(performance.now());
   const lastWindowCenterRef = useRef(-1);
   const shouldRenderRef = useRef(priority);
+  const [renderActive, setRenderActive] = useState(priority);
   const failedFramesRef = useRef(0);
   const [shouldLoad, setShouldLoad] = useState(priority);
   const [canvasReady, setCanvasReady] = useState(false);
@@ -77,9 +78,9 @@ function ScrollFrameChapter({
   const [useFallback, setUseFallback] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [mobileViewport, setMobileViewport] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches);
-  const [saveData, setSaveData] = useState(() => Boolean((navigator as Navigator & { connection?: NetworkInformationLike }).connection?.saveData));
+  const [saveData, setSaveData] = useState(() => typeof navigator !== 'undefined' && Boolean((navigator as Navigator & { connection?: NetworkInformationLike }).connection?.saveData));
   const [constrainedNetwork, setConstrainedNetwork] = useState(() => {
-    const effectiveType = (navigator as Navigator & { connection?: NetworkInformationLike }).connection?.effectiveType || '';
+    const effectiveType = typeof navigator !== 'undefined' ? (navigator as Navigator & { connection?: NetworkInformationLike }).connection?.effectiveType || '' : '';
     return effectiveType === 'slow-2g' || effectiveType === '2g';
   });
 
@@ -107,7 +108,8 @@ function ScrollFrameChapter({
 
   const frameBase = useMemo(() => mobileViewport ? mobileFrames : desktopFrames, [desktopFrames, mobileFrames, mobileViewport]);
   const fallbackSource = useMemo(() => mobileViewport ? mobileVideo : desktopVideo, [desktopVideo, mobileVideo, mobileViewport]);
-  const fallbackMode = useFallback || saveData || constrainedNetwork;
+  const staticMedia = reducedMotion || saveData || constrainedNetwork;
+  const fallbackMode = useFallback && !staticMedia;
   const decodedLimit = mobileViewport ? 24 : 30;
 
   const frameUrl = useCallback((index: number) => `${frameBase}/frame-${String(index + 1).padStart(4, '0')}.webp`, [frameBase]);
@@ -180,6 +182,7 @@ function ScrollFrameChapter({
     setCanvasReady(false);
     setUseFallback(false);
     failedFramesRef.current = 0;
+    if (staticMedia) return;
     ensureFrame(0, priority);
     if (priority) {
       // Keep roughly the first second ready before the visitor starts scrolling.
@@ -187,7 +190,7 @@ function ScrollFrameChapter({
         ensureFrame(index, index <= 6);
       }
     }
-  }, [ensureFrame, frameBase, frameCount, mobileViewport, priority]);
+  }, [ensureFrame, frameBase, frameCount, mobileViewport, priority, staticMedia]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -197,6 +200,7 @@ function ScrollFrameChapter({
     }, { rootMargin: '135% 0px 135% 0px', threshold: 0 });
     const renderObserver = new IntersectionObserver(([entry]) => {
       shouldRenderRef.current = entry.isIntersecting;
+      setRenderActive(entry.isIntersecting);
     }, { rootMargin: '45% 0px 45% 0px', threshold: 0 });
     preloadObserver.observe(section);
     renderObserver.observe(section);
@@ -207,18 +211,18 @@ function ScrollFrameChapter({
   }, []);
 
   useEffect(() => {
-    if (!shouldLoad || reducedMotion || fallbackMode) return;
+    if (!shouldLoad || staticMedia || fallbackMode) return;
     loadWindow(Math.round(targetRef.current * (frameCount - 1)));
-  }, [fallbackMode, frameCount, loadWindow, reducedMotion, shouldLoad]);
+  }, [fallbackMode, frameCount, loadWindow, shouldLoad, staticMedia]);
 
   useEffect(() => {
-    if (!fallbackMode || reducedMotion || !shouldLoad) return;
+    if (!fallbackMode || staticMedia || !shouldLoad) return;
     const video = videoRef.current;
     if (!video) return;
     setFallbackReady(false);
     video.src = fallbackSource;
     video.load();
-  }, [fallbackMode, fallbackSource, reducedMotion, shouldLoad]);
+  }, [fallbackMode, fallbackSource, shouldLoad, staticMedia]);
 
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -290,7 +294,7 @@ function ScrollFrameChapter({
       section.style.setProperty('--film-progress', `${nextTarget}`);
       section.style.setProperty('--copy-reveal', `${copyReveal}`);
       section.style.setProperty('--copy-shift', `${(1 - copyReveal) * 18}px`);
-      if (shouldLoad && !fallbackMode) loadWindow(Math.round(nextTarget * (frameCount - 1)));
+      if (shouldLoad && !staticMedia && !fallbackMode) loadWindow(Math.round(nextTarget * (frameCount - 1)));
     };
 
     const scheduleUpdate = () => {
@@ -315,7 +319,7 @@ function ScrollFrameChapter({
       window.removeEventListener('resize', handleResize);
       if (updateRafRef.current !== null) cancelAnimationFrame(updateRafRef.current);
     };
-  }, [fallbackMode, frameCount, loadWindow, preRoll, priority, shouldLoad]);
+  }, [fallbackMode, frameCount, loadWindow, preRoll, priority, shouldLoad, staticMedia]);
 
   const drawImageContained = useCallback((context: CanvasRenderingContext2D, image: HTMLImageElement, alpha = 1) => {
     const canvas = context.canvas;
@@ -342,7 +346,7 @@ function ScrollFrameChapter({
   }, [frameCount]);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (staticMedia || !renderActive) return;
     const render = (now: number) => {
       const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameRef.current) / 1000));
       lastFrameRef.current = now;
@@ -397,7 +401,7 @@ function ScrollFrameChapter({
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [drawImageContained, fallbackMode, fallbackReady, frameCount, loadWindow, nearestDecoded, reducedMotion, resizeCanvas, trimDecoded]);
+  }, [drawImageContained, fallbackMode, fallbackReady, frameCount, loadWindow, nearestDecoded, renderActive, resizeCanvas, staticMedia, trimDecoded]);
 
   const style = {
     '--chapter-height': `${heightVh}vh`,
@@ -410,16 +414,16 @@ function ScrollFrameChapter({
     <section
       ref={sectionRef}
       id={id}
-      className={`film-chapter ${priority ? 'film-chapter-priority' : ''}`}
+      className={`film-chapter ${priority ? 'film-chapter-priority' : ''} ${staticMedia ? 'film-chapter-static' : ''}`}
       style={style}
       aria-label={`${chapter} mission film chapter`}
-      data-media-ready={fallbackMode ? fallbackReady : canvasReady}
+      data-media-ready={staticMedia ? true : (fallbackMode ? fallbackReady : canvasReady)}
     >
       <div className="film-chapter-sticky">
         <div className="film-chapter-media" aria-hidden="true">
           <img src={poster} alt="" className="film-chapter-poster" fetchPriority={priority ? 'high' : 'auto'} loading={priority ? 'eager' : 'lazy'} decoding="async" />
-          {!reducedMotion && !fallbackMode && <canvas ref={canvasRef} className={`film-chapter-canvas ${canvasReady ? 'ready' : ''}`} />}
-          {!reducedMotion && fallbackMode && shouldLoad && (
+          {!staticMedia && !fallbackMode && <canvas ref={canvasRef} className={`film-chapter-canvas ${canvasReady ? 'ready' : ''}`} />}
+          {!staticMedia && fallbackMode && shouldLoad && (
             <video
               ref={videoRef}
               muted

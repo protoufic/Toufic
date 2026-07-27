@@ -1,6 +1,6 @@
 # Toufic Abou Ali — Six Continents
 
-Production-ready Vite/React website for the private Six Continents sponsor preview.
+Production-ready Vite/React website for Toufic Abou Ali’s public Six Continents mission, media profile and partnership campaign.
 
 ## Performance-first mission media
 

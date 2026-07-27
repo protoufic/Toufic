@@ -1,33 +1,34 @@
-# SEO QA Report
+# Final SEO QA report
 
 ## Passed
 
-- Seven unique canonical page configurations created.
-- Seven unique titles and meta descriptions created.
-- Canonical URL, Open Graph, Twitter/X, author, and robots metadata configured.
-- Person, WebSite, WebPage, AboutPage, CollectionPage, ProfilePage, Article, and BreadcrumbList JSON-LD generated where accurate.
-- JSON-LD parsed successfully for every generated HTML page.
-- XML parsing passed for sitemap, image sitemap, and RSS feed.
-- Public robots source allows crawling and references both sitemaps.
-- Vercel `X-Robots-Tag: noindex` header removed.
-- Old `/story`, `/record`, and `/ironman` routes permanently redirect to canonical pages.
-- Seven 1200 × 630 social preview images generated.
-- Favicon and touch-icon variants generated.
-- IndexNow key and submission script created.
-- Dynamic client-side metadata updates added for React navigation.
-- Static route-specific HTML generation tested using the source HTML template.
-- SEO validation script passed for all seven canonical pages.
-- 73 local asset references audited; missing assets: 0.
-- Node syntax checks passed for all SEO build and submission scripts.
+- TypeScript application check passed.
+- Static-render TypeScript check passed.
+- SEO build, preparation and validation scripts pass Node syntax checks.
+- Seven canonical HTML pages contain complete server-rendered page content.
+- Every canonical page has exactly one H1.
+- Seven unique titles and seven unique descriptions are configured.
+- Canonical, robots, Open Graph and Twitter/X metadata match each route.
+- Structured-data JSON parses successfully on every route.
+- Every configured social preview image exists.
+- Every generated local `href` and `src` reference resolves to an included route or asset.
+- Sitemap contains all seven canonical URLs and per-page modification dates.
+- Image sitemap, RSS feed, robots file, `llms.txt`, press kit and IndexNow key are present.
+- The 404 page correctly uses `noindex,follow`; no canonical page contains noindex.
+- Mobile and reduced-motion CSS provides reachable copy and buttons without depending on the film animation.
 
-## Build limitation in this environment
-
-A complete Vite production build could not be repeated because the temporary internal npm registry returned HTTP 503 errors while downloading project dependencies. The SEO generation and validation scripts were tested independently, and the project should be built on the user's computer or Vercel with:
+## Validation command
 
 ```powershell
-npm.cmd install
 npm.cmd run build
-npm.cmd run preview
 ```
 
-Do not submit the domain to search engines until this production build passes and the live headers and canonical URLs are verified.
+A successful build ends with:
+
+```text
+SEO validation passed for 7 canonical pages, rendered HTML, metadata, schema, sitemap, images, and local links.
+```
+
+## Environment note
+
+The included `dist` folder was regenerated and independently validated. This container could not repeat the Vite bundling stage because the uploaded `node_modules` contained Windows-native Rollup/esbuild binaries and external package installation was unavailable. The final ZIP deliberately excludes `node_modules`; Vercel or a normal local `npm install` will install the correct platform binaries and run the complete source build.

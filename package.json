@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && node scripts/generate-seo.mjs && node scripts/check-seo.mjs",
-    "preview": "vite preview",
+    "dev": "node ./node_modules/vite/bin/vite.js",
+    "build": "node ./node_modules/vite/bin/vite.js build && node ./node_modules/typescript/bin/tsc -p tsconfig.ssr.json && node scripts/prepare-ssr.mjs && node scripts/generate-seo.mjs && node scripts/check-seo.mjs",
+    "preview": "node ./node_modules/vite/bin/vite.js preview",
     "seo:check": "node scripts/check-seo.mjs",
     "indexnow": "node scripts/submit-indexnow.mjs"
   },

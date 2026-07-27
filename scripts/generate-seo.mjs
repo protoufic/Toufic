@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -16,6 +16,21 @@ const escapeHtml = (value = '') => String(value)
 const escapeXml = escapeHtml;
 const absolute = (url) => new URL(url, `${siteUrl}/`).toString();
 
+function imageEntity(page) {
+  const canonical = absolute(page.path);
+  const image = absolute(page.image);
+  return {
+    '@type': 'ImageObject',
+    '@id': `${canonical}#primaryimage`,
+    url: image,
+    contentUrl: image,
+    width: 1200,
+    height: 630,
+    caption: page.imageAlt,
+    representativeOfPage: true,
+  };
+}
+
 function personEntity() {
   return {
     '@type': 'Person',
@@ -23,7 +38,12 @@ function personEntity() {
     name: config.person.name,
     alternateName: config.person.alternateName,
     url: `${siteUrl}/founder`,
-    image: absolute(config.person.image),
+    image: {
+      '@type': 'ImageObject',
+      url: absolute(config.person.image),
+      contentUrl: absolute(config.person.image),
+      caption: config.person.name,
+    },
     description: config.person.description,
     jobTitle: config.person.jobTitle,
     email: `mailto:${config.email}`,
@@ -42,46 +62,48 @@ function personEntity() {
 function structuredData(page) {
   const canonical = absolute(page.path);
   const person = personEntity();
-  const graph = [person];
+  const image = imageEntity(page);
   const websiteId = `${siteUrl}/#website`;
+  const graph = [
+    person,
+    image,
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: `${siteUrl}/`,
+      name: config.siteName,
+      description: config.pages[0].description,
+      inLanguage: config.language,
+      publisher: { '@id': person['@id'] },
+    },
+  ];
+
+  const basePage = {
+    url: canonical,
+    name: page.title,
+    description: page.description,
+    isPartOf: { '@id': websiteId },
+    about: { '@id': person['@id'] },
+    primaryImageOfPage: { '@id': image['@id'] },
+    dateModified: page.lastModified,
+    inLanguage: config.language,
+  };
 
   if (page.path === '/') {
     graph.push({
-      '@type': 'WebSite',
-      '@id': websiteId,
-      url: `${siteUrl}/`,
-      name: config.siteName,
-      description: page.description,
-      inLanguage: config.language,
-      publisher: { '@id': person['@id'] },
-    });
-    graph.push({
       '@type': 'WebPage',
       '@id': `${canonical}#webpage`,
-      url: canonical,
-      name: page.title,
-      description: page.description,
-      isPartOf: { '@id': websiteId },
-      about: { '@id': person['@id'] },
-      primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(page.image) },
-      inLanguage: config.language,
+      ...basePage,
+      mainEntity: { '@id': person['@id'] },
     });
   } else {
     const breadcrumbId = `${canonical}#breadcrumb`;
-    graph.push({
-      '@type': 'WebSite',
-      '@id': websiteId,
-      url: `${siteUrl}/`,
-      name: config.siteName,
-      inLanguage: config.language,
-      publisher: { '@id': person['@id'] },
-    });
     graph.push({
       '@type': 'BreadcrumbList',
       '@id': breadcrumbId,
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
-        { '@type': 'ListItem', position: 2, name: page.title.split('|')[0].trim(), item: canonical },
+        { '@type': 'ListItem', position: 2, name: page.breadcrumbName, item: canonical },
       ],
     });
 
@@ -89,43 +111,36 @@ function structuredData(page) {
       graph.push({
         '@type': 'ProfilePage',
         '@id': `${canonical}#profile`,
-        url: canonical,
-        name: page.title,
-        description: page.description,
+        ...basePage,
         mainEntity: { '@id': person['@id'] },
-        isPartOf: { '@id': websiteId },
         breadcrumb: { '@id': breadcrumbId },
-        primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(page.image) },
-        inLanguage: config.language,
       });
     } else if (page.schemaType === 'Article') {
       graph.push({
         '@type': 'Article',
         '@id': `${canonical}#article`,
-        mainEntityOfPage: canonical,
+        ...basePage,
+        mainEntityOfPage: { '@id': `${canonical}#webpage` },
         headline: 'IRONMAN 70.3 Warsaw: Toufic Abou Ali’s First IRONMAN 70.3',
-        description: page.description,
-        image: [absolute(page.image)],
-        datePublished: '2026-06-07',
-        dateModified: buildDate,
+        image: { '@id': image['@id'] },
+        datePublished: page.datePublished || page.lastModified,
         author: { '@id': person['@id'] },
         publisher: { '@id': person['@id'] },
         about: ['IRONMAN 70.3 Warsaw', 'Toufic Abou Ali', 'Lebanese endurance athlete'],
         breadcrumb: { '@id': breadcrumbId },
-        inLanguage: config.language,
+      });
+      graph.push({
+        '@type': 'WebPage',
+        '@id': `${canonical}#webpage`,
+        ...basePage,
+        breadcrumb: { '@id': breadcrumbId },
       });
     } else {
       graph.push({
         '@type': page.schemaType,
         '@id': `${canonical}#webpage`,
-        url: canonical,
-        name: page.title,
-        description: page.description,
-        isPartOf: { '@id': websiteId },
-        about: { '@id': person['@id'] },
+        ...basePage,
         breadcrumb: { '@id': breadcrumbId },
-        primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(page.image) },
-        inLanguage: config.language,
       });
     }
   }
@@ -144,17 +159,34 @@ function headMarkup(page, noindex = false) {
   const canonical = absolute(page.path);
   const image = absolute(page.image);
   const verification = verificationTags();
+  const ogType = page.schemaType === 'Article' ? 'article' : page.schemaType === 'ProfilePage' ? 'profile' : 'website';
+  const published = page.datePublished || page.lastModified;
+  const articleMeta = page.schemaType === 'Article'
+    ? `<meta property="article:published_time" content="${escapeHtml(published)}" />
+    <meta property="article:modified_time" content="${escapeHtml(page.lastModified)}" />
+    <meta property="article:author" content="${siteUrl}/founder" />
+    <meta property="article:section" content="Endurance Sport" />`
+    : '';
+  const profileMeta = page.schemaType === 'ProfilePage'
+    ? `<meta property="profile:first_name" content="Toufic" />
+    <meta property="profile:last_name" content="Abou Ali" />
+    <meta property="profile:username" content="touficaa" />`
+    : '';
   return `<!-- SEO_HEAD_START -->
     <title>${escapeHtml(page.title)}</title>
     <meta name="description" content="${escapeHtml(page.description)}" />
     <meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'}" />
     <meta name="author" content="${escapeHtml(config.person.name)}" />
+    <meta name="application-name" content="${escapeHtml(config.siteName)}" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href="${escapeHtml(canonical)}" />
     <link rel="author" href="${escapeHtml(`${siteUrl}/founder`)}" />
+    <link rel="alternate" hreflang="en" href="${escapeHtml(canonical)}" />
+    <link rel="alternate" hreflang="x-default" href="${escapeHtml(canonical)}" />
     <link rel="me" href="https://www.instagram.com/touficaa/" />
     <link rel="me" href="https://www.linkedin.com/in/touficabouali" />
     <link rel="me" href="https://www.strava.com/athletes/109556347" />
-    <meta property="og:type" content="${page.schemaType === 'Article' ? 'article' : 'website'}" />
+    <meta property="og:type" content="${ogType}" />
     <meta property="og:site_name" content="${escapeHtml(config.siteName)}" />
     <meta property="og:locale" content="${escapeHtml(config.locale)}" />
     <meta property="og:title" content="${escapeHtml(page.title)}" />
@@ -166,37 +198,43 @@ function headMarkup(page, noindex = false) {
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="${escapeHtml(page.imageAlt)}" />
     <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:updated_time" content="${escapeHtml(page.lastModified)}" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="${escapeHtml(config.twitterHandle)}" />
+    <meta name="twitter:creator" content="${escapeHtml(config.twitterHandle)}" />
     <meta name="twitter:title" content="${escapeHtml(page.title)}" />
     <meta name="twitter:description" content="${escapeHtml(page.description)}" />
     <meta name="twitter:image" content="${escapeHtml(image)}" />
     <meta name="twitter:image:alt" content="${escapeHtml(page.imageAlt)}" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="alternate" type="application/rss+xml" title="Toufic Abou Ali — Six Continents updates" href="/feed.xml" />
-    ${page.schemaType === 'Article' ? `<meta property="article:published_time" content="2026-06-07" />\n    <meta property="article:modified_time" content="${buildDate}" />\n    <meta property="article:author" content="${siteUrl}/founder" />` : ''}
+    ${articleMeta}
+    ${profileMeta}
     ${verification}
     <!-- SEO_HEAD_END -->`;
 }
 
-function noscriptMarkup(page) {
-  const links = config.pages.map((entry) => `<a href="${entry.path}">${escapeHtml(entry.path === '/' ? 'Home' : entry.path.slice(1).replaceAll('-', ' '))}</a>`).join(' · ');
-  return `<noscript><main><h1>${escapeHtml(page.title)}</h1><p>${escapeHtml(page.description)}</p><nav>${links}</nav><p>Media and partnership enquiries: <a href="mailto:${escapeHtml(config.email)}">${escapeHtml(config.email)}</a></p></main></noscript>`;
+function noscriptMarkup() {
+  return '<noscript><p class="noscript-note">Interactive animation is unavailable. The complete page content is shown below.</p></noscript>';
 }
 
-function renderPage(template, page, noindex = false) {
+function renderPage(template, page, bodyMarkup, noindex = false) {
   const headRegex = /<!-- SEO_HEAD_START -->[\s\S]*?<!-- SEO_HEAD_END -->/;
   const schemaRegex = /<!-- STRUCTURED_DATA_START -->[\s\S]*?<!-- STRUCTURED_DATA_END -->/;
   if (!headRegex.test(template) || !schemaRegex.test(template)) throw new Error('SEO markers were not preserved in the Vite output.');
   return template
     .replace(headRegex, headMarkup(page, noindex))
     .replace(schemaRegex, `<!-- STRUCTURED_DATA_START -->\n    <script id="route-structured-data" type="application/ld+json">${JSON.stringify(structuredData(page))}</script>\n    <!-- STRUCTURED_DATA_END -->`)
-    .replace(/<noscript>[\s\S]*?<\/noscript>/, noscriptMarkup(page));
+    .replace(/<noscript>[\s\S]*?<\/noscript>/, noscriptMarkup(page))
+    .replace('<div id="root"></div>', `<div id="root">${bodyMarkup}</div>`);
 }
 
 const template = await fs.readFile(path.join(dist, 'index.html'), 'utf8');
+const ssrEntry = path.join(root, 'dist-ssr', 'entry-server.js');
+const { renderRoute } = await import(pathToFileURL(ssrEntry).href);
 for (const page of config.pages) {
   const output = page.path === '/' ? 'index.html' : `${page.path.slice(1)}.html`;
-  await fs.writeFile(path.join(dist, output), renderPage(template, page), 'utf8');
+  await fs.writeFile(path.join(dist, output), renderPage(template, page, renderRoute(page.path)), 'utf8');
 }
 
 const notFoundPage = {
@@ -206,12 +244,14 @@ const notFoundPage = {
   image: '/assets/img/social/home.jpg',
   imageAlt: 'Toufic Abou Ali — Six Continents',
   schemaType: 'WebPage',
+  breadcrumbName: 'Page Not Found',
+  lastModified: buildDate,
 };
-await fs.writeFile(path.join(dist, '404.html'), renderPage(template, notFoundPage, true), 'utf8');
+await fs.writeFile(path.join(dist, '404.html'), renderPage(template, notFoundPage, renderRoute('/404'), true), 'utf8');
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${config.pages.map((page) => `  <url><loc>${escapeXml(absolute(page.path))}</loc><lastmod>${buildDate}</lastmod><priority>${page.priority.toFixed(2)}</priority></url>`).join('\n')}
+${config.pages.map((page) => `  <url><loc>${escapeXml(absolute(page.path))}</loc><lastmod>${page.lastModified || buildDate}</lastmod></url>`).join('\n')}
 </urlset>\n`;
 await fs.writeFile(path.join(dist, 'sitemap.xml'), sitemap, 'utf8');
 
@@ -265,7 +305,7 @@ await fs.writeFile(path.join(dist, 'robots.txt'), robots, 'utf8');
 const rssItems = config.pages.filter((page) => ['/', '/mission', '/warsaw', '/founder', '/media'].includes(page.path));
 const feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel><title>${escapeXml(config.siteName)}</title><link>${escapeXml(`${siteUrl}/`)}</link><description>${escapeXml(config.pages[0].description)}</description><language>en</language><lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-${rssItems.map((page) => `<item><title>${escapeXml(page.title)}</title><link>${escapeXml(absolute(page.path))}</link><guid isPermaLink="true">${escapeXml(absolute(page.path))}</guid><description>${escapeXml(page.description)}</description><pubDate>${new Date(`${buildDate}T12:00:00Z`).toUTCString()}</pubDate></item>`).join('\n')}
+${rssItems.map((page) => `<item><title>${escapeXml(page.title)}</title><link>${escapeXml(absolute(page.path))}</link><guid isPermaLink="true">${escapeXml(absolute(page.path))}</guid><description>${escapeXml(page.description)}</description><pubDate>${new Date(`${page.lastModified || buildDate}T12:00:00Z`).toUTCString()}</pubDate></item>`).join('\n')}
 </channel></rss>\n`;
 await fs.writeFile(path.join(dist, 'feed.xml'), feed, 'utf8');
 
@@ -288,4 +328,5 @@ const pressKit = {
 };
 await fs.writeFile(path.join(dist, 'press-kit.json'), JSON.stringify(pressKit, null, 2), 'utf8');
 
-console.log(`SEO files generated for ${siteUrl}`);
+await fs.rm(path.join(root, 'dist-ssr'), { recursive: true, force: true });
+console.log(`SEO files and static page content generated for ${siteUrl}`);
