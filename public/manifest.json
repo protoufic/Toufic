@@ -1,16 +1,31 @@
 {
   "id": "/",
-  "name": "Toufic Abou Ali — Six Continents",
-  "short_name": "Six Continents",
-  "description": "Six continents. Six full IRONMAN races. One world-record attempt by Lebanese founder-athlete Toufic Abou Ali.",
+  "name": "Toufic Abou Ali — Six Continents World Record",
+  "short_name": "Six Continents WR",
+  "description": "Six full-distance IRONMAN races. Six continents. One world-record attempt. Application accepted; guidelines issued; Pending Evidence.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#050505",
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

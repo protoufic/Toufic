@@ -34,11 +34,11 @@ export function Header() {
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="site-shell">
         <nav className="site-nav" aria-label="Primary navigation">
-          <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents home">
+          <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents World Record home">
             <span className="site-brand-mark"><img src="/assets/img/brand/toufic-mark.svg" alt="" /></span>
             <span className="site-brand-copy">
               <strong>Toufic Abou Ali</strong>
-              <small>Six Continents</small>
+              <small>Six Continents World Record</small>
             </span>
           </Link>
 
@@ -98,8 +98,8 @@ export function Footer() {
     <footer className="site-footer">
       <div className="site-shell footer-grid">
         <div className="footer-lead">
-          <span className="footer-kicker">SIX CONTINENTS</span>
-          <h2>6 full IRONMAN races. 6 continents. 1 world-record attempt.</h2>
+          <span className="footer-kicker">SIX CONTINENTS WORLD RECORD</span>
+          <h2>6 full-distance IRONMAN races. 6 continents. 1 world-record attempt.</h2>
           <button className="text-link" onClick={() => openContactPanel('partnership')}>
             Discuss a partnership <ArrowUpRight size={16} />
           </button>
@@ -126,7 +126,7 @@ export function Footer() {
 
       <div className="site-shell footer-bottom">
         <p>© {new Date().getFullYear()} Toufic Abou Ali.</p>
-        <p>Independent campaign. Record application, final rules, and verification remain subject to confirmation. No endorsement is implied.</p>
+        <p>Application accepted. Guidelines issued 5 August 2026. Status: Pending Evidence. No record is claimed. Recognition depends on completion and evidence review. No endorsement is implied.</p>
       </div>
     </footer>
   );

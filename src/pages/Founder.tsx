@@ -86,7 +86,7 @@ export function FounderPage() {
           <motion.div {...reveal}>
             <p className="eyebrow">FOUNDER × ATHLETE</p>
             <h2>Pressure does not disappear. It gets organised.</h2>
-            <p>Six Continents requires the athlete, founder, student, and operator to work as one system. The story is not about doing everything alone. It is about building the right team around a hard target.</p>
+            <p>Six Continents World Record requires the athlete, founder, student, and operator to work as one system. The story is not about doing everything alone. It is about building the right team around a hard target.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Build the Mission Together <ArrowRight size={16} /></button>
           </motion.div>
         </div>

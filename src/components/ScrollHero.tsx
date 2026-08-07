@@ -484,10 +484,10 @@ export function ScrollHero() {
           <span aria-hidden="true" />
           <div className="ironman-wordmark" aria-label="IRONMAN">IRONMAN<sup>®</sup></div>
         </div>
-        <p className="film-eyebrow">TOUFIC ABOU ALI · LEBANESE FOUNDER-ATHLETE</p>
-        <h1>6 continents.<br />6 full IRONMAN races.<br /><em>1 world-record attempt.</em></h1>
-        <p className="film-subcopy"><strong>1,356 km.</strong> Main target: November 27, 2027. Extreme target: complete all six before turning 21.</p>
-        <p className="film-proof-line">The route, training, equipment, travel, and proof system must move before the first start line.</p>
+        <p className="film-eyebrow">SIX CONTINENTS WORLD RECORD · TOUFIC ABOU ALI</p>
+        <h1>6 full-distance races.<br />6 continents.<br /><em>1 world-record attempt.</em></h1>
+        <p className="film-subcopy"><strong>Application accepted.</strong> Official guidelines issued 5 August 2026. Status: Pending Evidence.</p>
+        <p className="film-proof-line">No record is claimed. All six races must be completed and the full evidence must pass review.</p>
         <div className="film-actions">
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
           <Link className="button-quiet" to="/mission">View the Mission</Link>
@@ -509,7 +509,7 @@ export function ScrollHero() {
         layer={2}
       >
         <p className="film-eyebrow">ONE FULL IRONMAN</p>
-        <h2>3.8 km swim.<br />180 km bike.<br />42.2 km run.</h2>
+        <h2>3.85 km swim.<br />180 km bike.<br />42.19 km run.</h2>
         <strong className="film-total">226 km total.</strong>
         <p>A marathon is the final part, not the whole race.</p>
       </ScrollFrameChapter>
@@ -529,9 +529,9 @@ export function ScrollHero() {
         layer={3}
       >
         <p className="film-eyebrow">BORN IN LEBANON · BUILT FOR SIX CONTINENTS</p>
-        <h2>Six full races become <em>1,356 km</em> across the world.</h2>
-        <p>North America. South America. Europe. Africa. Asia. Oceania.</p>
-        <p className="film-proof-line">The founding position exists before the first full race is secured.</p>
+        <h2>Do it six times across <em>six required regions</em>.</h2>
+        <p>North America. South America. Europe. Africa. Asia. Australasia.</p>
+        <p className="film-proof-line">The first partner roles are open before the first qualifying race is locked.</p>
         <div className="film-actions">
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
           <Link className="button-quiet" to="/partners">View Partner Value</Link>

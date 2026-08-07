@@ -105,7 +105,7 @@ export function WarsawPage() {
 
       <section className="final-cta">
         <div className="site-shell final-cta-inner">
-          <div><p className="eyebrow">THE RESPONSE</p><h2>Warsaw showed the gap.<br />Six Continents builds the system.</h2></div>
+          <div><p className="eyebrow">THE RESPONSE</p><h2>Warsaw showed the gap.<br />Six Continents World Record builds the system.</h2></div>
           <div><p>Professional coaching. Technical cycling. Open water. Full simulations. Tested fueling. Medical support. Controlled race selection. Clear proof.</p><button className="button-primary" onClick={() => openContactPanel('partnership')}>Build the Next Chapter <ArrowRight size={16} /></button></div>
         </div>
       </section>

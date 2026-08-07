@@ -72,7 +72,7 @@ export function PartnershipForm() {
     // In production, this would send to an API endpoint
     // For now, we'll create a mailto link as fallback
     try {
-      const subject = encodeURIComponent(`Partnership Inquiry: ${formData.company}`);
+      const subject = encodeURIComponent(`Six Continents World Record Partnership: ${formData.company}`);
       const body = encodeURIComponent(`
 Name: ${formData.name}
 Email: ${formData.email}
@@ -90,7 +90,7 @@ ${formData.message || 'No additional message'}
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Open mailto link
-      window.location.href = `mailto:protoufic@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:hello@toufic.co?subject=${subject}&body=${body}`;
       
       setStatus('success');
     } catch {
@@ -268,7 +268,7 @@ ${formData.message || 'No additional message'}
           ) : (
             <>
               <Send size={16} />
-              Build a Partnership Proposal
+              Request a Partner Role
             </>
           )}
         </button>
@@ -365,7 +365,7 @@ export function PartnershipConfigurator() {
 
   return (
     <div className="card-elevated p-8">
-      <h3 className="text-xl font-medium mb-6">Find Your Partnership Route</h3>
+      <h3 className="text-xl font-medium mb-6">Find the Clearest Partner Role</h3>
       
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <div>

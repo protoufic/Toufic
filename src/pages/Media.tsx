@@ -5,8 +5,8 @@ import { media, quotes, site, warsawRace } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
 
 const bios = {
-  short: 'Toufic Abou Ali is a 20-year-old Lebanese founder-athlete and Founder & CEO of Sira. After completing two marathons and IRONMAN 70.3 Warsaw before turning 20, he began preparing to complete six full IRONMAN races across six continents in a world-record attempt.',
-  medium: 'Toufic Abou Ali is a Lebanese founder-athlete and Founder & CEO of Sira. He completed IRONMAN 70.3 Warsaw at 19 in 6:08:15, seven days before turning 20, after already finishing two marathons and five official half marathons. Warsaw exposed major technical and preparation gaps. Six Continents is the response: a professionally controlled attempt to complete official full IRONMAN races on six continents, targeting the current listed male age record while carrying Lebanon across the world.',
+  short: 'Toufic Abou Ali is a 20-year-old Lebanese founder-athlete and Founder & CEO of Sira. His Guinness World Records application for the youngest male to complete an IRONMAN triathlon on six continents has been accepted. Official guidelines were issued on 5 August 2026. The record has not yet been achieved or verified.',
+  medium: 'Toufic Abou Ali is a Lebanese founder-athlete and Founder & CEO of Sira. He completed IRONMAN 70.3 Warsaw at 19 in 6:08:15. He is now building Six Continents World Record: a world-record attempt to complete six qualifying full-distance IRONMAN races across North America, South America, Europe, Africa, Asia, and Australasia before turning 21. His application has been accepted, the official guidelines were issued on 5 August 2026, and the status is Pending Evidence. No record is claimed; the result depends on completion and evidence review.',
 };
 
 export function MediaPage() {
@@ -31,9 +31,10 @@ export function MediaPage() {
         <div className="site-shell">
           <div className="section-heading"><p className="eyebrow">KEY FACTS</p><h2>Use the exact facts.</h2></div>
           <div className="media-facts-grid">
-            <div><span>Mission</span><strong>6 full IRONMAN races across 6 continents</strong></div>
-            <div><span>Main target</span><strong>November 27, 2027</strong></div>
-            <div><span>Extreme target</span><strong>Complete all six before turning 21</strong></div>
+            <div><span>Mission</span><strong>Six Continents World Record</strong></div>
+            <div><span>Application</span><strong>Accepted · 5 August 2026</strong></div>
+            <div><span>Current status</span><strong>Pending Evidence</strong></div>
+            <div><span>Personal target</span><strong>Complete all six before turning 21</strong></div>
             <div><span>First IRONMAN 70.3</span><strong>Warsaw · {warsawRace.total}</strong></div>
             <div><span>Identity</span><strong>Lebanese Founder-Athlete</strong></div>
             <div><span>Company</span><strong>Founder & CEO of Sira</strong></div>

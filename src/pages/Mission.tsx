@@ -18,19 +18,19 @@ const chapterSteps = [
   'Travel',
   'Race week',
   'Race day',
-  'Result',
-  'Lesson',
+  'Official result',
+  'Evidence',
   'Partner activation',
   'Report',
 ];
 
 const gates = [
-  { icon: FileCheck2, label: 'Record rules and qualifying race confirmed' },
+  { icon: FileCheck2, label: 'Official sanction, full distance, and correct region confirmed' },
   { icon: Check, label: 'Entry secured' },
   { icon: Plane, label: 'Visa and travel viable' },
   { icon: Stethoscope, label: 'Medical and recovery spacing approved' },
   { icon: WalletCards, label: 'Funding and technical support controlled' },
-  { icon: Clock3, label: 'Evidence, content, and reporting system ready' },
+  { icon: Clock3, label: 'Organiser, witnesses, travel proof, photos, and video ready' },
 ];
 
 export function MissionPage() {
@@ -40,22 +40,22 @@ export function MissionPage() {
         <img src={media.missionWide} alt="Toufic Abou Ali in front of the Six Continents map" />
         <div className="page-hero-overlay" />
         <div className="site-shell page-hero-content">
-          <p className="eyebrow">THE MISSION</p>
-          <h1>Six full IRONMAN races.<br />Six continents.<br /><em>One world-record attempt.</em></h1>
-          <p>1,356 km built as one global campaign from Lebanon to the world.</p>
-          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss the Mission <ArrowRight size={16} /></button>
+          <p className="eyebrow">SIX CONTINENTS WORLD RECORD</p>
+          <h1>Six full-distance IRONMAN races.<br />Six continents.<br /><em>One world-record attempt.</em></h1>
+          <p>Application accepted. Official guidelines issued 5 August 2026. Status: Pending Evidence.</p>
+          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partner Role <ArrowRight size={16} /></button>
         </div>
       </section>
 
       <section className="section mission-summary-section">
         <div className="site-shell mission-summary-grid">
           <motion.div {...reveal}>
-            <p className="eyebrow">THE TARGET</p>
-            <h2>Become the youngest male to complete official full IRONMAN races on six continents.</h2>
+            <p className="eyebrow">THE ACCEPTED APPLICATION TITLE</p>
+            <h2>Youngest person to complete an IRONMAN® triathlon on six continents (male).</h2>
           </motion.div>
           <motion.div {...reveal}>
-            <p>Toufic is a 20-year-old Lebanese founder-athlete. The current listed benchmark is {mission.benchmark.age}. The main target is November 27, 2027. The extreme target is to complete all six before turning 21.</p>
-            <p>Application and final rules remain pending. The record and every finish must be earned.</p>
+            <p>Guinness World Records accepted Toufic’s application and issued the official guidelines on 5 August 2026. He must complete one qualifying full-distance race in North America, South America, Europe, Africa, Asia, and Australasia.</p>
+            <p>No record is claimed. The result will only be determined after all six races are completed and the full evidence is reviewed. Toufic’s personal target is to finish before turning 21.</p>
           </motion.div>
         </div>
       </section>
@@ -64,13 +64,13 @@ export function MissionPage() {
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading">
             <p className="eyebrow">THE DISTANCE</p>
-            <h2>One race is 226 km. Six races are 1,356 km.</h2>
+            <h2>One race is about 226 km. Six races are about 1,356 km.</h2>
           </motion.div>
           <div className="mission-distance-grid">
-            <div><strong>3.8</strong><span>km swim per race</span><small>22.8 km total</small></div>
+            <div><strong>3.85</strong><span>km swim per race</span><small>23.1 km total</small></div>
             <div><strong>180</strong><span>km bike per race</span><small>1,080 km total</small></div>
-            <div><strong>42.2</strong><span>km run per race</span><small>253.2 km total</small></div>
-            <div className="mission-distance-total"><strong>1,356</strong><span>kilometres across six continents</span></div>
+            <div><strong>42.19</strong><span>km run per race</span><small>253.14 km total</small></div>
+            <div className="mission-distance-total"><strong>≈1,356</strong><span>kilometres across six continents</span></div>
           </div>
         </div>
       </section>
@@ -78,8 +78,8 @@ export function MissionPage() {
       <section className="section mission-deadline-section">
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading section-heading-wide">
-            <p className="eyebrow">TWO TARGETS</p>
-            <h2>The main deadline is the record target. The extreme deadline raises the standard.</h2>
+            <p className="eyebrow">THE AGE TARGET</p>
+            <h2>Beat the current listed age. Personal target: finish all six before 21.</h2>
           </motion.div>
           <DualCountdown />
           <div className="source-note">Current listed record: <a href={site.recordSource} target="_blank" rel="noreferrer">{mission.benchmark.holder}, {mission.benchmark.age}</a>. Guinness World Records notes that records can change before online pages are updated.</div>
@@ -89,9 +89,9 @@ export function MissionPage() {
       <section className="section campaign-system-section">
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading">
-            <p className="eyebrow">ONE CAMPAIGN. SIX CHAPTERS.</p>
-            <h2>This is not six random races.</h2>
-            <p>Every continent follows the same clear structure, giving the mission continuity and giving a partner repeatable value.</p>
+            <p className="eyebrow">SIX RACES. ONE EVIDENCE SYSTEM.</p>
+            <h2>Every race must be finished and proved.</h2>
+            <p>Every race needs an official result, organiser confirmation, independent verification, travel proof, photographs, and video.</p>
           </motion.div>
           <div className="chapter-track">
             {chapterSteps.map((step, index) => (
@@ -106,9 +106,9 @@ export function MissionPage() {
       <section className="section readiness-section">
         <div className="site-shell readiness-grid">
           <motion.div {...reveal} className="readiness-copy">
-            <p className="eyebrow">NO RACE IS ANNOUNCED BEFORE IT IS CONTROLLED</p>
-            <h2>The route is built through gates, not guesses.</h2>
-            <p>Every event must work for the record, athlete, passport, calendar, recovery plan, budget, and evidence system.</p>
+            <p className="eyebrow">NO RACE IS LOCKED BEFORE EVERY CHECK PASSES</p>
+            <h2>A race counts only when the race and the evidence qualify.</h2>
+            <p>Every event must pass the official rules, entry, visa, travel, medical, recovery, funding, organiser, witness, and evidence checks.</p>
           </motion.div>
           <div className="readiness-list">
             {gates.map((gate, index) => (
@@ -124,7 +124,7 @@ export function MissionPage() {
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading">
             <p className="eyebrow">THE GLOBAL ROUTE</p>
-            <h2>Six continents. Final races announced only when secured.</h2>
+            <h2>North America. South America. Europe. Africa. Asia. Australasia.</h2>
           </motion.div>
           <WorldMap />
         </div>
@@ -134,11 +134,11 @@ export function MissionPage() {
         <div className="site-shell early-partner-grid">
           <motion.div {...reveal}>
             <p className="eyebrow">WHY EARLY MATTERS</p>
-            <h2>The origin can only be owned once.</h2>
+            <h2>The first qualifying chapter can only be built once.</h2>
           </motion.div>
           <motion.div {...reveal}>
-            <p>A founding partner joins before the first full-race chapter is secured. That creates more room to shape the platform, integrate the brand, build the launch, and own the beginning of the story.</p>
-            <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Founding Position <ArrowRight size={16} /></button>
+            <p>The first partners join before Race 1 is locked. Each partner removes one real risk and becomes part of the documented beginning—not only the final result.</p>
+            <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partner Role <ArrowRight size={16} /></button>
           </motion.div>
         </div>
       </section>
