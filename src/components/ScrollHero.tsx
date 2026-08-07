@@ -13,8 +13,6 @@ function smootherStep(value: number) {
   return x * x * x * (x * (x * 6 - 15) + 10);
 }
 
-type FrameRecord = { image: HTMLImageElement; usedAt: number };
-
 type NetworkInformationLike = {
   saveData?: boolean;
   effectiveType?: string;
@@ -22,12 +20,14 @@ type NetworkInformationLike = {
   removeEventListener?: (type: 'change', listener: () => void) => void;
 };
 
+type HardwareNavigator = Navigator & {
+  connection?: NetworkInformationLike;
+  deviceMemory?: number;
+};
+
 type ChapterProps = {
   id: string;
   chapter: string;
-  desktopFrames: string;
-  mobileFrames: string;
-  frameCount: number;
   desktopVideo: string;
   mobileVideo: string;
   poster: string;
@@ -39,12 +39,14 @@ type ChapterProps = {
   layer?: number;
 };
 
+type Geometry = {
+  top: number;
+  height: number;
+};
+
 function ScrollFrameChapter({
   id,
   chapter,
-  desktopFrames,
-  mobileFrames,
-  frameCount,
   desktopVideo,
   mobileVideo,
   poster,
@@ -56,44 +58,49 @@ function ScrollFrameChapter({
   layer = 1,
 }: ChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const targetRef = useRef(0);
-  const lastTargetRef = useRef(0);
-  const directionRef = useRef<1 | -1>(1);
   const renderedRef = useRef(0);
-  const decodedRef = useRef(new Map<number, FrameRecord>());
-  const inflightRef = useRef(new Set<number>());
-  const rafRef = useRef<number | null>(null);
-  const updateRafRef = useRef<number | null>(null);
+  const geometryRef = useRef<Geometry>({ top: 0, height: 1 });
   const headerHeightRef = useRef(76);
-  const lastFrameRef = useRef(performance.now());
-  const lastWindowCenterRef = useRef(-1);
-  const shouldRenderRef = useRef(priority);
-  const [renderActive, setRenderActive] = useState(priority);
-  const failedFramesRef = useRef(0);
+  const updateRafRef = useRef<number | null>(null);
+  const renderRafRef = useRef<number | null>(null);
+  const lastRenderTimeRef = useRef(performance.now());
+  const renderVisibleRef = useRef(priority);
+  const seekPendingRef = useRef(false);
   const [shouldLoad, setShouldLoad] = useState(priority);
-  const [canvasReady, setCanvasReady] = useState(false);
-  const [fallbackReady, setFallbackReady] = useState(false);
-  const [useFallback, setUseFallback] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [mobileViewport, setMobileViewport] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches);
-  const [saveData, setSaveData] = useState(() => typeof navigator !== 'undefined' && Boolean((navigator as Navigator & { connection?: NetworkInformationLike }).connection?.saveData));
-  const [constrainedNetwork, setConstrainedNetwork] = useState(() => {
-    const effectiveType = typeof navigator !== 'undefined' ? (navigator as Navigator & { connection?: NetworkInformationLike }).connection?.effectiveType || '' : '';
-    return effectiveType === 'slow-2g' || effectiveType === '2g';
+  const [lightweightMedia, setLightweightMedia] = useState(() => {
+    if (typeof navigator === 'undefined') return false;
+    const nav = navigator as HardwareNavigator;
+    const effectiveType = nav.connection?.effectiveType || '';
+    return Boolean(
+      nav.connection?.saveData ||
+      effectiveType === 'slow-2g' ||
+      effectiveType === '2g' ||
+      (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) ||
+      (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4)
+    );
   });
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const mobileQuery = window.matchMedia('(max-width: 900px)');
-    const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection;
+    const nav = navigator as HardwareNavigator;
+    const connection = nav.connection;
     const sync = () => {
       const effectiveType = connection?.effectiveType || '';
       setReducedMotion(motionQuery.matches);
       setMobileViewport(mobileQuery.matches);
-      setSaveData(Boolean(connection?.saveData));
-      setConstrainedNetwork(effectiveType === 'slow-2g' || effectiveType === '2g');
+      setLightweightMedia(Boolean(
+        connection?.saveData ||
+        effectiveType === 'slow-2g' ||
+        effectiveType === '2g' ||
+        (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) ||
+        (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4)
+      ));
     };
     sync();
     motionQuery.addEventListener('change', sync);
@@ -106,302 +113,200 @@ function ScrollFrameChapter({
     };
   }, []);
 
-  const frameBase = useMemo(() => mobileViewport ? mobileFrames : desktopFrames, [desktopFrames, mobileFrames, mobileViewport]);
-  const fallbackSource = useMemo(() => mobileViewport ? mobileVideo : desktopVideo, [desktopVideo, mobileVideo, mobileViewport]);
-  const staticMedia = reducedMotion || saveData || constrainedNetwork;
-  const fallbackMode = useFallback && !staticMedia;
-  const decodedLimit = mobileViewport ? 24 : 30;
+  const videoSource = useMemo(
+    () => (mobileViewport || lightweightMedia ? mobileVideo : desktopVideo),
+    [desktopVideo, lightweightMedia, mobileVideo, mobileViewport],
+  );
 
-  const frameUrl = useCallback((index: number) => `${frameBase}/frame-${String(index + 1).padStart(4, '0')}.webp`, [frameBase]);
-
-  const trimDecoded = useCallback((center: number) => {
-    const decoded = decodedRef.current;
-    if (decoded.size <= decodedLimit) return;
-    const protectedIndexes = new Set<number>();
-    for (let offset = -4; offset <= 4; offset += 1) {
-      protectedIndexes.add(Math.max(0, Math.min(frameCount - 1, center + offset)));
-    }
-    const candidates = [...decoded.entries()]
-      .filter(([index]) => !protectedIndexes.has(index))
-      .sort((a, b) => a[1].usedAt - b[1].usedAt);
-    while (decoded.size > decodedLimit && candidates.length) {
-      const [index, record] = candidates.shift()!;
-      record.image.src = '';
-      decoded.delete(index);
-    }
-  }, [decodedLimit, frameCount]);
-
-  const ensureFrame = useCallback((index: number, highPriority = false) => {
-    const safeIndex = Math.max(0, Math.min(frameCount - 1, index));
-    if (decodedRef.current.has(safeIndex) || inflightRef.current.has(safeIndex)) return;
-    inflightRef.current.add(safeIndex);
-    const image = new Image();
-    image.decoding = 'async';
-    image.fetchPriority = highPriority ? 'high' : 'low';
-    image.onload = async () => {
-      try { await image.decode(); } catch { /* onload already confirms a usable image */ }
-      inflightRef.current.delete(safeIndex);
-      decodedRef.current.set(safeIndex, { image, usedAt: performance.now() });
-      failedFramesRef.current = 0;
-      if (safeIndex === 0) setCanvasReady(true);
-      trimDecoded(Math.round(targetRef.current * (frameCount - 1)));
+  const measure = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const styles = getComputedStyle(document.documentElement);
+    headerHeightRef.current = Number.parseFloat(styles.getPropertyValue('--header')) || 76;
+    const rect = section.getBoundingClientRect();
+    geometryRef.current = {
+      top: rect.top + window.scrollY,
+      height: section.offsetHeight,
     };
-    image.onerror = () => {
-      inflightRef.current.delete(safeIndex);
-      failedFramesRef.current += 1;
-      if (safeIndex === 0 || failedFramesRef.current >= 6) setUseFallback(true);
-    };
-    image.src = frameUrl(safeIndex);
-  }, [frameCount, frameUrl, trimDecoded]);
+  }, []);
 
-  const loadWindow = useCallback((center: number) => {
-    const direction = directionRef.current;
-    const behind = mobileViewport ? 4 : 5;
-    const ahead = mobileViewport ? 13 : 17;
-    const start = direction > 0 ? -behind : -ahead;
-    const end = direction > 0 ? ahead : behind;
+  const desiredVideoTime = useCallback((progress: number) => {
+    const video = videoRef.current;
+    if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return 0;
+    return progress * Math.max(0, video.duration - 1 / 30);
+  }, []);
 
-    ensureFrame(center, true);
-    for (let offset = start; offset <= end; offset += 1) {
-      if (offset !== 0) ensureFrame(center + offset, Math.abs(offset) <= 2);
+  const isBuffered = useCallback((time: number) => {
+    const video = videoRef.current;
+    if (!video) return false;
+    for (let index = 0; index < video.buffered.length; index += 1) {
+      if (time >= video.buffered.start(index) - 0.08 && time <= video.buffered.end(index) + 0.08) return true;
     }
+    return false;
+  }, []);
 
-    // A few sparse anchors keep fast jumps responsive without downloading the full film.
-    ensureFrame(0);
-    ensureFrame(frameCount - 1);
-    ensureFrame(Math.round((frameCount - 1) * 0.25));
-    ensureFrame(Math.round((frameCount - 1) * 0.5));
-    ensureFrame(Math.round((frameCount - 1) * 0.75));
-    ensureFrame(center + direction * (mobileViewport ? 14 : 18));
-  }, [ensureFrame, frameCount, mobileViewport]);
+  const renderVideo = useCallback((now: number) => {
+    renderRafRef.current = null;
+    if (reducedMotion || !renderVisibleRef.current) return;
 
-  useEffect(() => {
-    decodedRef.current.forEach(({ image }) => { image.src = ''; });
-    decodedRef.current.clear();
-    inflightRef.current.clear();
-    setCanvasReady(false);
-    setUseFallback(false);
-    failedFramesRef.current = 0;
-    if (staticMedia) return;
-    ensureFrame(0, priority);
-    if (priority) {
-      // Keep roughly the first second ready before the visitor starts scrolling.
-      for (let index = 1; index <= Math.min(frameCount - 1, mobileViewport ? 12 : 16); index += 1) {
-        ensureFrame(index, index <= 6);
+    const dt = Math.min(0.05, Math.max(0.001, (now - lastRenderTimeRef.current) / 1000));
+    lastRenderTimeRef.current = now;
+    const delta = targetRef.current - renderedRef.current;
+    const response = 20 + Math.min(42, Math.abs(delta) * 130);
+    const alpha = 1 - Math.exp(-response * dt);
+    renderedRef.current += delta * alpha;
+    if (Math.abs(delta) < 0.00015) renderedRef.current = targetRef.current;
+
+    const video = videoRef.current;
+    if (video && videoReady && !seekPendingRef.current) {
+      const desired = desiredVideoTime(renderedRef.current);
+      if (Math.abs(video.currentTime - desired) > 1 / 50) {
+        // Avoid repeated network-range seeks while a weak connection is still buffering.
+        // Once the file is buffered, seeks stay local and scroll scrubbing remains fluid.
+        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA || isBuffered(desired)) {
+          seekPendingRef.current = true;
+          try {
+            video.currentTime = desired;
+          } catch {
+            seekPendingRef.current = false;
+          }
+        }
       }
     }
-  }, [ensureFrame, frameBase, frameCount, mobileViewport, priority, staticMedia]);
+
+    if (Math.abs(targetRef.current - renderedRef.current) > 0.00015 || seekPendingRef.current) {
+      renderRafRef.current = requestAnimationFrame(renderVideo);
+    }
+  }, [desiredVideoTime, isBuffered, reducedMotion, videoReady]);
+
+  const scheduleRender = useCallback(() => {
+    if (renderRafRef.current !== null || reducedMotion || !renderVisibleRef.current) return;
+    lastRenderTimeRef.current = performance.now();
+    renderRafRef.current = requestAnimationFrame(renderVideo);
+  }, [reducedMotion, renderVideo]);
+
+  const update = useCallback(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const { top, height } = geometryRef.current;
+    const header = headerHeightRef.current;
+    const viewportHeight = window.innerHeight;
+    const availableHeight = Math.max(1, viewportHeight - header);
+    const stickyStart = header;
+    const rectTop = top - window.scrollY;
+    const rectBottom = rectTop + height;
+    const entryStart = viewportHeight * 1.06;
+    const slowMotionEnd = stickyStart + availableHeight * 0.54;
+    const travel = Math.max(1, height - availableHeight);
+
+    let progress = 0;
+    let copyReveal = priority ? 1 : 0;
+
+    if (rectTop > stickyStart) {
+      const entering = clamp((entryStart - rectTop) / Math.max(1, entryStart - slowMotionEnd));
+      progress = preRoll * smootherStep(entering);
+      copyReveal = clamp((entering - 0.2) / 0.58);
+    } else {
+      const main = clamp((stickyStart - rectTop) / travel);
+      progress = preRoll + (1 - preRoll) * smootherStep(main);
+      copyReveal = 1;
+    }
+
+    if (rectBottom <= stickyStart + availableHeight * 0.02) progress = 1;
+    targetRef.current = clamp(progress);
+    section.style.setProperty('--film-progress', `${targetRef.current}`);
+    section.style.setProperty('--copy-reveal', `${copyReveal}`);
+    section.style.setProperty('--copy-shift', `${(1 - copyReveal) * 18}px`);
+    scheduleRender();
+  }, [preRoll, priority, scheduleRender]);
+
+  const scheduleUpdate = useCallback(() => {
+    if (updateRafRef.current !== null) return;
+    updateRafRef.current = requestAnimationFrame(() => {
+      updateRafRef.current = null;
+      update();
+    });
+  }, [update]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    // Start loading chapters several screens before they are needed. This gives the
+    // browser time to cache a single compact MP4 instead of requesting dozens of images mid-scroll.
     const preloadObserver = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) setShouldLoad(true);
-    }, { rootMargin: '135% 0px 135% 0px', threshold: 0 });
+    }, { rootMargin: '650% 0px 650% 0px', threshold: 0 });
+
     const renderObserver = new IntersectionObserver(([entry]) => {
-      shouldRenderRef.current = entry.isIntersecting;
-      setRenderActive(entry.isIntersecting);
-    }, { rootMargin: '45% 0px 45% 0px', threshold: 0 });
+      renderVisibleRef.current = entry.isIntersecting;
+      if (entry.isIntersecting) scheduleRender();
+      else if (renderRafRef.current !== null) {
+        cancelAnimationFrame(renderRafRef.current);
+        renderRafRef.current = null;
+      }
+    }, { rootMargin: '55% 0px 55% 0px', threshold: 0 });
+
     preloadObserver.observe(section);
     renderObserver.observe(section);
     return () => {
       preloadObserver.disconnect();
       renderObserver.disconnect();
     };
-  }, []);
+  }, [scheduleRender]);
 
   useEffect(() => {
-    if (!shouldLoad || staticMedia || fallbackMode) return;
-    loadWindow(Math.round(targetRef.current * (frameCount - 1)));
-  }, [fallbackMode, frameCount, loadWindow, shouldLoad, staticMedia]);
-
-  useEffect(() => {
-    if (!fallbackMode || staticMedia || !shouldLoad) return;
-    const video = videoRef.current;
-    if (!video) return;
-    setFallbackReady(false);
-    video.src = fallbackSource;
-    video.load();
-  }, [fallbackMode, fallbackSource, shouldLoad, staticMedia]);
-
-  const resizeCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, mobileViewport ? 1.25 : 1.6);
-    const width = Math.max(1, Math.round(rect.width * dpr));
-    const height = Math.max(1, Math.round(rect.height * dpr));
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext('2d', { alpha: false });
-      if (context) {
-        context.imageSmoothingEnabled = true;
-        context.imageSmoothingQuality = 'high';
-      }
-    }
-  }, [mobileViewport]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    resizeCanvas();
-    const observer = canvas && 'ResizeObserver' in window ? new ResizeObserver(resizeCanvas) : null;
-    if (canvas && observer) observer.observe(canvas);
-    window.addEventListener('resize', resizeCanvas);
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener('resize', resizeCanvas);
-    };
-  }, [resizeCanvas]);
-
-  useEffect(() => {
-    const readHeaderHeight = () => {
-      const styles = getComputedStyle(document.documentElement);
-      headerHeightRef.current = Number.parseFloat(styles.getPropertyValue('--header')) || 76;
-    };
-
-    const update = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      const header = headerHeightRef.current;
-      const viewportHeight = window.innerHeight;
-      const availableHeight = Math.max(1, viewportHeight - header);
-      const stickyStart = header;
-      const entryStart = viewportHeight * 1.06;
-      const slowMotionEnd = stickyStart + availableHeight * 0.54;
-      const travel = Math.max(1, section.offsetHeight - availableHeight);
-
-      let progress = 0;
-      let copyReveal = priority ? 1 : 0;
-
-      if (rect.top > stickyStart) {
-        const entering = clamp((entryStart - rect.top) / Math.max(1, entryStart - slowMotionEnd));
-        progress = preRoll * smootherStep(entering);
-        copyReveal = clamp((entering - 0.2) / 0.58);
-      } else {
-        const main = clamp((stickyStart - rect.top) / travel);
-        progress = preRoll + (1 - preRoll) * smootherStep(main);
-        copyReveal = 1;
-      }
-
-      if (rect.bottom <= stickyStart + availableHeight * 0.02) progress = 1;
-      const nextTarget = clamp(progress);
-      const movement = nextTarget - lastTargetRef.current;
-      if (Math.abs(movement) > 0.00005) directionRef.current = movement >= 0 ? 1 : -1;
-      lastTargetRef.current = nextTarget;
-      targetRef.current = nextTarget;
-      section.style.setProperty('--film-progress', `${nextTarget}`);
-      section.style.setProperty('--copy-reveal', `${copyReveal}`);
-      section.style.setProperty('--copy-shift', `${(1 - copyReveal) * 18}px`);
-      if (shouldLoad && !staticMedia && !fallbackMode) loadWindow(Math.round(nextTarget * (frameCount - 1)));
-    };
-
-    const scheduleUpdate = () => {
-      if (updateRafRef.current !== null) return;
-      updateRafRef.current = requestAnimationFrame(() => {
-        updateRafRef.current = null;
-        update();
-      });
-    };
+    measure();
+    update();
+    const section = sectionRef.current;
+    const observer = section && 'ResizeObserver' in window ? new ResizeObserver(() => {
+      measure();
+      scheduleUpdate();
+    }) : null;
+    if (section && observer) observer.observe(section);
 
     const handleResize = () => {
-      readHeaderHeight();
+      measure();
       scheduleUpdate();
     };
 
-    readHeaderHeight();
-    update();
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('orientationchange', handleResize, { passive: true });
     return () => {
+      observer?.disconnect();
       window.removeEventListener('scroll', scheduleUpdate);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
       if (updateRafRef.current !== null) cancelAnimationFrame(updateRafRef.current);
+      if (renderRafRef.current !== null) cancelAnimationFrame(renderRafRef.current);
     };
-  }, [fallbackMode, frameCount, loadWindow, preRoll, priority, shouldLoad, staticMedia]);
-
-  const drawImageContained = useCallback((context: CanvasRenderingContext2D, image: HTMLImageElement, alpha = 1) => {
-    const canvas = context.canvas;
-    const scale = Math.min(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
-    const width = image.naturalWidth * scale;
-    const height = image.naturalHeight * scale;
-    const x = (canvas.width - width) / 2;
-    const y = (canvas.height - height) / 2;
-    context.globalAlpha = alpha;
-    context.drawImage(image, x, y, width, height);
-    context.globalAlpha = 1;
-  }, []);
-
-  const nearestDecoded = useCallback((index: number) => {
-    const decoded = decodedRef.current;
-    if (decoded.has(index)) return decoded.get(index)!;
-    for (let distance = 1; distance < frameCount; distance += 1) {
-      const before = decoded.get(index - distance);
-      if (before) return before;
-      const after = decoded.get(index + distance);
-      if (after) return after;
-    }
-    return undefined;
-  }, [frameCount]);
+  }, [measure, scheduleUpdate, update]);
 
   useEffect(() => {
-    if (staticMedia || !renderActive) return;
-    const render = (now: number) => {
-      const dt = Math.min(0.05, Math.max(0.001, (now - lastFrameRef.current) / 1000));
-      lastFrameRef.current = now;
-      if (shouldRenderRef.current) {
-        const delta = targetRef.current - renderedRef.current;
-        const response = 18 + Math.min(40, Math.abs(delta) * 120);
-        const alpha = 1 - Math.exp(-response * dt);
-        renderedRef.current += delta * alpha;
-        if (Math.abs(delta) < 0.0002) renderedRef.current = targetRef.current;
+    setVideoReady(false);
+    seekPendingRef.current = false;
+    renderedRef.current = targetRef.current;
+    const video = videoRef.current;
+    if (!video || !shouldLoad || reducedMotion) return;
+    video.load();
+  }, [reducedMotion, shouldLoad, videoSource]);
 
-        if (fallbackMode) {
-          const video = videoRef.current;
-          if (video && fallbackReady && Number.isFinite(video.duration) && video.duration > 0 && !video.seeking) {
-            const desired = renderedRef.current * Math.max(0, video.duration - 1 / 30);
-            if (Math.abs(video.currentTime - desired) > 1 / 45) {
-              try { video.currentTime = desired; } catch { /* retry on next frame */ }
-            }
-          }
-        } else {
-          const canvas = canvasRef.current;
-          const context = canvas?.getContext('2d', { alpha: false });
-          if (canvas && context) {
-            const frameFloat = renderedRef.current * (frameCount - 1);
-            const lowerIndex = Math.floor(frameFloat);
-            const upperIndex = Math.min(frameCount - 1, lowerIndex + 1);
-            const windowCenter = Math.round(frameFloat);
-            if (windowCenter !== lastWindowCenterRef.current) {
-              lastWindowCenterRef.current = windowCenter;
-              loadWindow(windowCenter);
-            }
-            const lower = nearestDecoded(lowerIndex);
-            const upper = decodedRef.current.get(upperIndex);
-            if (lower) {
-              lower.usedAt = now;
-              context.fillStyle = '#000';
-              context.fillRect(0, 0, canvas.width, canvas.height);
-              drawImageContained(context, lower.image, 1);
-              const blend = smootherStep(frameFloat - lowerIndex);
-              if (upper && upper !== lower && blend > 0.01) {
-                upper.usedAt = now;
-                drawImageContained(context, upper.image, blend);
-              }
-              trimDecoded(Math.round(frameFloat));
-            }
-          }
-        }
-      }
-      rafRef.current = requestAnimationFrame(render);
-    };
-    lastFrameRef.current = performance.now();
-    rafRef.current = requestAnimationFrame(render);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [drawImageContained, fallbackMode, fallbackReady, frameCount, loadWindow, nearestDecoded, renderActive, resizeCanvas, staticMedia, trimDecoded]);
+  const handleMediaReady = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    setVideoReady(true);
+    const desired = desiredVideoTime(targetRef.current);
+    if (Number.isFinite(desired)) {
+      try { video.currentTime = desired; } catch { /* first frame remains visible */ }
+    }
+    scheduleRender();
+  }, [desiredVideoTime, scheduleRender]);
+
+  const handleSeekComplete = useCallback(() => {
+    seekPendingRef.current = false;
+    scheduleRender();
+  }, [scheduleRender]);
 
   const style = {
     '--chapter-height': `${heightVh}vh`,
@@ -414,30 +319,29 @@ function ScrollFrameChapter({
     <section
       ref={sectionRef}
       id={id}
-      className={`film-chapter ${priority ? 'film-chapter-priority' : ''} ${staticMedia ? 'film-chapter-static' : ''}`}
+      className={`film-chapter ${priority ? 'film-chapter-priority' : ''} ${reducedMotion ? 'film-chapter-static' : ''}`}
       style={style}
       aria-label={`${chapter} mission film chapter`}
-      data-media-ready={staticMedia ? true : (fallbackMode ? fallbackReady : canvasReady)}
+      data-media-ready={reducedMotion || videoReady}
     >
       <div className="film-chapter-sticky">
         <div className="film-chapter-media" aria-hidden="true">
           <img src={poster} alt="" className="film-chapter-poster" fetchPriority={priority ? 'high' : 'auto'} loading={priority ? 'eager' : 'lazy'} decoding="async" />
-          {!staticMedia && !fallbackMode && <canvas ref={canvasRef} className={`film-chapter-canvas ${canvasReady ? 'ready' : ''}`} />}
-          {!staticMedia && fallbackMode && shouldLoad && (
+          {!reducedMotion && shouldLoad && (
             <video
               ref={videoRef}
+              src={videoSource}
               muted
               playsInline
-              preload={priority ? 'auto' : 'metadata'}
+              preload="auto"
               poster={poster}
-              className={`film-chapter-video ${fallbackReady ? 'ready' : ''}`}
-              onLoadedMetadata={() => {
-                setFallbackReady(true);
-                const video = videoRef.current;
-                if (video && Number.isFinite(video.duration)) {
-                  try { video.currentTime = targetRef.current * Math.max(0, video.duration - 1 / 30); } catch { /* no-op */ }
-                }
-              }}
+              className={`film-chapter-video ${videoReady ? 'ready' : ''}`}
+              disablePictureInPicture
+              onLoadedMetadata={handleMediaReady}
+              onCanPlay={handleMediaReady}
+              onSeeked={handleSeekComplete}
+              onProgress={scheduleRender}
+              onError={() => setVideoReady(false)}
             />
           )}
           <div className="film-chapter-depth" />
@@ -467,9 +371,6 @@ export function ScrollHero() {
       <ScrollFrameChapter
         id="mission-film-one"
         chapter="01 / 03"
-        desktopFrames={media.sceneOne.framesDesktop}
-        mobileFrames={media.sceneOne.framesMobile}
-        frameCount={media.sceneOne.frameCount}
         desktopVideo={media.sceneOne.desktop}
         mobileVideo={media.sceneOne.mobile}
         poster={media.sceneOne.poster}
@@ -485,9 +386,9 @@ export function ScrollHero() {
           <div className="ironman-wordmark" aria-label="IRONMAN">IRONMAN<sup>®</sup></div>
         </div>
         <p className="film-eyebrow">SIX CONTINENTS WORLD RECORD · TOUFIC ABOU ALI</p>
-        <h1>6 full-distance races.<br />6 continents.<br /><em>1 world-record attempt.</em></h1>
-        <p className="film-subcopy"><strong>Application accepted.</strong> Official guidelines issued 5 August 2026. Status: Pending Evidence.</p>
-        <p className="film-proof-line">No record is claimed. All six races must be completed and the full evidence must pass review.</p>
+        <h1>6 full IRONMAN races.<br />6 continents.<br /><em>1 Guinness World Records attempt.</em></h1>
+        <p className="film-subcopy"><strong>Approved Application.</strong> Official rules issued on 5 August 2026.</p>
+        <p className="film-proof-line">All 6 races must be completed and the evidence approved by Guinness World Records.</p>
         <div className="film-actions">
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
           <Link className="button-quiet" to="/mission">View the Mission</Link>
@@ -497,9 +398,6 @@ export function ScrollHero() {
       <ScrollFrameChapter
         id="mission-film-two"
         chapter="02 / 03"
-        desktopFrames={media.sceneTwo.framesDesktop}
-        mobileFrames={media.sceneTwo.framesMobile}
-        frameCount={media.sceneTwo.frameCount}
         desktopVideo={media.sceneTwo.desktop}
         mobileVideo={media.sceneTwo.mobile}
         poster={media.sceneTwo.poster}
@@ -517,9 +415,6 @@ export function ScrollHero() {
       <ScrollFrameChapter
         id="mission-film-three"
         chapter="03 / 03"
-        desktopFrames={media.sceneThree.framesDesktop}
-        mobileFrames={media.sceneThree.framesMobile}
-        frameCount={media.sceneThree.frameCount}
         desktopVideo={media.sceneThree.desktop}
         mobileVideo={media.sceneThree.mobile}
         poster={media.sceneThree.poster}

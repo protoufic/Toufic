@@ -80,25 +80,25 @@ p { margin: 0; }
 /* Three-part scroll film */
 .mission-film-sequence { position: relative; padding-top: var(--header); background: #000; isolation: isolate; }
 .film-chapter { position: relative; z-index: var(--chapter-layer, 1); height: var(--chapter-height); background: #000; }
-.film-chapter-sticky { position: sticky; top: var(--header); height: calc(100svh - var(--header)); min-height: 560px; overflow: hidden; isolation: isolate; background: #000; border-top: 1px solid rgba(255,255,255,.06); }
+.film-chapter-sticky { position: sticky; top: var(--header); height: calc(100svh - var(--header)); min-height: 560px; overflow: hidden; isolation: isolate; contain: paint; background: #000; border-top: 1px solid rgba(255,255,255,.06); transform: translateZ(0); }
 .film-chapter-media, .film-chapter-poster, .film-chapter-video, .film-chapter-canvas, .film-chapter-depth, .film-chapter-vignette, .film-chapter-grain { position: absolute; inset: 0; width: 100%; height: 100%; }
-.film-chapter-media { background: #000; }
+.film-chapter-media { background: #000; contain: strict; transform: translateZ(0); backface-visibility: hidden; }
 .film-chapter-poster, .film-chapter-video { object-fit: contain; object-position: 50% 50%; background: #000; }
 .film-chapter-canvas { opacity: 0; background: #000; transition: opacity .18s linear; will-change: opacity; transform: translateZ(0); }
 .film-chapter-canvas.ready { opacity: 1; }
-.film-chapter-video { opacity: 0; transition: opacity .22s linear; will-change: opacity; transform: translateZ(0); backface-visibility: hidden; }
+.film-chapter-video { opacity: 0; transition: opacity .16s linear; will-change: opacity; transform: translate3d(0,0,0); backface-visibility: hidden; }
 .film-chapter-video.ready { opacity: 1; }
 .film-chapter-depth { z-index: 1; background: radial-gradient(circle at 54% 45%, transparent 0 24%, rgba(0,0,0,.08) 50%, rgba(0,0,0,.5) 100%); }
 .film-chapter-vignette { z-index: 2; background: linear-gradient(90deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.56) 31%, rgba(0,0,0,.06) 59%, rgba(0,0,0,.28) 100%), linear-gradient(180deg, rgba(0,0,0,.18), transparent 25%, transparent 70%, rgba(0,0,0,.78)); }
 #mission-film-two .film-chapter-vignette { background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.04) 42%, rgba(0,0,0,.62) 72%, rgba(0,0,0,.94)), linear-gradient(180deg, rgba(0,0,0,.12), transparent 70%, rgba(0,0,0,.78)); }
 #mission-film-three .film-chapter-vignette { background: linear-gradient(90deg, rgba(0,0,0,.85), rgba(0,0,0,.33) 39%, rgba(0,0,0,.07) 66%, rgba(0,0,0,.33)), linear-gradient(180deg, rgba(0,0,0,.12), transparent 62%, rgba(0,0,0,.8)); }
-.film-chapter-grain { z-index: 3; pointer-events: none; opacity: .075; background-image: radial-gradient(rgba(255,255,255,.15) .5px, transparent .65px); background-size: 4px 4px; mix-blend-mode: soft-light; }
+.film-chapter-grain { z-index: 3; pointer-events: none; opacity: .045; background-image: radial-gradient(rgba(255,255,255,.12) .5px, transparent .65px); background-size: 4px 4px; }
 .film-chapter-ui { position: relative; z-index: 4; height: 100%; }
 .film-step { position: absolute; max-width: 640px; opacity: 1; pointer-events: auto; }
 .film-step-left { left: 0; top: 50%; width: min(570px, 47vw); transform: translateY(-50%); }
 .film-step-right { right: 0; top: 46%; width: min(440px, 36vw); transform: translateY(-50%); }
 .film-step-final { left: 0; bottom: 8%; top: auto; width: min(600px, 49vw); transform: none; }
-.film-copy-panel { position: relative; padding: clamp(22px, 2.4vw, 34px); border: 1px solid rgba(255,255,255,.16); background: linear-gradient(135deg, rgba(5,5,5,.94), rgba(5,5,5,.72)); box-shadow: 0 22px 70px rgba(0,0,0,.42); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); opacity: var(--copy-reveal, 1); transform: translateY(var(--copy-shift, 0px)); transition: opacity .18s linear, transform .18s ease-out; }
+.film-copy-panel { position: relative; padding: clamp(22px, 2.4vw, 34px); border: 1px solid rgba(255,255,255,.16); background: linear-gradient(135deg, rgba(5,5,5,.94), rgba(5,5,5,.72)); box-shadow: 0 22px 70px rgba(0,0,0,.42); backdrop-filter: none; -webkit-backdrop-filter: none; opacity: var(--copy-reveal, 1); transform: translateY(var(--copy-shift, 0px)); transition: opacity .18s linear, transform .18s ease-out; }
 .film-copy-panel::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 2px; background: linear-gradient(180deg, transparent, var(--red) 22%, var(--red) 78%, transparent); }
 .film-eyebrow { margin: 0 0 16px; color: #ff4a51; font-size: 10px; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; }
 .film-step h1 { font-size: clamp(44px, 5.25vw, 80px); line-height: .91; font-weight: 790; letter-spacing: -.058em; text-wrap: balance; text-shadow: 0 4px 36px rgba(0,0,0,.64); }
@@ -650,7 +650,7 @@ p { margin: 0; }
   .film-chapter-vignette, #mission-film-two .film-chapter-vignette, #mission-film-three .film-chapter-vignette { background: linear-gradient(180deg, rgba(0,0,0,.05), transparent 62%, rgba(0,0,0,.62)); }
   .film-chapter-ui { position: absolute; top: min(calc(56.25vw + 14px), 52%); bottom: 44px; left: 0; right: 0; width: calc(100% - 28px); height: auto; display: flex; align-items: center; }
   .film-step, .film-step-left, .film-step-right, .film-step-final, .film-step-hero { position: static; inset: auto; width: 100%; max-width: 100%; transform: none; }
-  .film-copy-panel { width: 100%; padding: clamp(17px, 4.5vw, 24px); background: linear-gradient(145deg, rgba(7,7,7,.96), rgba(7,7,7,.84)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .film-copy-panel { width: 100%; padding: clamp(17px, 4.5vw, 24px); background: linear-gradient(145deg, rgba(7,7,7,.96), rgba(7,7,7,.84)); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .film-step h1 { font-size: clamp(37px, 10.7vw, 58px); line-height: .92; }
   .film-step h2 { font-size: clamp(31px, 8.7vw, 49px); line-height: .96; }
   .film-step p:not(.film-eyebrow) { margin-top: 13px; max-width: 100%; font-size: clamp(13px, 3.8vw, 16px); line-height: 1.4; }
