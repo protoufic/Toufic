@@ -13,23 +13,15 @@ function smootherStep(value: number) {
   return x * x * x * (x * (x * 6 - 15) + 10);
 }
 
-type NetworkInformationLike = {
-  saveData?: boolean;
-  effectiveType?: string;
-  addEventListener?: (type: 'change', listener: () => void) => void;
-  removeEventListener?: (type: 'change', listener: () => void) => void;
-};
-
-type HardwareNavigator = Navigator & {
-  connection?: NetworkInformationLike;
-  deviceMemory?: number;
-};
+type FrameRecord = { image: HTMLImageElement; usedAt: number };
+type FetchInitWithPriority = RequestInit & { priority?: 'high' | 'low' | 'auto' };
 
 type ChapterProps = {
   id: string;
   chapter: string;
-  desktopVideo: string;
-  mobileVideo: string;
+  desktopFrames: string;
+  mobileFrames: string;
+  frameCount: number;
   poster: string;
   heightVh: number;
   children: ReactNode;
@@ -39,16 +31,12 @@ type ChapterProps = {
   layer?: number;
 };
 
-type Geometry = {
-  top: number;
-  height: number;
-};
-
 function ScrollFrameChapter({
   id,
   chapter,
-  desktopVideo,
-  mobileVideo,
+  desktopFrames,
+  mobileFrames,
+  frameCount,
   poster,
   heightVh,
   children,
@@ -58,49 +46,47 @@ function ScrollFrameChapter({
   layer = 1,
 }: ChapterProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const targetRef = useRef(0);
   const renderedRef = useRef(0);
-  const geometryRef = useRef<Geometry>({ top: 0, height: 1 });
-  const headerHeightRef = useRef(76);
-  const updateRafRef = useRef<number | null>(null);
+  const lastTargetRef = useRef(0);
+  const directionRef = useRef<1 | -1>(1);
+  const lastDrawnIndexRef = useRef(-1);
+  const decodedRef = useRef(new Map<number, FrameRecord>());
+  const compressedRef = useRef(new Map<string, Blob>());
+  const fetchPromisesRef = useRef(new Map<string, Promise<Blob>>());
+  const generationRef = useRef(0);
+  const decodePromisesRef = useRef(new Set<number>());
   const renderRafRef = useRef<number | null>(null);
+  const updateRafRef = useRef<number | null>(null);
   const lastRenderTimeRef = useRef(performance.now());
+  const headerHeightRef = useRef(76);
   const renderVisibleRef = useRef(priority);
-  const seekPendingRef = useRef(false);
+  const mountedRef = useRef(true);
+  const scheduleRenderRef = useRef<() => void>(() => undefined);
   const [shouldLoad, setShouldLoad] = useState(priority);
-  const [videoReady, setVideoReady] = useState(false);
+  const [canvasReady, setCanvasReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [mobileViewport, setMobileViewport] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches);
-  const [lightweightMedia, setLightweightMedia] = useState(() => {
+  const [saveData, setSaveData] = useState(() => {
     if (typeof navigator === 'undefined') return false;
-    const nav = navigator as HardwareNavigator;
-    const effectiveType = nav.connection?.effectiveType || '';
-    return Boolean(
-      nav.connection?.saveData ||
-      effectiveType === 'slow-2g' ||
-      effectiveType === '2g' ||
-      (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) ||
-      (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4)
-    );
+    return Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
   });
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const mobileQuery = window.matchMedia('(max-width: 900px)');
-    const nav = navigator as HardwareNavigator;
-    const connection = nav.connection;
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; addEventListener?: (type: 'change', listener: () => void) => void; removeEventListener?: (type: 'change', listener: () => void) => void } }).connection;
     const sync = () => {
-      const effectiveType = connection?.effectiveType || '';
       setReducedMotion(motionQuery.matches);
       setMobileViewport(mobileQuery.matches);
-      setLightweightMedia(Boolean(
-        connection?.saveData ||
-        effectiveType === 'slow-2g' ||
-        effectiveType === '2g' ||
-        (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) ||
-        (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4)
-      ));
+      setSaveData(Boolean(connection?.saveData));
     };
     sync();
     motionQuery.addEventListener('change', sync);
@@ -113,138 +99,144 @@ function ScrollFrameChapter({
     };
   }, []);
 
-  const videoSource = useMemo(
-    () => (mobileViewport || lightweightMedia ? mobileVideo : desktopVideo),
-    [desktopVideo, lightweightMedia, mobileVideo, mobileViewport],
-  );
+  const frameBase = useMemo(() => mobileViewport ? mobileFrames : desktopFrames, [desktopFrames, mobileFrames, mobileViewport]);
+  const staticMedia = reducedMotion || saveData;
+  const decodedLimit = mobileViewport ? 18 : 22;
+  const preloadMargin = priority ? '100% 0px 100% 0px' : '420% 0px 420% 0px';
 
-  const measure = useCallback(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const styles = getComputedStyle(document.documentElement);
-    headerHeightRef.current = Number.parseFloat(styles.getPropertyValue('--header')) || 76;
-    const rect = section.getBoundingClientRect();
-    geometryRef.current = {
-      top: rect.top + window.scrollY,
-      height: section.offsetHeight,
+  const frameUrl = useCallback((index: number) => `${frameBase}/frame-${String(index + 1).padStart(4, '0')}.webp`, [frameBase]);
+
+  const fetchFrame = useCallback((index: number, highPriority = false) => {
+    const safeIndex = Math.max(0, Math.min(frameCount - 1, index));
+    const url = frameUrl(safeIndex);
+    const cached = compressedRef.current.get(url);
+    if (cached) return Promise.resolve(cached);
+    const existing = fetchPromisesRef.current.get(url);
+    if (existing) return existing;
+
+    const init: FetchInitWithPriority = {
+      cache: 'force-cache',
+      priority: highPriority ? 'high' : 'low',
     };
-  }, []);
+    const promise = fetch(url, init)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Frame ${safeIndex + 1} failed with ${response.status}`);
+        return response.blob();
+      })
+      .then((blob) => {
+        if (mountedRef.current) compressedRef.current.set(url, blob);
+        return blob;
+      })
+      .finally(() => {
+        if (fetchPromisesRef.current.get(url) === promise) fetchPromisesRef.current.delete(url);
+      });
+    fetchPromisesRef.current.set(url, promise);
+    return promise;
+  }, [frameCount, frameUrl]);
 
-  const desiredVideoTime = useCallback((progress: number) => {
-    const video = videoRef.current;
-    if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return 0;
-    return progress * Math.max(0, video.duration - 1 / 30);
-  }, []);
+  const trimDecoded = useCallback((center: number) => {
+    const decoded = decodedRef.current;
+    if (decoded.size <= decodedLimit) return;
 
-  const isBuffered = useCallback((time: number) => {
-    const video = videoRef.current;
-    if (!video) return false;
-    for (let index = 0; index < video.buffered.length; index += 1) {
-      if (time >= video.buffered.start(index) - 0.08 && time <= video.buffered.end(index) + 0.08) return true;
+    const protectedIndexes = new Set<number>();
+    for (let offset = -4; offset <= 5; offset += 1) {
+      protectedIndexes.add(Math.max(0, Math.min(frameCount - 1, center + offset)));
     }
-    return false;
-  }, []);
+    protectedIndexes.add(lastDrawnIndexRef.current);
 
-  const renderVideo = useCallback((now: number) => {
-    renderRafRef.current = null;
-    if (reducedMotion || !renderVisibleRef.current) return;
+    const candidates = [...decoded.entries()]
+      .filter(([index]) => !protectedIndexes.has(index))
+      .sort((a, b) => a[1].usedAt - b[1].usedAt);
 
-    const dt = Math.min(0.05, Math.max(0.001, (now - lastRenderTimeRef.current) / 1000));
-    lastRenderTimeRef.current = now;
-    const delta = targetRef.current - renderedRef.current;
-    const response = 20 + Math.min(42, Math.abs(delta) * 130);
-    const alpha = 1 - Math.exp(-response * dt);
-    renderedRef.current += delta * alpha;
-    if (Math.abs(delta) < 0.00015) renderedRef.current = targetRef.current;
+    while (decoded.size > decodedLimit && candidates.length) {
+      const [index] = candidates.shift()!;
+      decoded.delete(index);
+    }
+  }, [decodedLimit, frameCount]);
 
-    const video = videoRef.current;
-    if (video && videoReady && !seekPendingRef.current) {
-      const desired = desiredVideoTime(renderedRef.current);
-      if (Math.abs(video.currentTime - desired) > 1 / 50) {
-        // Avoid repeated network-range seeks while a weak connection is still buffering.
-        // Once the file is buffered, seeks stay local and scroll scrubbing remains fluid.
-        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA || isBuffered(desired)) {
-          seekPendingRef.current = true;
-          try {
-            video.currentTime = desired;
-          } catch {
-            seekPendingRef.current = false;
-          }
-        }
+  const ensureFrame = useCallback((index: number, highPriority = false) => {
+    const safeIndex = Math.max(0, Math.min(frameCount - 1, index));
+    if (decodedRef.current.has(safeIndex) || decodePromisesRef.current.has(safeIndex)) return;
+    const generation = generationRef.current;
+    decodePromisesRef.current.add(safeIndex);
+
+    fetchFrame(safeIndex, highPriority)
+      .then((blob) => {
+        if (!mountedRef.current || generation !== generationRef.current) return;
+        return new Promise<void>((resolve, reject) => {
+          const objectUrl = URL.createObjectURL(blob);
+          const image = new Image();
+          image.decoding = 'async';
+          image.onload = async () => {
+            try { await image.decode(); } catch { /* onload already confirms a decoded image can be drawn */ }
+            URL.revokeObjectURL(objectUrl);
+            if (mountedRef.current && generation === generationRef.current) {
+              decodedRef.current.set(safeIndex, { image, usedAt: performance.now() });
+              if (safeIndex === 0) setCanvasReady(true);
+              trimDecoded(Math.round(renderedRef.current * (frameCount - 1)));
+              scheduleRenderRef.current();
+            }
+            resolve();
+          };
+          image.onerror = () => {
+            URL.revokeObjectURL(objectUrl);
+            reject(new Error(`Unable to decode frame ${safeIndex + 1}`));
+          };
+          image.src = objectUrl;
+        });
+      })
+      .catch(() => {
+        // Keep the last clean canvas frame visible. Never substitute an unrelated frame.
+      })
+      .finally(() => {
+        decodePromisesRef.current.delete(safeIndex);
+      });
+  }, [fetchFrame, frameCount, trimDecoded]);
+
+  const loadWindow = useCallback((center: number) => {
+    const direction = directionRef.current;
+    const behind = mobileViewport ? 4 : 5;
+    const ahead = mobileViewport ? 11 : 14;
+    const start = direction > 0 ? -behind : -ahead;
+    const end = direction > 0 ? ahead : behind;
+
+    ensureFrame(center, true);
+    for (let offset = start; offset <= end; offset += 1) {
+      if (offset === 0) continue;
+      ensureFrame(center + offset, Math.abs(offset) <= 3);
+    }
+  }, [ensureFrame, mobileViewport]);
+
+  useEffect(() => {
+    generationRef.current += 1;
+    decodedRef.current.clear();
+    decodePromisesRef.current.clear();
+    lastDrawnIndexRef.current = -1;
+    setCanvasReady(false);
+    if (staticMedia) return;
+
+    // Decode the opening neighborhood immediately only for the visible first chapter.
+    // Later chapters are fetched at low priority before they are reached and decoded on demand.
+    if (priority) {
+      ensureFrame(0, true);
+      const initialCount = mobileViewport ? 12 : 15;
+      for (let index = 1; index <= Math.min(frameCount - 1, initialCount); index += 1) {
+        ensureFrame(index, index <= 5);
       }
     }
-
-    if (Math.abs(targetRef.current - renderedRef.current) > 0.00015 || seekPendingRef.current) {
-      renderRafRef.current = requestAnimationFrame(renderVideo);
-    }
-  }, [desiredVideoTime, isBuffered, reducedMotion, videoReady]);
-
-  const scheduleRender = useCallback(() => {
-    if (renderRafRef.current !== null || reducedMotion || !renderVisibleRef.current) return;
-    lastRenderTimeRef.current = performance.now();
-    renderRafRef.current = requestAnimationFrame(renderVideo);
-  }, [reducedMotion, renderVideo]);
-
-  const update = useCallback(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const { top, height } = geometryRef.current;
-    const header = headerHeightRef.current;
-    const viewportHeight = window.innerHeight;
-    const availableHeight = Math.max(1, viewportHeight - header);
-    const stickyStart = header;
-    const rectTop = top - window.scrollY;
-    const rectBottom = rectTop + height;
-    const entryStart = viewportHeight * 1.06;
-    const slowMotionEnd = stickyStart + availableHeight * 0.54;
-    const travel = Math.max(1, height - availableHeight);
-
-    let progress = 0;
-    let copyReveal = priority ? 1 : 0;
-
-    if (rectTop > stickyStart) {
-      const entering = clamp((entryStart - rectTop) / Math.max(1, entryStart - slowMotionEnd));
-      progress = preRoll * smootherStep(entering);
-      copyReveal = clamp((entering - 0.2) / 0.58);
-    } else {
-      const main = clamp((stickyStart - rectTop) / travel);
-      progress = preRoll + (1 - preRoll) * smootherStep(main);
-      copyReveal = 1;
-    }
-
-    if (rectBottom <= stickyStart + availableHeight * 0.02) progress = 1;
-    targetRef.current = clamp(progress);
-    section.style.setProperty('--film-progress', `${targetRef.current}`);
-    section.style.setProperty('--copy-reveal', `${copyReveal}`);
-    section.style.setProperty('--copy-shift', `${(1 - copyReveal) * 18}px`);
-    scheduleRender();
-  }, [preRoll, priority, scheduleRender]);
-
-  const scheduleUpdate = useCallback(() => {
-    if (updateRafRef.current !== null) return;
-    updateRafRef.current = requestAnimationFrame(() => {
-      updateRafRef.current = null;
-      update();
-    });
-  }, [update]);
+  }, [ensureFrame, frameBase, frameCount, mobileViewport, priority, staticMedia]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Start loading chapters several screens before they are needed. This gives the
-    // browser time to cache a single compact MP4 instead of requesting dozens of images mid-scroll.
     const preloadObserver = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) setShouldLoad(true);
-    }, { rootMargin: '650% 0px 650% 0px', threshold: 0 });
+    }, { rootMargin: preloadMargin, threshold: 0 });
 
     const renderObserver = new IntersectionObserver(([entry]) => {
       renderVisibleRef.current = entry.isIntersecting;
-      if (entry.isIntersecting) scheduleRender();
-      else if (renderRafRef.current !== null) {
-        cancelAnimationFrame(renderRafRef.current);
-        renderRafRef.current = null;
-      }
+      if (entry.isIntersecting) scheduleRenderRef.current();
     }, { rootMargin: '55% 0px 55% 0px', threshold: 0 });
 
     preloadObserver.observe(section);
@@ -253,60 +245,202 @@ function ScrollFrameChapter({
       preloadObserver.disconnect();
       renderObserver.disconnect();
     };
+  }, [preloadMargin]);
+
+  useEffect(() => {
+    if (!shouldLoad || staticMedia) return;
+    let cancelled = false;
+
+    // Warm the browser with the full compressed sequence before the chapter is reached.
+    // Only a small rolling window is decoded, keeping memory controlled while removing
+    // network requests from the actual scroll path.
+    const order = Array.from({ length: frameCount }, (_, index) => index);
+    const workers = Array.from({ length: priority ? (mobileViewport ? 3 : 4) : 2 }, async () => {
+      while (!cancelled) {
+        const next = order.shift();
+        if (next === undefined) return;
+        try { await fetchFrame(next, false); } catch { /* the on-demand loader will retry if necessary */ }
+      }
+    });
+
+    void Promise.all(workers);
+    loadWindow(Math.round(targetRef.current * (frameCount - 1)));
+    return () => { cancelled = true; };
+  }, [fetchFrame, frameCount, loadWindow, mobileViewport, priority, shouldLoad, staticMedia]);
+
+  const resizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    const mediaWidth = mobileViewport ? 960 : 1600;
+    const mediaHeight = mobileViewport ? 540 : 900;
+    const desiredDpr = Math.min(window.devicePixelRatio || 1, mobileViewport ? 1.1 : 1.15);
+    const sourceNativeScale = Math.min(mediaWidth / rect.width, mediaHeight / rect.height);
+    const renderScale = Math.max(0.58, Math.min(desiredDpr, sourceNativeScale));
+    const width = Math.max(1, Math.round(rect.width * renderScale));
+    const height = Math.max(1, Math.round(rect.height * renderScale));
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+      contextRef.current = canvas.getContext('2d', { alpha: false, desynchronized: true });
+      if (contextRef.current) {
+        contextRef.current.imageSmoothingEnabled = true;
+        contextRef.current.imageSmoothingQuality = 'high';
+      }
+      lastDrawnIndexRef.current = -1;
+      scheduleRenderRef.current();
+    } else if (!contextRef.current) {
+      contextRef.current = canvas.getContext('2d', { alpha: false, desynchronized: true });
+    }
+  }, [mobileViewport]);
+
+  useEffect(() => {
+    resizeCanvas();
+    const canvas = canvasRef.current;
+    const observer = canvas && 'ResizeObserver' in window ? new ResizeObserver(resizeCanvas) : null;
+    if (canvas && observer) observer.observe(canvas);
+    window.addEventListener('resize', resizeCanvas);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, [resizeCanvas]);
+
+  const drawFrame = useCallback((record: FrameRecord, index: number, now: number) => {
+    const canvas = canvasRef.current;
+    const context = contextRef.current;
+    if (!canvas || !context || !record.image.naturalWidth || !record.image.naturalHeight) return;
+
+    const scale = Math.min(canvas.width / record.image.naturalWidth, canvas.height / record.image.naturalHeight);
+    const width = record.image.naturalWidth * scale;
+    const height = record.image.naturalHeight * scale;
+    const x = (canvas.width - width) / 2;
+    const y = (canvas.height - height) / 2;
+
+    context.fillStyle = '#000';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.globalAlpha = 1;
+    context.drawImage(record.image, x, y, width, height);
+    record.usedAt = now;
+    lastDrawnIndexRef.current = index;
+  }, []);
+
+  const renderTick = useCallback((now: number) => {
+    renderRafRef.current = null;
+    if (staticMedia || !renderVisibleRef.current) return;
+
+    const dt = Math.min(0.045, Math.max(0.001, (now - lastRenderTimeRef.current) / 1000));
+    lastRenderTimeRef.current = now;
+    const delta = targetRef.current - renderedRef.current;
+    const response = 22 + Math.min(44, Math.abs(delta) * 145);
+    const alpha = 1 - Math.exp(-response * dt);
+    renderedRef.current += delta * alpha;
+    if (Math.abs(delta) < 0.00018) renderedRef.current = targetRef.current;
+
+    const frameIndex = Math.round(renderedRef.current * (frameCount - 1));
+    loadWindow(frameIndex);
+    const exactFrame = decodedRef.current.get(frameIndex);
+    if (exactFrame && lastDrawnIndexRef.current !== frameIndex) {
+      drawFrame(exactFrame, frameIndex, now);
+      trimDecoded(frameIndex);
+    } else if (!exactFrame) {
+      ensureFrame(frameIndex, true);
+    }
+
+    const targetIndex = Math.round(targetRef.current * (frameCount - 1));
+    const settled = Math.abs(targetRef.current - renderedRef.current) <= 0.00018;
+    const targetReady = decodedRef.current.has(targetIndex);
+    if (!settled || !targetReady) {
+      renderRafRef.current = requestAnimationFrame(renderTick);
+    }
+  }, [drawFrame, ensureFrame, frameCount, loadWindow, staticMedia, trimDecoded]);
+
+  const scheduleRender = useCallback(() => {
+    if (staticMedia || !renderVisibleRef.current || renderRafRef.current !== null) return;
+    lastRenderTimeRef.current = performance.now();
+    renderRafRef.current = requestAnimationFrame(renderTick);
+  }, [renderTick, staticMedia]);
+
+  useEffect(() => {
+    scheduleRenderRef.current = scheduleRender;
+    return () => { scheduleRenderRef.current = () => undefined; };
   }, [scheduleRender]);
 
   useEffect(() => {
-    measure();
-    update();
-    const section = sectionRef.current;
-    const observer = section && 'ResizeObserver' in window ? new ResizeObserver(() => {
-      measure();
-      scheduleUpdate();
-    }) : null;
-    if (section && observer) observer.observe(section);
+    const readHeaderHeight = () => {
+      const styles = getComputedStyle(document.documentElement);
+      headerHeightRef.current = Number.parseFloat(styles.getPropertyValue('--header')) || 76;
+    };
+
+    const update = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const header = headerHeightRef.current;
+      const viewportHeight = window.innerHeight;
+      const availableHeight = Math.max(1, viewportHeight - header);
+      const stickyStart = header;
+      const entryStart = viewportHeight * 1.06;
+      const slowMotionEnd = stickyStart + availableHeight * 0.54;
+      const travel = Math.max(1, section.offsetHeight - availableHeight);
+
+      let progress = 0;
+      let copyReveal = priority ? 1 : 0;
+
+      if (rect.top > stickyStart) {
+        const entering = clamp((entryStart - rect.top) / Math.max(1, entryStart - slowMotionEnd));
+        progress = preRoll * smootherStep(entering);
+        copyReveal = clamp((entering - 0.2) / 0.58);
+      } else {
+        const main = clamp((stickyStart - rect.top) / travel);
+        progress = preRoll + (1 - preRoll) * smootherStep(main);
+        copyReveal = 1;
+      }
+
+      if (rect.bottom <= stickyStart + availableHeight * 0.02) progress = 1;
+      const nextTarget = clamp(progress);
+      const movement = nextTarget - lastTargetRef.current;
+      if (Math.abs(movement) > 0.00005) directionRef.current = movement >= 0 ? 1 : -1;
+      lastTargetRef.current = nextTarget;
+      targetRef.current = nextTarget;
+      section.style.setProperty('--film-progress', `${nextTarget}`);
+      section.style.setProperty('--copy-reveal', `${copyReveal}`);
+      section.style.setProperty('--copy-shift', `${(1 - copyReveal) * 18}px`);
+
+      if (!staticMedia) {
+        const center = Math.round(nextTarget * (frameCount - 1));
+        loadWindow(center);
+        scheduleRender();
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (updateRafRef.current !== null) return;
+      updateRafRef.current = requestAnimationFrame(() => {
+        updateRafRef.current = null;
+        update();
+      });
+    };
 
     const handleResize = () => {
-      measure();
+      readHeaderHeight();
       scheduleUpdate();
     };
 
+    readHeaderHeight();
+    update();
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('orientationchange', handleResize, { passive: true });
+    window.addEventListener('resize', handleResize);
     return () => {
-      observer?.disconnect();
       window.removeEventListener('scroll', scheduleUpdate);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
       if (updateRafRef.current !== null) cancelAnimationFrame(updateRafRef.current);
       if (renderRafRef.current !== null) cancelAnimationFrame(renderRafRef.current);
     };
-  }, [measure, scheduleUpdate, update]);
-
-  useEffect(() => {
-    setVideoReady(false);
-    seekPendingRef.current = false;
-    renderedRef.current = targetRef.current;
-    const video = videoRef.current;
-    if (!video || !shouldLoad || reducedMotion) return;
-    video.load();
-  }, [reducedMotion, shouldLoad, videoSource]);
-
-  const handleMediaReady = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    setVideoReady(true);
-    const desired = desiredVideoTime(targetRef.current);
-    if (Number.isFinite(desired)) {
-      try { video.currentTime = desired; } catch { /* first frame remains visible */ }
-    }
-    scheduleRender();
-  }, [desiredVideoTime, scheduleRender]);
-
-  const handleSeekComplete = useCallback(() => {
-    seekPendingRef.current = false;
-    scheduleRender();
-  }, [scheduleRender]);
+  }, [frameCount, loadWindow, preRoll, priority, scheduleRender, staticMedia]);
 
   const style = {
     '--chapter-height': `${heightVh}vh`,
@@ -319,31 +453,15 @@ function ScrollFrameChapter({
     <section
       ref={sectionRef}
       id={id}
-      className={`film-chapter ${priority ? 'film-chapter-priority' : ''} ${reducedMotion ? 'film-chapter-static' : ''}`}
+      className={`film-chapter ${priority ? 'film-chapter-priority' : ''} ${staticMedia ? 'film-chapter-static' : ''}`}
       style={style}
       aria-label={`${chapter} mission film chapter`}
-      data-media-ready={reducedMotion || videoReady}
+      data-media-ready={staticMedia ? true : canvasReady}
     >
       <div className="film-chapter-sticky">
         <div className="film-chapter-media" aria-hidden="true">
           <img src={poster} alt="" className="film-chapter-poster" fetchPriority={priority ? 'high' : 'auto'} loading={priority ? 'eager' : 'lazy'} decoding="async" />
-          {!reducedMotion && shouldLoad && (
-            <video
-              ref={videoRef}
-              src={videoSource}
-              muted
-              playsInline
-              preload="auto"
-              poster={poster}
-              className={`film-chapter-video ${videoReady ? 'ready' : ''}`}
-              disablePictureInPicture
-              onLoadedMetadata={handleMediaReady}
-              onCanPlay={handleMediaReady}
-              onSeeked={handleSeekComplete}
-              onProgress={scheduleRender}
-              onError={() => setVideoReady(false)}
-            />
-          )}
+          {!staticMedia && <canvas ref={canvasRef} className={`film-chapter-canvas ${canvasReady ? 'ready' : ''}`} />}
           <div className="film-chapter-depth" />
           <div className="film-chapter-vignette" />
           <div className="film-chapter-grain" />
@@ -371,8 +489,9 @@ export function ScrollHero() {
       <ScrollFrameChapter
         id="mission-film-one"
         chapter="01 / 03"
-        desktopVideo={media.sceneOne.desktop}
-        mobileVideo={media.sceneOne.mobile}
+        desktopFrames={media.sceneOne.framesDesktop}
+        mobileFrames={media.sceneOne.framesMobile}
+        frameCount={media.sceneOne.frameCount}
         poster={media.sceneOne.poster}
         heightVh={285}
         copyClassName="film-step-left film-step-hero"
@@ -386,7 +505,11 @@ export function ScrollHero() {
           <div className="ironman-wordmark" aria-label="IRONMAN">IRONMAN<sup>®</sup></div>
         </div>
         <p className="film-eyebrow">SIX CONTINENTS WORLD RECORD · TOUFIC ABOU ALI</p>
-        <h1>6 full IRONMAN races.<br />6 continents.<br /><em>1 Guinness World Records attempt.</em></h1>
+        <h1 className="hero-record-title">
+          <span>6 full IRONMAN races.</span>
+          <span>6 continents.</span>
+          <em>1 Guinness World Records attempt.</em>
+        </h1>
         <p className="film-subcopy"><strong>Approved Application.</strong> Official rules issued on 5 August 2026.</p>
         <p className="film-proof-line">All 6 races must be completed and the evidence approved by Guinness World Records.</p>
         <div className="film-actions">
@@ -398,8 +521,9 @@ export function ScrollHero() {
       <ScrollFrameChapter
         id="mission-film-two"
         chapter="02 / 03"
-        desktopVideo={media.sceneTwo.desktop}
-        mobileVideo={media.sceneTwo.mobile}
+        desktopFrames={media.sceneTwo.framesDesktop}
+        mobileFrames={media.sceneTwo.framesMobile}
+        frameCount={media.sceneTwo.frameCount}
         poster={media.sceneTwo.poster}
         heightVh={235}
         copyClassName="film-step-right film-step-scale"
@@ -415,8 +539,9 @@ export function ScrollHero() {
       <ScrollFrameChapter
         id="mission-film-three"
         chapter="03 / 03"
-        desktopVideo={media.sceneThree.desktop}
-        mobileVideo={media.sceneThree.mobile}
+        desktopFrames={media.sceneThree.framesDesktop}
+        mobileFrames={media.sceneThree.framesMobile}
+        frameCount={media.sceneThree.frameCount}
         poster={media.sceneThree.poster}
         heightVh={410}
         copyClassName="film-step-left film-step-final"
