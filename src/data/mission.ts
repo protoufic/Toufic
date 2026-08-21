@@ -1,8 +1,8 @@
 export const site = {
   name: 'Toufic Abou Ali',
-  identity: 'Lebanese Founder-Athlete',
+  identity: 'Lebanese Founder and Athlete',
   age: 20,
-  email: 'hello@toufic.co',
+  email: 'protoufic@gmail.com',
   whatsapp: 'https://wa.me/96176923943?text=Hello%20Toufic%2C%20I%20would%20like%20to%20discuss%20a%20possible%20partnership%20for%20the%20Six%20Continents%20World%20Record%20mission.',
   instagram: 'https://www.instagram.com/touficaa/',
   linkedin: 'https://www.linkedin.com/in/touficabouali',
@@ -13,7 +13,7 @@ export const site = {
 };
 
 export const mission = {
-  headline: '6 full-distance IRONMAN races. 6 continents. 1 world-record attempt.',
+  headline: '6 full distance IRONMAN races. 6 continents. 1 world record attempt.',
   name: 'Six Continents World Record',
   recordTitle: 'Youngest person to complete an IRONMAN® triathlon on six continents (male)',
   applicationStatus: 'Application accepted • Guidelines issued 5 August 2026 • Pending Evidence',
@@ -41,13 +41,66 @@ export const mission = {
   },
   recordStatus: 'Application accepted • Guidelines issued 5 August 2026 • Pending Evidence',
   continents: [
-    { name: 'North America', x: 20.0, y: 38.8, summary: 'One qualifying full-distance race. Final race announced only after all checks are complete.' },
-    { name: 'South America', x: 30.5, y: 66.8, summary: 'One qualifying full-distance race. Final race announced only after all checks are complete.' },
-    { name: 'Europe', x: 49.0, y: 36.0, summary: 'One qualifying full-distance race. Final race announced only after all checks are complete.' },
-    { name: 'Africa', x: 53.7, y: 63.0, summary: 'One qualifying full-distance race. Final race announced only after all checks are complete.' },
-    { name: 'Asia', x: 75.5, y: 40.5, summary: 'One qualifying full-distance race. Final race announced only after all checks are complete.' },
-    { name: 'Australasia', x: 85.0, y: 73.5, summary: 'One qualifying full-distance race. Final race announced only after all checks are complete.' },
+    { name: 'North America', x: 20.0, y: 38.8, summary: 'Route B: Jacksonville on 16 May 2027. Route A backup: Texas on 24 April 2027.', preferredRace: 'Jacksonville, USA', preferredDate: '16 May 2027', backupRace: 'Texas, USA', backupDate: '24 April 2027' },
+    { name: 'South America', x: 30.5, y: 66.8, summary: 'The opening chapter in both route plans.', preferredRace: 'San Juan, Argentina', preferredDate: '1 November 2026', backupRace: 'San Juan, Argentina', backupDate: '1 November 2026' },
+    { name: 'Europe', x: 49.0, y: 36.0, summary: 'Route B closes in Hamburg. Route A keeps Lanzarote as the backup European finish.', preferredRace: 'Hamburg, Germany', preferredDate: '6 June 2027', backupRace: 'Lanzarote, Spain', backupDate: '15 May 2027' },
+    { name: 'Africa', x: 53.7, y: 63.0, summary: 'South Africa is the fourth chapter in both route plans.', preferredRace: 'South Africa', preferredDate: '18 April 2027', backupRace: 'South Africa', backupDate: '18 April 2027' },
+    { name: 'Asia', x: 75.5, y: 40.5, summary: 'Oman is the second chapter in both route plans.', preferredRace: 'Oman', preferredDate: '5 December 2026', backupRace: 'Oman', backupDate: '5 December 2026' },
+    { name: 'Australasia', x: 85.0, y: 73.5, summary: 'New Zealand is the third chapter in both route plans.', preferredRace: 'New Zealand', preferredDate: '6 March 2027', backupRace: 'New Zealand', backupDate: '6 March 2027' },
   ],
+};
+
+export type RoutePlanKey = 'B' | 'A';
+
+export interface MissionRaceChapter {
+  continent: string;
+  location: string;
+  country: string;
+  date: string;
+  isoDate: string;
+  note?: string;
+}
+
+export interface MissionRoutePlan {
+  key: RoutePlanKey;
+  label: string;
+  status: string;
+  description: string;
+  rationale: string;
+  chapters: MissionRaceChapter[];
+}
+
+export const routePlans: Record<RoutePlanKey, MissionRoutePlan> = {
+  B: {
+    key: 'B',
+    label: 'Route B',
+    status: 'Preferred route',
+    description: 'The preferred sequence because it creates materially safer recovery spacing after South Africa and turns Hamburg into the final European chapter.',
+    rationale: '28 days from South Africa to Jacksonville, then 21 days to Hamburg. The final race lands eight days before the personal before 21 deadline.',
+    chapters: [
+      { continent: 'South America', location: 'San Juan', country: 'Argentina', date: '1 Nov 2026', isoDate: '2026-11-01' },
+      { continent: 'Asia', location: 'Oman', country: 'Oman', date: '5 Dec 2026', isoDate: '2026-12-05' },
+      { continent: 'Australasia', location: 'New Zealand', country: 'New Zealand', date: '6 Mar 2027', isoDate: '2027-03-06' },
+      { continent: 'Africa', location: 'South Africa', country: 'South Africa', date: '18 Apr 2027', isoDate: '2027-04-18' },
+      { continent: 'North America', location: 'Jacksonville', country: 'USA', date: '16 May 2027', isoDate: '2027-05-16' },
+      { continent: 'Europe', location: 'Hamburg', country: 'Germany', date: '6 Jun 2027', isoDate: '2027-06-06', note: 'Premium XC access route' },
+    ],
+  },
+  A: {
+    key: 'A',
+    label: 'Route A',
+    status: 'Backup route',
+    description: 'The backup sequence if the preferred North America or Europe finish cannot be secured. It finishes earlier, but the Africa to Texas turnaround is much tighter.',
+    rationale: 'The main weakness is the six day turnaround between South Africa and Texas, which makes recovery and travel significantly more aggressive.',
+    chapters: [
+      { continent: 'South America', location: 'San Juan', country: 'Argentina', date: '1 Nov 2026', isoDate: '2026-11-01' },
+      { continent: 'Asia', location: 'Oman', country: 'Oman', date: '5 Dec 2026', isoDate: '2026-12-05' },
+      { continent: 'Australasia', location: 'New Zealand', country: 'New Zealand', date: '6 Mar 2027', isoDate: '2027-03-06' },
+      { continent: 'Africa', location: 'South Africa', country: 'South Africa', date: '18 Apr 2027', isoDate: '2027-04-18' },
+      { continent: 'North America', location: 'Texas', country: 'USA', date: '24 Apr 2027', isoDate: '2027-04-24', note: 'Only six days after South Africa' },
+      { continent: 'Europe', location: 'Lanzarote', country: 'Spain', date: '15 May 2027', isoDate: '2027-05-15' },
+    ],
+  },
 };
 
 export const warsawRace = {

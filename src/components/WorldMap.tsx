@@ -43,7 +43,7 @@ export function WorldMap() {
             onMouseEnter={() => setSelected(continent)}
             onFocus={() => setSelected(continent)}
             aria-pressed={selected.name === continent.name}
-            aria-label={`${continent.name}: race selection in progress`}
+            aria-label={`${continent.name}: view planned race chapters`}
           >
             <span />
             <small>{continent.name}</small>
@@ -64,8 +64,14 @@ export function WorldMap() {
             <p className="eyebrow">TARGET CONTINENT</p>
             <h3>{selected.name}</h3>
           </div>
-          <p>{selected.summary}</p>
-          <span className="map-status">Race selection in progress</span>
+          <div className="map-route-detail">
+            <p>{selected.summary}</p>
+            <div className="map-route-options">
+              <span><small>ROUTE B · PREFERRED</small><strong>{selected.preferredRace}</strong><em>{selected.preferredDate}</em></span>
+              <span><small>ROUTE A · BACKUP</small><strong>{selected.backupRace}</strong><em>{selected.backupDate}</em></span>
+            </div>
+          </div>
+          <span className="map-status">Route architecture defined · final execution checks ongoing</span>
         </motion.div>
       </AnimatePresence>
 
@@ -78,8 +84,8 @@ export function WorldMap() {
       </div>
 
       <div className="map-next-step">
-        <p><strong>The campaign must move before the route is secured.</strong> Entry windows, travel, training, evidence, and recovery planning all begin early.</p>
-        <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Discuss the first chapter <ArrowRight size={15} /></button>
+        <p><strong>Route B is preferred. Route A stays live as backup.</strong> Entries, visas, travel, recovery, evidence, and partner roles still have to be secured chapter by chapter.</p>
+        <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Discuss a partner role <ArrowRight size={15} /></button>
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ export function FounderPage() {
         <div className="site-shell founder-page-hero-grid">
           <div className="founder-page-copy">
             <p className="eyebrow">TOUFIC ABOU ALI</p>
-            <h1>Lebanese Founder-Athlete.</h1>
+            <h1>Lebanese Founder and Athlete.</h1>
             <p>Founder & CEO of Sira. Student abroad. Endurance athlete. Building one global campaign through the same discipline used to build teams and systems.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss the Campaign <ArrowRight size={16} /></button>
           </div>

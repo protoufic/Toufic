@@ -499,10 +499,10 @@ export function ScrollHero() {
         preRoll={0}
         layer={1}
       >
-        <div className="hero-brand-lockup">
-          <img src={media.guinness} alt="Guinness World Records" />
+        <div className="hero-brand-lockup hero-brand-lockup-status">
+          <strong>APPLICATION ACCEPTED</strong>
           <span aria-hidden="true" />
-          <div className="ironman-wordmark" aria-label="IRONMAN">IRONMAN<sup>®</sup></div>
+          <small>GUIDELINES ISSUED · PENDING EVIDENCE</small>
         </div>
         <p className="film-eyebrow">SIX CONTINENTS WORLD RECORD · TOUFIC ABOU ALI</p>
         <h1 className="hero-record-title">
@@ -510,7 +510,7 @@ export function ScrollHero() {
           <span>6 continents.</span>
           <em>1 Guinness World Records attempt.</em>
         </h1>
-        <p className="film-subcopy"><strong>Approved Application.</strong> Official rules issued on 5 August 2026.</p>
+        <p className="film-subcopy"><strong>Application accepted.</strong> Official guidelines issued on 5 August 2026.</p>
         <p className="film-proof-line">All 6 races must be completed and the evidence approved by Guinness World Records.</p>
         <div className="film-actions">
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
@@ -551,10 +551,10 @@ export function ScrollHero() {
         <p className="film-eyebrow">BORN IN LEBANON · BUILT FOR SIX CONTINENTS</p>
         <h2>Do it six times across <em>six required regions</em>.</h2>
         <p>North America. South America. Europe. Africa. Asia. Australasia.</p>
-        <p className="film-proof-line">The first partner roles are open before the first qualifying race is locked.</p>
+        <p className="film-proof-line">Route B is preferred. Route A remains live as backup while the final race entries and partner roles are secured.</p>
         <div className="film-actions">
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
-          <Link className="button-quiet" to="/partners">View Partner Value</Link>
+          <Link className="button-quiet" to="/partners">Open Partner Walkthrough</Link>
         </div>
       </ScrollFrameChapter>
     </div>

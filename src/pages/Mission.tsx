@@ -3,6 +3,7 @@ import { ArrowRight, Check, Clock3, FileCheck2, Plane, Stethoscope, WalletCards 
 import { Layout } from '../components/Layout';
 import { DualCountdown } from '../components/Countdown';
 import { WorldMap } from '../components/WorldMap';
+import { RoutePlans } from '../components/RoutePlans';
 import { media, mission, site } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
 
@@ -41,7 +42,7 @@ export function MissionPage() {
         <div className="page-hero-overlay" />
         <div className="site-shell page-hero-content">
           <p className="eyebrow">SIX CONTINENTS WORLD RECORD</p>
-          <h1>Six full-distance IRONMAN races.<br />Six continents.<br /><em>One world-record attempt.</em></h1>
+          <h1>Six full distance IRONMAN races.<br />Six continents.<br /><em>One world record attempt.</em></h1>
           <p>Application accepted. Official guidelines issued 5 August 2026. Status: Pending Evidence.</p>
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partner Role <ArrowRight size={16} /></button>
         </div>
@@ -54,7 +55,7 @@ export function MissionPage() {
             <h2>Youngest person to complete an IRONMAN® triathlon on six continents (male).</h2>
           </motion.div>
           <motion.div {...reveal}>
-            <p>Guinness World Records accepted Toufic’s application and issued the official guidelines on 5 August 2026. He must complete one qualifying full-distance race in North America, South America, Europe, Africa, Asia, and Australasia.</p>
+            <p>Guinness World Records accepted Toufic’s application and issued the official guidelines on 5 August 2026. He must complete one qualifying full distance race in North America, South America, Europe, Africa, Asia, and Australasia.</p>
             <p>No record is claimed. The result will only be determined after all six races are completed and the full evidence is reviewed. Toufic’s personal target is to finish before turning 21.</p>
           </motion.div>
         </div>
@@ -106,9 +107,9 @@ export function MissionPage() {
       <section className="section readiness-section">
         <div className="site-shell readiness-grid">
           <motion.div {...reveal} className="readiness-copy">
-            <p className="eyebrow">NO RACE IS LOCKED BEFORE EVERY CHECK PASSES</p>
-            <h2>A race counts only when the race and the evidence qualify.</h2>
-            <p>Every event must pass the official rules, entry, visa, travel, medical, recovery, funding, organiser, witness, and evidence checks.</p>
+            <p className="eyebrow">A PLANNED RACE STILL HAS TO PASS EVERY EXECUTION CHECK</p>
+            <h2>A route is only useful if every chapter can actually be executed and proved.</h2>
+            <p>Every event still has to pass the official rules, entry, visa, travel, medical, recovery, funding, organiser, witness, and evidence checks.</p>
           </motion.div>
           <div className="readiness-list">
             {gates.map((gate, index) => (
@@ -120,11 +121,23 @@ export function MissionPage() {
         </div>
       </section>
 
+      <section className="section mission-route-plan-section">
+        <div className="site-shell">
+          <motion.div {...reveal} className="section-heading section-heading-wide">
+            <p className="eyebrow">THE OPERATING ROUTE</p>
+            <h2>Route B is preferred. Route A stays live as the backup.</h2>
+            <p>Both routes cover all six required regions. The difference is the final North America and Europe combination, and the recovery risk created by that sequence.</p>
+          </motion.div>
+          <RoutePlans />
+        </div>
+      </section>
+
       <section className="section mission-map-page">
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading">
-            <p className="eyebrow">THE GLOBAL ROUTE</p>
-            <h2>North America. South America. Europe. Africa. Asia. Australasia.</h2>
+            <p className="eyebrow">THE GLOBAL VIEW</p>
+            <h2>Six required regions. Two live route plans.</h2>
+            <p>Explore each continent to see the preferred Route B chapter and the Route A backup where the plans differ.</p>
           </motion.div>
           <WorldMap />
         </div>
@@ -134,10 +147,10 @@ export function MissionPage() {
         <div className="site-shell early-partner-grid">
           <motion.div {...reveal}>
             <p className="eyebrow">WHY EARLY MATTERS</p>
-            <h2>The first qualifying chapter can only be built once.</h2>
+            <h2>The first chapter can only be built once.</h2>
           </motion.div>
           <motion.div {...reveal}>
-            <p>The first partners join before Race 1 is locked. Each partner removes one real risk and becomes part of the documented beginning—not only the final result.</p>
+            <p>The first partners join while the route is being secured. Each partner removes one real risk and becomes part of the documented beginning, not only the final result.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partner Role <ArrowRight size={16} /></button>
           </motion.div>
         </div>

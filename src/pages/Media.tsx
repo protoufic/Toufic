@@ -5,8 +5,8 @@ import { media, quotes, site, warsawRace } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
 
 const bios = {
-  short: 'Toufic Abou Ali is a 20-year-old Lebanese founder-athlete and Founder & CEO of Sira. His Guinness World Records application for the youngest male to complete an IRONMAN triathlon on six continents has been accepted. Official guidelines were issued on 5 August 2026. The record has not yet been achieved or verified.',
-  medium: 'Toufic Abou Ali is a Lebanese founder-athlete and Founder & CEO of Sira. He completed IRONMAN 70.3 Warsaw at 19 in 6:08:15. He is now building Six Continents World Record: a world-record attempt to complete six qualifying full-distance IRONMAN races across North America, South America, Europe, Africa, Asia, and Australasia before turning 21. His application has been accepted, the official guidelines were issued on 5 August 2026, and the status is Pending Evidence. No record is claimed; the result depends on completion and evidence review.',
+  short: 'Toufic Abou Ali is a 20-year-old Lebanese founder and athlete and Founder & CEO of Sira. His Guinness World Records application for the youngest male to complete an IRONMAN triathlon on six continents has been accepted. Official guidelines were issued on 5 August 2026. The record has not yet been achieved or verified.',
+  medium: 'Toufic Abou Ali is a Lebanese founder and athlete and Founder & CEO of Sira. He completed IRONMAN 70.3 Warsaw at 19 in 6:08:15. He is now building Six Continents World Record: a world record attempt to complete six qualifying full distance IRONMAN races across North America, South America, Europe, Africa, Asia, and Australasia before turning 21. His application has been accepted, the official guidelines were issued on 5 August 2026, and the status is Pending Evidence. No record is claimed; the result depends on completion and evidence review.',
 };
 
 export function MediaPage() {
@@ -36,7 +36,7 @@ export function MediaPage() {
             <div><span>Current status</span><strong>Pending Evidence</strong></div>
             <div><span>Personal target</span><strong>Complete all six before turning 21</strong></div>
             <div><span>First IRONMAN 70.3</span><strong>Warsaw · {warsawRace.total}</strong></div>
-            <div><span>Identity</span><strong>Lebanese Founder-Athlete</strong></div>
+            <div><span>Identity</span><strong>Lebanese Founder and Athlete</strong></div>
             <div><span>Company</span><strong>Founder & CEO of Sira</strong></div>
           </div>
         </div>

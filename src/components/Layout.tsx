@@ -50,10 +50,17 @@ export function Header() {
             ))}
           </div>
 
-          <button className="header-cta" onClick={() => openContactPanel('partnership')}>
-            Discuss a Partnership
-            <ArrowUpRight size={15} />
-          </button>
+          {location.pathname === '/partners' ? (
+            <button className="header-cta" onClick={() => openContactPanel('partnership')}>
+              Discuss the Fit
+              <ArrowUpRight size={15} />
+            </button>
+          ) : (
+            <Link className="header-cta" to="/partners" onPointerEnter={() => preloadRoute('/partners')} onFocus={() => preloadRoute('/partners')}>
+              15 Min Partner Walkthrough
+              <ArrowUpRight size={15} />
+            </Link>
+          )}
 
           <button
             className="mobile-menu-button"
@@ -82,9 +89,15 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
-              <button onClick={() => openContactPanel('partnership')}>
-                <MessageCircle size={18} /> Discuss a Partnership
-              </button>
+              {location.pathname === '/partners' ? (
+                <button onClick={() => openContactPanel('partnership')}>
+                  <MessageCircle size={18} /> Discuss the Fit
+                </button>
+              ) : (
+                <Link to="/partners" className="mobile-partner-walkthrough">
+                  <MessageCircle size={18} /> 15 Min Partner Walkthrough
+                </Link>
+              )}
             </div>
           </motion.div>
         )}
@@ -99,7 +112,7 @@ export function Footer() {
       <div className="site-shell footer-grid">
         <div className="footer-lead">
           <span className="footer-kicker">SIX CONTINENTS WORLD RECORD</span>
-          <h2>6 full-distance IRONMAN races. 6 continents. 1 world-record attempt.</h2>
+          <h2>6 full distance IRONMAN races. 6 continents. 1 world record attempt.</h2>
           <button className="text-link" onClick={() => openContactPanel('partnership')}>
             Discuss a partnership <ArrowUpRight size={16} />
           </button>

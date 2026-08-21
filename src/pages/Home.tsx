@@ -22,7 +22,7 @@ function ScaleSection() {
       <div className="site-shell">
         <motion.div {...reveal} className="section-heading section-heading-wide">
           <p className="eyebrow">UNDERSTAND THE SCALE</p>
-          <h2>A full-distance IRONMAN ends with a marathon.</h2>
+          <h2>A full distance IRONMAN ends with a marathon.</h2>
           <p>The 42.19 km run starts only after a 3.85 km swim and a 180 km bike ride.</p>
         </motion.div>
 
@@ -65,7 +65,7 @@ function WhyNowSection() {
   const items = [
     { icon: TimerReset, title: 'Race entries can close', copy: 'A qualifying race cannot be used if the entry, route, visa, or preparation window is lost.' },
     { icon: ShieldCheck, title: 'Evidence starts before Race 1', copy: 'Organiser documents, witnesses, travel proof, photos, and video must be planned before the start.' },
-    { icon: Globe2, title: 'The first partner roles are open', copy: 'A company joining before Race 1 can remove one real risk and become part of the beginning.' },
+    { icon: Globe2, title: 'Route B is preferred', copy: 'The six chapter sequence is defined. Route A stays live as backup while the final entries and logistics are secured.' },
   ];
   return (
     <section className="section urgency-section visual-backdrop-section">
@@ -73,9 +73,9 @@ function WhyNowSection() {
       <div className="site-shell urgency-grid">
         <motion.div {...reveal} className="urgency-lead">
           <p className="eyebrow">WHY THE ATTEMPT STARTS NOW</p>
-          <h2>Race 1 must be built before it can be raced.</h2>
-          <p>The application is accepted and the rules are issued. The races, travel, equipment, health, funding, witnesses, and evidence must now be controlled.</p>
-          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Help build Race 1 <ArrowRight size={16} /></button>
+          <h2>Race 1 is Argentina. Execution starts now.</h2>
+          <p>The application is accepted, the rules are issued, and the route architecture is defined. Entries, travel, equipment, health, funding, witnesses, and evidence must now be controlled.</p>
+          <Link className="button-primary" to="/partners">Open the 15 minute partner walkthrough <ArrowRight size={16} /></Link>
         </motion.div>
         <div className="urgency-list">
           {items.map((item, index) => (
@@ -142,7 +142,7 @@ function MapSection() {
         <motion.div {...reveal} className="section-heading">
           <p className="eyebrow">THE SIX REQUIRED REGIONS</p>
           <h2>Six qualifying races. Six required regions.</h2>
-          <p>North America, South America, Europe, Africa, Asia, and Australasia. A race is announced only after every rule and evidence check is complete.</p>
+          <p>North America, South America, Europe, Africa, Asia, and Australasia. Route B is preferred; Route A remains the backup where the final North America and Europe chapters differ.</p>
         </motion.div>
         <WorldMap />
       </div>
@@ -220,10 +220,10 @@ function PartnersSection() {
       <div className="site-shell partners-home-grid">
         <motion.div {...reveal} className="partners-home-copy">
           <p className="eyebrow">THE PARTNERSHIP OPPORTUNITY</p>
-          <h2>A partner removes one real blocker.</h2>
-          <p>Travel. Insurance. Equipment. Health. Nutrition. Race entry. Evidence. The company becomes part of the solution and receives a clear role, real use, content, activation, and reporting.</p>
+          <h2>Own the part that makes it possible.</h2>
+          <p>Travel. Insurance. Accommodation. Bike. Health. Story and evidence. The company becomes part of the solution and receives a clear role, real use, content, activation, and reporting.</p>
           <div className="partners-home-actions">
-            <Link className="button-primary" to="/partners">View Partnership Opportunities <ArrowRight size={16} /></Link>
+            <Link className="button-primary" to="/partners">Open the 15 minute walkthrough <ArrowRight size={16} /></Link>
             <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Talk directly to Toufic</button>
           </div>
         </motion.div>
@@ -249,7 +249,7 @@ function FinalCta() {
           <h2>Tell me what your company can unlock.<br />I will build one clear role.</h2>
         </div>
         <div>
-          <p>Choose one real problem to solve before Race 1. The proposal will define the role, contribution, deliverables, rights, dates, and reporting.</p>
+          <p>Use the partner page as the conversation. Choose one real problem to solve, then build the custom role, contribution, deliverables, rights, dates, and reporting around the company’s goals.</p>
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
         </div>
       </div>
