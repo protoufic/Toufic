@@ -1,13 +1,13 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
-import { FounderPage } from './pages/Founder';
-import { HomePage } from './pages/Home';
-import { MediaPage } from './pages/Media';
-import { MissionPage } from './pages/Mission';
-import { NotFoundPage } from './pages/NotFound';
-import { PartnersPage } from './pages/Partners';
-import { ProofPage } from './pages/Proof';
-import { WarsawPage } from './pages/Warsaw';
+import { FounderPage } from './views/Founder';
+import { HomePage } from './views/Home';
+import { MediaPage } from './views/Media';
+import { MissionPage } from './views/Mission';
+import { NotFoundPage } from './views/NotFound';
+import { PartnersPage } from './views/Partners';
+import { ProofPage } from './views/Proof';
+import { WarsawPage } from './views/Warsaw';
 
 const pages: Record<string, React.ComponentType> = {
   '/': HomePage,

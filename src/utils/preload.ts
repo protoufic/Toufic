@@ -1,10 +1,10 @@
 const routeLoaders: Record<string, () => Promise<unknown>> = {
-  '/mission': () => import('../pages/Mission'),
-  '/proof': () => import('../pages/Proof'),
-  '/founder': () => import('../pages/Founder'),
-  '/partners': () => import('../pages/Partners'),
-  '/warsaw': () => import('../pages/Warsaw'),
-  '/media': () => import('../pages/Media'),
+  '/mission': () => import('../views/Mission'),
+  '/proof': () => import('../views/Proof'),
+  '/founder': () => import('../views/Founder'),
+  '/partners': () => import('../views/Partners'),
+  '/warsaw': () => import('../views/Warsaw'),
+  '/media': () => import('../views/Media'),
 };
 
 const requested = new Set<string>();

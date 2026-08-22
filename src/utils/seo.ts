@@ -176,7 +176,7 @@ export function buildStructuredData(page: SeoPage, siteUrlInput?: string) {
 
 export function applyRouteSeo(pathname: string) {
   const page = getSeoPage(pathname);
-  const configuredSiteUrl = import.meta.env.VITE_SITE_URL || seoConfig.siteUrl;
+  const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || seoConfig.siteUrl;
   const siteUrl = configuredSiteUrl.replace(/\/$/, '');
   const canonical = absoluteUrl(page.path, siteUrl);
   const image = absoluteUrl(page.image, siteUrl);

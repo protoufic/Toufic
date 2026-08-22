@@ -2,14 +2,14 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { applyRouteSeo } from './utils/seo';
 
-const HomePage = lazy(() => import('./pages/Home').then((module) => ({ default: module.HomePage })));
-const MissionPage = lazy(() => import('./pages/Mission').then((module) => ({ default: module.MissionPage })));
-const WarsawPage = lazy(() => import('./pages/Warsaw').then((module) => ({ default: module.WarsawPage })));
-const ProofPage = lazy(() => import('./pages/Proof').then((module) => ({ default: module.ProofPage })));
-const FounderPage = lazy(() => import('./pages/Founder').then((module) => ({ default: module.FounderPage })));
-const PartnersPage = lazy(() => import('./pages/Partners').then((module) => ({ default: module.PartnersPage })));
-const MediaPage = lazy(() => import('./pages/Media').then((module) => ({ default: module.MediaPage })));
-const NotFoundPage = lazy(() => import('./pages/NotFound').then((module) => ({ default: module.NotFoundPage })));
+const HomePage = lazy(() => import('./views/Home').then((module) => ({ default: module.HomePage })));
+const MissionPage = lazy(() => import('./views/Mission').then((module) => ({ default: module.MissionPage })));
+const WarsawPage = lazy(() => import('./views/Warsaw').then((module) => ({ default: module.WarsawPage })));
+const ProofPage = lazy(() => import('./views/Proof').then((module) => ({ default: module.ProofPage })));
+const FounderPage = lazy(() => import('./views/Founder').then((module) => ({ default: module.FounderPage })));
+const PartnersPage = lazy(() => import('./views/Partners').then((module) => ({ default: module.PartnersPage })));
+const MediaPage = lazy(() => import('./views/Media').then((module) => ({ default: module.MediaPage })));
+const NotFoundPage = lazy(() => import('./views/NotFound').then((module) => ({ default: module.NotFoundPage })));
 
 function RouteEffects() {
   const location = useLocation();
