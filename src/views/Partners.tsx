@@ -6,14 +6,22 @@ import {
   Camera,
   Check,
   CircleDollarSign,
+  Eye,
   FileCheck2,
+  Film,
   Globe2,
+  Handshake,
   HeartPulse,
   Hotel,
+  LineChart,
+  Megaphone,
   MessageCircle,
   PackageCheck,
   Plane,
+  Presentation,
   ShieldCheck,
+  Target,
+  Trophy,
   Users,
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
@@ -42,7 +50,7 @@ const needs = [
   { icon: Hotel, title: 'Race week base', copy: 'Accommodation and local support for preparation, recovery, and race execution.' },
   { icon: Bike, title: 'Bicycle system', copy: 'A race ready bicycle, fit, travel case, service, spares, and technical support.' },
   { icon: HeartPulse, title: 'Health and performance', copy: 'Medical oversight, physiotherapy, nutrition, testing, and recovery support.' },
-  { icon: CircleDollarSign, title: 'Final race access', copy: 'The last two entries and the support required to secure North America and Europe.' },
+  { icon: CircleDollarSign, title: 'Race access and funding', copy: 'Registrations, travel, and the core costs behind all six race chapters.' },
   { icon: Camera, title: 'Story and evidence', copy: 'Content production and disciplined proof capture from preparation to final review.' },
 ];
 
@@ -57,13 +65,34 @@ const companyFit = [
 ];
 
 const value = [
-  { icon: Globe2, title: 'A role people understand', copy: 'A clear position tied to the part your company genuinely makes possible.' },
-  { icon: PackageCheck, title: 'Real use', copy: 'Your product or service appears while solving a visible problem, not as decoration.' },
-  { icon: Camera, title: 'Months of story', copy: 'Training, travel, race week, race day, recovery, and the next continent.' },
-  { icon: Building2, title: 'Useful company assets', copy: 'Approved photos, video, interviews, and campaign material for agreed channels.' },
-  { icon: Users, title: 'People to involve', copy: 'Employee, customer, youth, university, and community moments can be built around the mission.' },
-  { icon: FileCheck2, title: 'Proof and reporting', copy: 'Clear delivery tracking, race updates, asset records, and a final case study.' },
+  { icon: Globe2, group: 'Visibility', title: 'Six continent visibility', copy: 'Your company can appear across six international race chapters, from preparation to the final finish.' },
+  { icon: Eye, group: 'Visibility', title: 'Clear brand presence', copy: 'Agreed visibility on relevant content, equipment, appearances, and campaign material.' },
+  { icon: Megaphone, group: 'Visibility', title: 'Social media exposure', copy: 'Planned posts, stories, tags, partner credits, race updates, and milestone content.' },
+  { icon: Target, group: 'Visibility', title: 'Media opportunities', copy: 'A ready story, facts, images, and interviews that can support press outreach. Earned coverage is never guaranteed.' },
+  { icon: Camera, group: 'Content', title: 'Original photos and video', copy: 'Approved race, travel, training, recovery, and behind the scenes assets for agreed use.' },
+  { icon: Film, group: 'Content', title: 'A story that keeps moving', copy: 'Six races create repeated moments instead of one short campaign that disappears after a single event.' },
+  { icon: Building2, group: 'Content', title: 'Content for company channels', copy: 'Agreed assets can be adapted for social media, websites, internal updates, events, and campaigns.' },
+  { icon: PackageCheck, group: 'Proof', title: 'Product or service in action', copy: 'Show what your company provides while it solves a real need during the mission.' },
+  { icon: Trophy, group: 'Position', title: 'Category exclusivity', copy: 'Where agreed, your company can be the only mission partner in its business category.' },
+  { icon: ShieldCheck, group: 'Position', title: 'A recognised partner role', copy: 'Be clearly credited as the company that made the agreed part of the mission possible.' },
+  { icon: Users, group: 'People', title: 'Employee engagement', copy: 'Talks, questions and answers, wellbeing ideas, goal setting, and internal mission updates.' },
+  { icon: Building2, group: 'People', title: 'Employer brand', copy: 'Show current and future employees the kind of ambition, discipline, and purpose your company supports.' },
+  { icon: Handshake, group: 'People', title: 'Customer and community moments', copy: 'Build agreed events, challenges, competitions, meetups, or digital activations around the journey.' },
+  { icon: Presentation, group: 'People', title: 'Appearances and speaking', copy: 'Agreed interviews, company visits, events, workshops, and conversations with Toufic.' },
+  { icon: HeartPulse, group: 'Meaning', title: 'Youth and ambition', copy: 'Connect the company with discipline, resilience, health, entrepreneurship, and young Lebanese ambition.' },
+  { icon: Globe2, group: 'Meaning', title: 'Lebanon on an international stage', copy: 'Help carry a serious Lebanese story through six countries and bring every chapter back home.' },
+  { icon: LineChart, group: 'Proof', title: 'Measured delivery', copy: 'Receive a clear record of agreed posts, assets, appearances, reach, engagement, and completed deliverables.' },
+  { icon: FileCheck2, group: 'Proof', title: 'Final case study', copy: 'Turn the partnership into one usable story showing the need, the company role, the work, and the outcome.' },
 ];
+
+const routeFlags: Record<string, string> = {
+  Argentina: '🇦🇷',
+  Oman: '🇴🇲',
+  'New Zealand': '🇳🇿',
+  'South Africa': '🇿🇦',
+  'United States': '🇺🇸',
+  Germany: '🇩🇪',
+};
 
 const scopes = [
   { number: '01', title: 'Whole mission', copy: 'A leading role across all six race chapters.' },
@@ -78,12 +107,12 @@ const faqs = [
     a: 'No. The application has been accepted and the official guidelines were issued on 5 August 2026. Recognition depends on completing all six races, submitting the required evidence, and passing the final review.',
   },
   {
-    q: 'Are all six race entries secured?',
-    a: 'Four are secured: Argentina, Oman, New Zealand, and South Africa. Jacksonville and Hamburg are the preferred final races and are being secured. A flexible backup route protects the attempt if that final combination changes.',
+    q: 'Where will the six race chapters happen?',
+    a: 'The six race plan covers San Juan in Argentina, Oman, New Zealand, South Africa, Jacksonville in the United States, and Hamburg in Germany.',
   },
   {
     q: 'Does a company need to fund the whole mission?',
-    a: 'No. A company can support the whole mission, one category, one race chapter, or one specific need. Support can be financial, product, service, access, or a useful mix.',
+    a: 'A lead company can fund and own the full six race mission. A company can also choose one category, one race chapter, or one specific need. Support can be financial, product, service, access, or a useful mix.',
   },
   {
     q: 'What is promised before an agreement?',
@@ -102,8 +131,8 @@ export function PartnersPage() {
         <div className="site-shell partners-hero-grid">
           <div className="partners-hero-copy">
             <p className="eyebrow">PARTNER BRIEF · BUILT FOR A FIRST CONVERSATION</p>
-            <h1>Do not sponsor the attempt.<br /><em>Own the part that makes it possible.</em></h1>
-            <p>Six races. Six continents. Six problems to solve. Your company can own one real gap, then build useful visibility, content, and engagement around what it helped make possible.</p>
+            <h1><em>Own the part that makes six continents possible.</em></h1>
+            <p>Six full distance races. Six continents. One Lebanese mission before age 21. Your company can make a real part possible and receive clear visibility, useful content, product use, audience engagement, and measured delivery in return.</p>
             <div className="partners-hero-actions">
               <button className="button-primary" onClick={() => openContactPanel('partnership')}>Start a 15 Minute Conversation <ArrowRight size={16} /></button>
               <a className="button-quiet" href="#fit">Find Your Company Fit</a>
@@ -111,7 +140,7 @@ export function PartnersPage() {
             <div className="partner-trust-line">
               <span><Check size={15} /> Application accepted</span>
               <span><Check size={15} /> Guidelines issued</span>
-              <span><Check size={15} /> Four entries secured</span>
+              <span><Check size={15} /> Six race chapters</span>
             </div>
           </div>
           <figure className="partners-hero-media">
@@ -124,7 +153,7 @@ export function PartnersPage() {
       <section className="partner-status-ribbon">
         <div className="site-shell partner-status-grid">
           <div><span>Race 1</span><strong>San Juan, Argentina</strong><small>1 November 2026</small></div>
-          <div><span>Route status</span><strong>4 of 6 entries secured</strong><small>Two preferred races being secured</small></div>
+          <div><span>Global route</span><strong>6 races · 6 continents</strong><small>One complete international mission</small></div>
           <div><span>Deadline</span><strong>Before age 21</strong><small>14 June 2027</small></div>
           <div><span>Application</span><strong>Pending Evidence</strong><small>No record is claimed</small></div>
         </div>
@@ -168,18 +197,18 @@ export function PartnersPage() {
       <section className="section partner-route-section" id="route">
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading section-heading-wide">
-            <p className="eyebrow">THE PREFERRED ROUTE</p>
-            <h2>Four entries secured. Two final chapters to unlock.</h2>
-            <p>The first four races are secured. Jacksonville then Hamburg is the preferred finish. A flexible final combination protects the deadline if those last two races change.</p>
+            <p className="eyebrow">THE SIX RACE PLAN</p>
+            <h2>Six races. Six continents. One complete story.</h2>
+            <p>Each race is a full chapter: preparation, travel, race week, race day, recovery, content, and proof.</p>
           </motion.div>
           <div className="partner-route-grid">
             {preferredRoute.map((race, index) => (
-              <motion.article key={race.number} {...reveal} transition={{ duration: .48, delay: index * .045 }} className={race.secured ? 'route-secured' : 'route-open'}>
-                <div><span>{race.number}</span><small>{race.continent}</small></div>
+              <motion.article key={race.number} {...reveal} transition={{ duration: .48, delay: index * .045 }}>
+                <div><span>{race.number}</span><b aria-hidden="true">{routeFlags[race.country]}</b><small>{race.continent}</small></div>
                 <h3>{race.race}</h3>
                 <p>{race.country}</p>
                 <time>{race.date}</time>
-                <strong>{race.secured ? <Check size={15} /> : <Globe2 size={15} />}{race.status}</strong>
+                <strong><Globe2 size={15} /> Full distance race chapter</strong>
               </motion.article>
             ))}
           </div>
@@ -226,14 +255,14 @@ export function PartnersPage() {
       <section className="section partner-value-section" id="value">
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading section-heading-wide">
-            <p className="eyebrow">WHAT A PARTNER CAN RECEIVE</p>
-            <h2>A useful role. Real use. Clear delivery.</h2>
-            <p>The exact package depends on the role, contribution, rights, and channels agreed together.</p>
+            <p className="eyebrow">WHAT A COMPANY CAN GAIN</p>
+            <h2>Visibility. Content. Real use. People. Meaning. Proof.</h2>
+            <p>These are the possible benefits. The custom proposal keeps only the ones that matter to the company and defines exactly what will be delivered.</p>
           </motion.div>
           <div className="partner-value-page-grid">
             {value.map((item, index) => (
               <motion.article key={item.title} {...reveal} transition={{ duration: .48, delay: index * .045 }}>
-                <item.icon size={22} /><h3>{item.title}</h3><p>{item.copy}</p>
+                <div><item.icon size={22} /><span>{item.group}</span></div><h3>{item.title}</h3><p>{item.copy}</p>
               </motion.article>
             ))}
           </div>
@@ -243,9 +272,9 @@ export function PartnersPage() {
       <section className="section partner-scope-section">
         <div className="site-shell partner-scope-grid">
           <motion.div {...reveal}>
-            <p className="eyebrow">THE SUPPORT CAN BE FOCUSED</p>
-            <h2>Your company does not need to fund everything.</h2>
-            <p>Financial support helps, but a product, service, access, expertise, or useful mix can remove an equally important blocker.</p>
+            <p className="eyebrow">THE SUPPORT CAN MATCH THE COMPANY</p>
+            <h2>Lead the full mission or own one clear part.</h2>
+            <p>A lead partner can fund and carry all six race chapters. Other partners can remove one important cost, service, product, or access gap.</p>
           </motion.div>
           <div className="partner-scope-list">
             {scopes.map((scope) => <article key={scope.number}><span>{scope.number}</span><div><h3>{scope.title}</h3><p>{scope.copy}</p></div></article>)}
