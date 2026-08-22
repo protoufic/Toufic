@@ -9,10 +9,10 @@ This is the production ready Vercel edition of Toufic Abou Ali's website.
 3. Keep the root directory as the project root.
 4. Keep the install command as `npm ci`.
 5. Keep the build command as `npm run build`.
-6. Leave the output directory empty. Vercel manages the Next.js output automatically.
+6. Set the output directory to `dist`.
 7. Deploy.
 
-The included `vercel.json` already applies these settings.
+The included `next.config.ts` writes the native Next.js build to `dist`, and `vercel.json` applies the matching Vercel setting. This makes the project compatible with an existing Vercel project already configured to expect `dist`.
 
 ## Local verification
 
