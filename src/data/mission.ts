@@ -1,12 +1,13 @@
 export const site = {
   name: 'Toufic Abou Ali',
-  identity: 'Lebanese Founder and Athlete',
+  identity: 'Lebanese founder and athlete',
   age: 20,
   email: 'protoufic@gmail.com',
   whatsapp: 'https://wa.me/96176923943?text=Hello%20Toufic%2C%20I%20would%20like%20to%20discuss%20a%20possible%20partnership%20for%20the%20Six%20Continents%20World%20Record%20mission.',
   instagram: 'https://www.instagram.com/touficaa/',
   linkedin: 'https://www.linkedin.com/in/touficabouali',
   strava: 'https://www.strava.com/athletes/109556347',
+  federationFeature: 'https://www.instagram.com/p/DZXwxDAonHS/',
   sira: 'https://siracareers.com',
   recordSource: 'https://www.guinnessworldrecords.com/world-records/764002-youngest-person-to-complete-an-ironman%C2%AE-triathlon-on-six-continents-male',
   ironmanSource: 'https://www.ironman.com/news/about-ironman',
@@ -29,10 +30,8 @@ export const mission = {
     missionTotal: 1356.24,
   },
   deadlines: {
-    main: '2027-11-27T23:59:59+02:00',
-    mainLabel: 'Current listed record benchmark',
-    extreme: '2027-06-13T23:59:59+02:00',
-    extremeLabel: 'Personal target: complete all six before turning 21',
+    main: '2027-06-14T00:00:00+03:00',
+    mainLabel: 'Time left to finish before turning 21',
   },
   benchmark: {
     holder: 'Taeyoung Lee',
@@ -41,67 +40,23 @@ export const mission = {
   },
   recordStatus: 'Application accepted • Guidelines issued 5 August 2026 • Pending Evidence',
   continents: [
-    { name: 'North America', x: 20.0, y: 38.8, summary: 'Route B: Jacksonville on 16 May 2027. Route A backup: Texas on 24 April 2027.', preferredRace: 'Jacksonville, USA', preferredDate: '16 May 2027', backupRace: 'Texas, USA', backupDate: '24 April 2027' },
-    { name: 'South America', x: 30.5, y: 66.8, summary: 'The opening chapter in both route plans.', preferredRace: 'San Juan, Argentina', preferredDate: '1 November 2026', backupRace: 'San Juan, Argentina', backupDate: '1 November 2026' },
-    { name: 'Europe', x: 49.0, y: 36.0, summary: 'Route B closes in Hamburg. Route A keeps Lanzarote as the backup European finish.', preferredRace: 'Hamburg, Germany', preferredDate: '6 June 2027', backupRace: 'Lanzarote, Spain', backupDate: '15 May 2027' },
-    { name: 'Africa', x: 53.7, y: 63.0, summary: 'South Africa is the fourth chapter in both route plans.', preferredRace: 'South Africa', preferredDate: '18 April 2027', backupRace: 'South Africa', backupDate: '18 April 2027' },
-    { name: 'Asia', x: 75.5, y: 40.5, summary: 'Oman is the second chapter in both route plans.', preferredRace: 'Oman', preferredDate: '5 December 2026', backupRace: 'Oman', backupDate: '5 December 2026' },
-    { name: 'Australasia', x: 85.0, y: 73.5, summary: 'New Zealand is the third chapter in both route plans.', preferredRace: 'New Zealand', preferredDate: '6 March 2027', backupRace: 'New Zealand', backupDate: '6 March 2027' },
+    { name: 'North America', x: 20.0, y: 38.8, race: 'Jacksonville, United States', date: '16 May 2027', status: 'Preferred route · Being secured', secured: false, summary: 'Jacksonville is the preferred North America race. A flexible backup protects the attempt if the final combination must change.' },
+    { name: 'South America', x: 30.5, y: 66.8, race: 'San Juan, Argentina', date: '1 November 2026', status: 'Entry secured', secured: true, summary: 'San Juan is the opening race and the first full distance chapter of the mission.' },
+    { name: 'Europe', x: 49.0, y: 36.0, race: 'Hamburg, Germany', date: '6 June 2027', status: 'Preferred route · Being secured', secured: false, summary: 'Hamburg is the preferred final race, eight days before Toufic turns 21. A flexible backup route protects the deadline.' },
+    { name: 'Africa', x: 53.7, y: 63.0, race: 'South Africa', date: '18 April 2027', status: 'Entry secured', secured: true, summary: 'South Africa is the fourth secured race and the African chapter of the attempt.' },
+    { name: 'Asia', x: 75.5, y: 40.5, race: 'Oman', date: '5 December 2026', status: 'Entry secured', secured: true, summary: 'Oman is the second secured race, five weeks after the opening chapter in Argentina.' },
+    { name: 'Australasia', x: 85.0, y: 73.5, race: 'New Zealand', date: '6 March 2027', status: 'Entry secured', secured: true, summary: 'New Zealand is the third secured race and begins the final four month push to the deadline.' },
   ],
 };
 
-export type RoutePlanKey = 'B' | 'A';
-
-export interface MissionRaceChapter {
-  continent: string;
-  location: string;
-  country: string;
-  date: string;
-  isoDate: string;
-  note?: string;
-}
-
-export interface MissionRoutePlan {
-  key: RoutePlanKey;
-  label: string;
-  status: string;
-  description: string;
-  rationale: string;
-  chapters: MissionRaceChapter[];
-}
-
-export const routePlans: Record<RoutePlanKey, MissionRoutePlan> = {
-  B: {
-    key: 'B',
-    label: 'Route B',
-    status: 'Preferred route',
-    description: 'The preferred sequence because it creates materially safer recovery spacing after South Africa and turns Hamburg into the final European chapter.',
-    rationale: '28 days from South Africa to Jacksonville, then 21 days to Hamburg. The final race lands eight days before the personal before 21 deadline.',
-    chapters: [
-      { continent: 'South America', location: 'San Juan', country: 'Argentina', date: '1 Nov 2026', isoDate: '2026-11-01' },
-      { continent: 'Asia', location: 'Oman', country: 'Oman', date: '5 Dec 2026', isoDate: '2026-12-05' },
-      { continent: 'Australasia', location: 'New Zealand', country: 'New Zealand', date: '6 Mar 2027', isoDate: '2027-03-06' },
-      { continent: 'Africa', location: 'South Africa', country: 'South Africa', date: '18 Apr 2027', isoDate: '2027-04-18' },
-      { continent: 'North America', location: 'Jacksonville', country: 'USA', date: '16 May 2027', isoDate: '2027-05-16' },
-      { continent: 'Europe', location: 'Hamburg', country: 'Germany', date: '6 Jun 2027', isoDate: '2027-06-06', note: 'Premium XC access route' },
-    ],
-  },
-  A: {
-    key: 'A',
-    label: 'Route A',
-    status: 'Backup route',
-    description: 'The backup sequence if the preferred North America or Europe finish cannot be secured. It finishes earlier, but the Africa to Texas turnaround is much tighter.',
-    rationale: 'The main weakness is the six day turnaround between South Africa and Texas, which makes recovery and travel significantly more aggressive.',
-    chapters: [
-      { continent: 'South America', location: 'San Juan', country: 'Argentina', date: '1 Nov 2026', isoDate: '2026-11-01' },
-      { continent: 'Asia', location: 'Oman', country: 'Oman', date: '5 Dec 2026', isoDate: '2026-12-05' },
-      { continent: 'Australasia', location: 'New Zealand', country: 'New Zealand', date: '6 Mar 2027', isoDate: '2027-03-06' },
-      { continent: 'Africa', location: 'South Africa', country: 'South Africa', date: '18 Apr 2027', isoDate: '2027-04-18' },
-      { continent: 'North America', location: 'Texas', country: 'USA', date: '24 Apr 2027', isoDate: '2027-04-24', note: 'Only six days after South Africa' },
-      { continent: 'Europe', location: 'Lanzarote', country: 'Spain', date: '15 May 2027', isoDate: '2027-05-15' },
-    ],
-  },
-};
+export const preferredRoute = [
+  { number: '01', continent: 'South America', race: 'San Juan', country: 'Argentina', date: '1 Nov 2026', status: 'Entry secured', secured: true },
+  { number: '02', continent: 'Asia', race: 'Oman', country: 'Oman', date: '5 Dec 2026', status: 'Entry secured', secured: true },
+  { number: '03', continent: 'Australasia', race: 'New Zealand', country: 'New Zealand', date: '6 Mar 2027', status: 'Entry secured', secured: true },
+  { number: '04', continent: 'Africa', race: 'South Africa', country: 'South Africa', date: '18 Apr 2027', status: 'Entry secured', secured: true },
+  { number: '05', continent: 'North America', race: 'Jacksonville', country: 'United States', date: '16 May 2027', status: 'Being secured', secured: false },
+  { number: '06', continent: 'Europe', race: 'Hamburg', country: 'Germany', date: '6 Jun 2027', status: 'Being secured', secured: false },
+];
 
 export const warsawRace = {
   date: 'June 7, 2026',
@@ -129,12 +84,15 @@ export const warsawRace = {
 };
 
 export const siraMetrics = [
-  { value: '25+', label: 'expert team members' },
-  { value: '60,000+', label: 'empowered members' },
-  { value: '12,000+', label: 'careers transformed' },
-  { value: '1,850+', label: 'candidates hired' },
-  { value: '7,281+', label: 'consultation calls' },
-  { value: '150+', label: 'partnerships' },
+  { value: '25', label: 'team members' },
+  { value: '60K+', label: 'WhatsApp community' },
+  { value: '120K+', label: 'job seeker database' },
+  { value: '900+', label: 'interviews created' },
+  { value: '300', label: 'job offers' },
+  { value: '150+', label: 'people landed jobs' },
+  { value: '140+', label: 'workshops delivered' },
+  { value: '5K+', label: 'workshop attendees' },
+  { value: '15M+', label: 'content impressions' },
 ];
 
 export const quotes = [
@@ -146,65 +104,34 @@ export const quotes = [
 ];
 
 export const media = {
-  heroPoster: '/assets/img/mission/scene-01-poster.webp',
-  heroFinal: '/assets/img/mission/scene-03-final.webp',
   sceneOne: {
-    desktop: '/assets/media/mission-scene-01-desktop-opt-v2.mp4',
-    mobile: '/assets/media/mission-scene-01-mobile-opt-v2.mp4',
     poster: '/assets/img/mission/scene-01-poster.webp',
-    framesDesktop: '/assets/frames-opt-v2/scene-01/desktop',
-    framesMobile: '/assets/frames-opt-v2/scene-01/mobile',
-    frameCount: 69,
   },
   sceneTwo: {
-    desktop: '/assets/media/mission-scene-02-desktop-opt-v2.mp4',
-    mobile: '/assets/media/mission-scene-02-mobile-opt-v2.mp4',
     poster: '/assets/img/mission/scene-02-poster.webp',
-    framesDesktop: '/assets/frames-opt-v2/scene-02/desktop',
-    framesMobile: '/assets/frames-opt-v2/scene-02/mobile',
-    frameCount: 28,
   },
   sceneThree: {
-    desktop: '/assets/media/mission-scene-03-desktop-opt-v2.mp4',
-    mobile: '/assets/media/mission-scene-03-mobile-opt-v2.mp4',
-    poster: '/assets/img/mission/scene-03-poster.webp',
     final: '/assets/img/mission/scene-03-final.webp',
-    framesDesktop: '/assets/frames-opt-v2/scene-03/desktop',
-    framesMobile: '/assets/frames-opt-v2/scene-03/mobile',
-    frameCount: 130,
   },
   map: '/assets/img/mission/world-map-dark.webp',
-  missionFinal: '/assets/img/mission/map-final.webp',
   missionWide: '/assets/img/mission/mission-page-cover.webp',
-  flag: '/assets/img/mission/flag-frame.webp',
   partnerCover: '/assets/img/warsaw/finish-lebanon.webp',
   founder: '/assets/img/identity/headshot.webp',
   founderWarsaw: '/assets/img/identity/founder-warsaw.webp',
   founderRunning: '/assets/img/identity/running.webp',
   guinness: '/assets/img/brand/guinness-world-records-transparent.png',
-  backgrounds: {
-    marathon: '/assets/img/races/2025-beirut-wide.webp',
-    podium: '/assets/img/races/2023-isf.webp',
-    warsaw: '/assets/img/warsaw/finish-wide.webp',
-    run: '/assets/img/warsaw/run-course.webp',
-    lebanon: '/assets/img/warsaw/post-flag.webp',
-  },
   warsaw: {
     finishLebanon: '/assets/img/warsaw/finish-lebanon.webp',
     finishWide: '/assets/img/warsaw/finish-wide.webp',
     finishUp: '/assets/img/warsaw/finish-up.webp',
     finishDown: '/assets/img/warsaw/finish-down.webp',
     postFlag: '/assets/img/warsaw/post-flag.webp',
-    swimCap: '/assets/img/warsaw/swim-cap.webp',
     swimExit: '/assets/img/warsaw/swim-exit.webp',
-    swimFocus: '/assets/img/warsaw/swim-focus.webp',
     t1: '/assets/img/warsaw/t1-run.webp',
-    bikeCity: '/assets/img/warsaw/bike-city.webp',
     bikeCourse: '/assets/img/warsaw/bike-course.webp',
     run: '/assets/img/warsaw/run-course.webp',
     result: '/assets/img/warsaw/result.webp',
     preBikeHold: '/assets/img/warsaw/pre-bike-hold.webp',
     preBikeStand: '/assets/img/warsaw/pre-bike-stand.webp',
-    finisherVideo: '/assets/media/warsaw-finisher-zone.mp4',
   },
 };

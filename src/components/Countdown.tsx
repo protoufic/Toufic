@@ -33,9 +33,8 @@ function CountdownBlock({ target, label, emphasis = false }: { target: string; l
 
 export function DualCountdown() {
   return (
-    <div className="dual-countdown">
+    <div className="dual-countdown single-countdown">
       <CountdownBlock target={mission.deadlines.main} label={mission.deadlines.mainLabel} emphasis />
-      <CountdownBlock target={mission.deadlines.extreme} label={mission.deadlines.extremeLabel} />
     </div>
   );
 }

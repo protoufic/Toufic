@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { applyRouteSeo } from './utils/seo';
 
 const HomePage = lazy(() => import('./pages/Home').then((module) => ({ default: module.HomePage })));
@@ -29,9 +29,9 @@ function RouteLoader() {
   return <div className="route-loader" role="status" aria-label="Loading page"><span /></div>;
 }
 
-export default function App() {
+function SiteRoutes() {
   return (
-    <BrowserRouter>
+    <>
       <RouteEffects />
       <Suspense fallback={<RouteLoader />}>
         <Routes>
@@ -48,6 +48,13 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
-    </BrowserRouter>
+    </>
   );
+}
+
+export default function App({ initialPath = '/' }: { initialPath?: string }) {
+  if (typeof window === 'undefined') {
+    return <MemoryRouter initialEntries={[initialPath]}><SiteRoutes /></MemoryRouter>;
+  }
+  return <BrowserRouter><SiteRoutes /></BrowserRouter>;
 }

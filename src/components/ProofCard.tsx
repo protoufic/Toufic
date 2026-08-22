@@ -24,6 +24,8 @@ const imageByRace: Record<string, string> = {
   '2025-tripoli-race': '/assets/img/races/2025-tripoli.webp',
   '2025-biathle-triathle-world-tour': '/assets/img/races/2025-biathle.webp',
   '2026-ironman-70-3-warsaw': '/assets/img/warsaw/finish-lebanon.webp',
+  '2026-kharbe-race': '/assets/img/races/2026-kharbe.webp',
+  '2026-saghbine-race': '/assets/img/races/2026-saghbine-podium.webp',
 };
 
 export function ProofCard({ race }: { race: Race }) {

@@ -5,7 +5,7 @@ import { Layout } from '../components/Layout';
 import { ScrollHero } from '../components/ScrollHero';
 import { DualCountdown } from '../components/Countdown';
 import { WorldMap } from '../components/WorldMap';
-import { mission, media, quotes, siraMetrics, site, warsawRace } from '../data/mission';
+import { media, quotes, siraMetrics, site, warsawRace } from '../data/mission';
 import { personalBests, raceMetrics } from '../data/metrics';
 import { openContactPanel } from '../utils/contact';
 
@@ -63,9 +63,9 @@ function ScaleSection() {
 
 function WhyNowSection() {
   const items = [
-    { icon: TimerReset, title: 'Race entries can close', copy: 'A qualifying race cannot be used if the entry, route, visa, or preparation window is lost.' },
-    { icon: ShieldCheck, title: 'Evidence starts before Race 1', copy: 'Organiser documents, witnesses, travel proof, photos, and video must be planned before the start.' },
-    { icon: Globe2, title: 'Route B is preferred', copy: 'The six chapter sequence is defined. Route A stays live as backup while the final entries and logistics are secured.' },
+    { icon: TimerReset, title: 'Race 1 is 1 November 2026', copy: 'San Juan starts a seven month race calendar that must finish before 14 June 2027.' },
+    { icon: ShieldCheck, title: 'Evidence starts before every race', copy: 'Witnesses, travel proof, photos, and video must be planned before each start.' },
+    { icon: Globe2, title: 'Four entries are secured', copy: 'Argentina, Oman, New Zealand, and South Africa are secured. North America and Europe are next.' },
   ];
   return (
     <section className="section urgency-section visual-backdrop-section">
@@ -73,9 +73,9 @@ function WhyNowSection() {
       <div className="site-shell urgency-grid">
         <motion.div {...reveal} className="urgency-lead">
           <p className="eyebrow">WHY THE ATTEMPT STARTS NOW</p>
-          <h2>Race 1 is Argentina. Execution starts now.</h2>
-          <p>The application is accepted, the rules are issued, and the route architecture is defined. Entries, travel, equipment, health, funding, witnesses, and evidence must now be controlled.</p>
-          <Link className="button-primary" to="/partners">Open the 15 minute partner walkthrough <ArrowRight size={16} /></Link>
+          <h2>The mission is no longer an idea. It is now a calendar.</h2>
+          <p>Four entries are secured. The races, travel, bicycle, health, funding, witnesses, and evidence must now work as one system.</p>
+          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Find Your Company Role <ArrowRight size={16} /></button>
         </motion.div>
         <div className="urgency-list">
           {items.map((item, index) => (
@@ -100,7 +100,7 @@ function RecordSection() {
           <div className="record-copy">
             <p className="eyebrow">OFFICIAL APPLICATION STATUS</p>
             <h2>Application accepted. Guidelines issued. Pending Evidence.</h2>
-            <p>The record is not achieved. Toufic must complete six qualifying races and pass the evidence review. His personal target is to finish all six before turning 21.</p>
+            <p>The record is not achieved. Toufic must complete six qualifying races and pass the evidence review. Four race entries are secured and the target is to finish before 14 June 2027.</p>
             <a className="inline-link" href={site.recordSource} target="_blank" rel="noreferrer">View the current listed benchmark <ExternalLink size={15} /></a>
           </div>
           <DualCountdown />
@@ -121,7 +121,8 @@ function WarsawSection() {
         <motion.div {...reveal} className="warsaw-origin-copy">
           <p className="eyebrow">WHERE THE MISSION STARTED</p>
           <h2>IRONMAN 70.3 Warsaw showed the gap.</h2>
-          <p>Toufic completed his first IRONMAN 70.3 at 19. He finished. The race also showed exactly what was missing: outdoor cycling, open-water preparation, brick training, race simulation, transitions, fueling, and technical execution.</p>
+          <p>Toufic completed his first IRONMAN 70.3 at 19. The Lebanese Triathlon Federation featured him as the youngest Lebanese athlete to complete an IRONMAN 70.3. The race also showed exactly what must improve for the full distance mission.</p>
+          <a className="inline-link" href={site.federationFeature} target="_blank" rel="noreferrer">View the Federation feature <ExternalLink size={15} /></a>
           <blockquote>“{quotes[3]}”</blockquote>
           <div className="split-strip" aria-label="Warsaw race splits">
             <span><small>Swim</small><strong>{warsawRace.splits.swim}</strong></span>
@@ -142,7 +143,7 @@ function MapSection() {
         <motion.div {...reveal} className="section-heading">
           <p className="eyebrow">THE SIX REQUIRED REGIONS</p>
           <h2>Six qualifying races. Six required regions.</h2>
-          <p>North America, South America, Europe, Africa, Asia, and Australasia. Route B is preferred; Route A remains the backup where the final North America and Europe chapters differ.</p>
+          <p>Argentina, Oman, New Zealand, and South Africa are secured. Jacksonville and Hamburg form the preferred final route, with a flexible backup protecting the deadline.</p>
         </motion.div>
         <WorldMap />
       </div>
@@ -155,8 +156,9 @@ function ProofSection() {
     { value: warsawRace.total, label: 'IRONMAN 70.3 Warsaw at 19' },
     { value: personalBests.halfMarathon.time, label: 'Half-marathon best' },
     { value: personalBests.tenK.time, label: '10 km best' },
-    { value: '2', label: 'Marathons before 20' },
-    { value: `${raceMetrics.verifiedPodiums}+`, label: 'Documented podium results' },
+    { value: `${raceMetrics.totalEntries}+`, label: 'races locally and internationally' },
+    { value: `${raceMetrics.verifiedPodiums}+`, label: 'podium finishes' },
+    { value: '2', label: 'full marathons completed' },
   ];
   return (
     <section className="section proof-section">
@@ -220,10 +222,10 @@ function PartnersSection() {
       <div className="site-shell partners-home-grid">
         <motion.div {...reveal} className="partners-home-copy">
           <p className="eyebrow">THE PARTNERSHIP OPPORTUNITY</p>
-          <h2>Own the part that makes it possible.</h2>
-          <p>Travel. Insurance. Accommodation. Bike. Health. Story and evidence. The company becomes part of the solution and receives a clear role, real use, content, activation, and reporting.</p>
+          <h2>Do not sponsor a logo. Own the part that makes the mission possible.</h2>
+          <p>Travel. Insurance. Accommodation. Bicycle support. Health. Final race access. Story and evidence. Your company solves a visible problem and receives a role people can understand.</p>
           <div className="partners-home-actions">
-            <Link className="button-primary" to="/partners">Open the 15 minute walkthrough <ArrowRight size={16} /></Link>
+            <Link className="button-primary" to="/partners">View Partnership Opportunities <ArrowRight size={16} /></Link>
             <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Talk directly to Toufic</button>
           </div>
         </motion.div>
@@ -249,7 +251,7 @@ function FinalCta() {
           <h2>Tell me what your company can unlock.<br />I will build one clear role.</h2>
         </div>
         <div>
-          <p>Use the partner page as the conversation. Choose one real problem to solve, then build the custom role, contribution, deliverables, rights, dates, and reporting around the company’s goals.</p>
+          <p>In 15 minutes, we can find the strongest fit. The custom proposal will define the role, support, rights, deliverables, activation, useful measures, timeline, and decision date.</p>
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
         </div>
       </div>

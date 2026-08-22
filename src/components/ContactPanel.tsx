@@ -7,9 +7,9 @@ type Intent = 'partnership' | 'media' | 'general';
 
 const intentCopy: Record<Intent, { title: string; subject: string; body: string }> = {
   partnership: {
-    title: 'Discuss the right partner role',
+    title: 'Discuss a partnership',
     subject: 'Six Continents World Record partnership enquiry',
-    body: 'Hello Toufic,\n\nI would like to discuss a possible partner role for the Six Continents World Record mission.\n\nCompany:\nWhat we could help make possible:\nMain objective:\nBest time for a 15 minute conversation:\n\nBest,',
+    body: 'Hello Toufic,\n\nI would like to discuss a possible partnership for the Six Continents World Record mission.\n\nCompany:\nRole:\nMain objective:\nFunding, product, service, access, or undecided:\n\nBest,',
   },
   media: {
     title: 'Media enquiry',
@@ -87,7 +87,7 @@ export function ContactPanel() {
             <div className="eyebrow mb-4">NEXT STEP</div>
             <h2 id="contact-panel-title" className="contact-panel-title">{copy.title}</h2>
             <p className="contact-panel-copy">
-              Choose the fastest option. Share the company, what it could help make possible, and the best time for a focused 15 minute conversation.
+              Choose the fastest option. Share the company, the problem it can solve, and the best person to continue the conversation.
             </p>
 
             <div className="contact-intents" aria-label="Enquiry type">
@@ -118,7 +118,7 @@ export function ContactPanel() {
               </a>
             </div>
 
-            <p className="contact-panel-note">After the conversation, one custom proposal can be built around the company’s goals, exact role, contribution, deliverables, rights, dates, and reporting.</p>
+            <p className="contact-panel-note">A simple proposal can be built around one partner role, one contribution, clear deliverables, rights, dates, and reporting.</p>
           </motion.section>
         </motion.div>
       )}

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Bike, Footprints, Waves } from 'lucide-react';
 import { Layout } from '../components/Layout';
-import { media, quotes, warsawRace } from '../data/mission';
+import { media, quotes, site, warsawRace } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
 
 const reveal = {
@@ -20,8 +20,8 @@ export function WarsawPage() {
         <div className="site-shell page-hero-content">
           <p className="eyebrow">JUNE 7, 2026 · WARSAW, POLAND</p>
           <h1>IRONMAN 70.3 Warsaw.</h1>
-          <p>Toufic’s first IRONMAN 70.3. Seven days before turning 20. Official finish: 6:08:15.</p>
-          <a className="button-primary" href={warsawRace.links.official} target="_blank" rel="noreferrer">View Official Result <ArrowUpRight size={16} /></a>
+          <p>Toufic’s first IRONMAN 70.3. Seven days before turning 20. Official finish: 6:08:15. Featured by the Lebanese Triathlon Federation as the youngest Lebanese athlete to complete an IRONMAN 70.3.</p>
+          <div className="warsaw-archive-actions"><a className="button-primary" href={warsawRace.links.official} target="_blank" rel="noreferrer">View Official Result <ArrowUpRight size={16} /></a><a className="button-quiet" href={site.federationFeature} target="_blank" rel="noreferrer">Federation Feature <ArrowUpRight size={16} /></a></div>
         </div>
       </section>
 
@@ -48,7 +48,7 @@ export function WarsawPage() {
           <motion.div {...reveal}><p className="eyebrow">WHAT THE FINISH PROVED</p><h2>Toufic could survive the race.</h2></motion.div>
           <motion.div {...reveal}><p>He entered injured, tired, and technically underprepared. He still completed the swim, bike, and run, carried the Lebanese flag, and crossed the finish line.</p><blockquote>“{quotes[0]}”</blockquote></motion.div>
           <motion.div {...reveal}><p className="eyebrow">WHAT THE RESULT EXPOSED</p><h2>Fitness was not enough.</h2></motion.div>
-          <motion.div {...reveal}><p>Almost no outdoor cycling. No open-water preparation. No brick training. No race simulation. No transition practice. Weak hydration and fueling. Little experience with the bike and clipless pedals.</p><blockquote>“{quotes[1]}”</blockquote></motion.div>
+          <motion.div {...reveal}><p>Almost no outdoor cycling. No open water preparation. No brick training. No race simulation. No transition practice. Weak hydration and fueling. Little experience with the bike and clipless pedals.</p><blockquote>“{quotes[1]}”</blockquote></motion.div>
         </div>
       </section>
 
@@ -56,7 +56,7 @@ export function WarsawPage() {
         <div className="site-shell">
           <div className="race-chapter">
             <motion.figure {...reveal}><img src={media.warsaw.swimExit} alt="Toufic leaving the water at IRONMAN 70.3 Warsaw" loading="lazy" /></motion.figure>
-            <motion.div {...reveal}><Waves size={24} /><p className="eyebrow">SWIM · 44:26</p><h2>First open-water race swim.</h2><p>The water was chaotic. Athletes hit, grabbed, and crossed his line. He exited with cramps already starting.</p></motion.div>
+            <motion.div {...reveal}><Waves size={24} /><p className="eyebrow">SWIM · 44:26</p><h2>First open water race swim.</h2><p>The water was chaotic. Athletes hit, grabbed, and crossed his line. He exited with cramps already starting.</p></motion.div>
           </div>
           <div className="race-chapter race-chapter-reverse">
             <motion.figure {...reveal}><img src={media.warsaw.bikeCourse} alt="Toufic cycling at IRONMAN 70.3 Warsaw" loading="lazy" /></motion.figure>
@@ -85,10 +85,8 @@ export function WarsawPage() {
 
       <section className="section warsaw-video-section">
         <div className="site-shell warsaw-video-grid">
-          <motion.div {...reveal}><p className="eyebrow">FINISH-ZONE FOOTAGE</p><h2>The finish was real.</h2><p>The next chapter is not about surviving the sport. It is about executing it properly.</p></motion.div>
-          <motion.video {...reveal} controls muted playsInline preload="metadata" poster={media.warsaw.finishLebanon}>
-            <source src={media.warsaw.finisherVideo} type="video/mp4" />
-          </motion.video>
+          <motion.div {...reveal}><p className="eyebrow">FINISH FOOTAGE</p><h2>The finish was real.</h2><p>The next chapter is not about surviving the sport. It is about executing it properly.</p><div className="warsaw-archive-actions"><a className="button-primary" href={warsawRace.links.videos} target="_blank" rel="noreferrer">Open Video Archive <ArrowUpRight size={16} /></a><a className="button-quiet" href={warsawRace.links.photos} target="_blank" rel="noreferrer">Open Photo Archive</a></div></motion.div>
+          <motion.figure {...reveal}><img src={media.warsaw.finishDown} alt="Toufic Abou Ali inside the IRONMAN 70.3 Warsaw finish area" loading="lazy" /></motion.figure>
         </div>
       </section>
 

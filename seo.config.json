@@ -1,5 +1,5 @@
 {
-  "siteName": "Toufic Abou Ali \u2014 Six Continents World Record",
+  "siteName": "Toufic Abou Ali — Six Continents World Record",
   "siteUrl": "https://toufic.co",
   "language": "en",
   "locale": "en_US",
@@ -9,7 +9,7 @@
     "alternateName": "Toufic",
     "description": "Lebanese founder and athlete and Founder & CEO of Sira preparing Six Continents World Record: six full distance IRONMAN races across six continents before turning 21. Application accepted; guidelines issued; Pending Evidence.",
     "image": "/assets/img/identity/headshot.webp",
-    "jobTitle": "Founder & CEO of Sira; Lebanese Founder and Athlete",
+    "jobTitle": "Founder & CEO of Sira; Lebanese founder and athlete",
     "nationality": "Lebanon",
     "sameAs": [
       "https://www.instagram.com/touficaa/",
@@ -21,80 +21,80 @@
     {
       "path": "/",
       "title": "Toufic Abou Ali | Six Continents World Record",
-      "description": "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents before turning 21. Route B is preferred, Route A is the backup, and the application is Pending Evidence.",
-      "image": "/assets/img/social/home.jpg",
+      "description": "Application accepted; guidelines issued. Toufic Abou Ali is preparing six full distance IRONMAN races across six continents before turning 21. Four race entries are secured. No record is claimed.",
+      "image": "/assets/img/mission/scene-01-poster.webp",
       "imageAlt": "Toufic Abou Ali and the Six Continents World Record mission",
       "schemaType": "WebSite",
       "priority": 1.0,
       "breadcrumbName": "Home",
-      "lastModified": "2026-08-21"
+      "lastModified": "2026-08-22"
     },
     {
       "path": "/mission",
       "title": "Six Continents World Record Mission | Toufic Abou Ali",
-      "description": "Explore the accepted application, preferred Route B and backup Route A, six race chapters, evidence system, and before 21 target behind Toufic Abou Ali\u2019s world record attempt.",
-      "image": "/assets/img/social/mission.jpg",
+      "description": "The accepted application, six required regions, secured race route, evidence rules, and deadline behind Toufic Abou Ali’s world record attempt.",
+      "image": "/assets/img/mission/mission-page-cover.webp",
       "imageAlt": "Toufic Abou Ali in front of the Six Continents mission map",
       "schemaType": "AboutPage",
       "priority": 0.9,
       "breadcrumbName": "Six Continents World Record",
-      "lastModified": "2026-08-21"
+      "lastModified": "2026-08-22"
     },
     {
       "path": "/proof",
       "title": "Race Results & Athletic Record | Toufic Abou Ali",
-      "description": "Explore Toufic Abou Ali\u2019s documented race results, including IRONMAN 70.3 Warsaw, marathons, half marathons, 10K races, podiums and official proof.",
-      "image": "/assets/img/social/proof.jpg",
+      "description": "Explore Toufic Abou Ali’s documented race results, including IRONMAN 70.3 Warsaw, marathons, half marathons, 10K races, podiums and official proof.",
+      "image": "/assets/img/races/2025-beirut-wide.webp",
       "imageAlt": "Toufic Abou Ali's marathon and endurance race proof",
       "schemaType": "CollectionPage",
       "priority": 0.85,
       "breadcrumbName": "Race Results and Proof",
-      "lastModified": "2026-08-21"
+      "lastModified": "2026-08-22"
     },
     {
       "path": "/founder",
-      "title": "Toufic Abou Ali | Lebanese Founder and Athlete & Sira CEO",
-      "description": "Meet Toufic Abou Ali, the Lebanese founder and athlete and Sira Founder & CEO combining company building, university and endurance sport in a global record mission.",
-      "image": "/assets/img/social/founder.jpg",
-      "imageAlt": "Portrait of Lebanese founder-athlete Toufic Abou Ali",
+      "title": "Toufic Abou Ali | Lebanese Founder, Athlete and Sira CEO",
+      "description": "Meet Toufic Abou Ali, the Lebanese founder and athlete and Sira Founder and CEO combining company building, university, and endurance sport in a global record mission.",
+      "image": "/assets/img/identity/headshot.webp",
+      "imageAlt": "Portrait of Lebanese founder and athlete Toufic Abou Ali",
       "schemaType": "ProfilePage",
       "priority": 0.85,
       "breadcrumbName": "About Toufic Abou Ali",
-      "lastModified": "2026-08-21"
+      "lastModified": "2026-08-22"
     },
     {
       "path": "/partners",
       "title": "Partner with Six Continents World Record | Toufic Abou Ali",
-      "description": "A 15 minute interactive partner walkthrough for Six Continents Before 21. See the mission, proof, preferred route, real needs, company fit, partner value, and next step.",
-      "image": "/assets/img/social/partners.jpg",
+      "description": "Find the exact role your company can own inside Toufic Abou Ali’s six continent world record attempt before a custom proposal is built.",
+      "image": "/assets/img/warsaw/finish-lebanon.webp",
       "imageAlt": "Toufic Abou Ali carrying the Lebanese flag at an IRONMAN finish",
       "schemaType": "WebPage",
       "priority": 0.9,
       "breadcrumbName": "Partnership Opportunities",
-      "lastModified": "2026-08-21"
+      "lastModified": "2026-08-22"
     },
     {
       "path": "/warsaw",
       "title": "IRONMAN 70.3 Warsaw Result & Story | Toufic Abou Ali",
       "description": "Toufic Abou Ali completed IRONMAN 70.3 Warsaw at age 19 in 6:08:15. Explore his official splits, race photographs, activities and the mission origin story.",
-      "image": "/assets/img/social/warsaw.jpg",
+      "image": "/assets/img/warsaw/finish-wide.webp",
       "imageAlt": "Toufic Abou Ali at the IRONMAN 70.3 Warsaw finish line",
       "schemaType": "Article",
       "priority": 0.9,
       "breadcrumbName": "IRONMAN 70.3 Warsaw",
-      "lastModified": "2026-08-21",
+      "lastModified": "2026-08-22",
       "datePublished": "2026-06-07"
     },
     {
       "path": "/media",
       "title": "Toufic Abou Ali Media Kit | Bio, Facts, Photos & Contact",
       "description": "Approved bios, exact application status, verified facts, quotes, race results, photographs and media contact for Six Continents World Record.",
-      "image": "/assets/img/social/media.jpg",
+      "image": "/assets/img/warsaw/finish-up.webp",
       "imageAlt": "Toufic Abou Ali media kit for Six Continents World Record",
       "schemaType": "CollectionPage",
       "priority": 0.85,
       "breadcrumbName": "Media Kit",
-      "lastModified": "2026-08-21"
+      "lastModified": "2026-08-22"
     }
   ],
   "redirects": {

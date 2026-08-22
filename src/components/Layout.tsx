@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/proof', label: 'Proof' },
   { href: '/founder', label: 'Founder' },
   { href: '/partners', label: 'Partners' },
+  { href: '/media', label: 'Media' },
 ];
 
 export function Header() {
@@ -26,8 +27,6 @@ export function Header() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => setMobileMenuOpen(false), [location.pathname]);
 
   return (
     <header className={`site-header ${isScrolled ? 'site-header-scrolled' : ''}`}>
@@ -50,17 +49,10 @@ export function Header() {
             ))}
           </div>
 
-          {location.pathname === '/partners' ? (
-            <button className="header-cta" onClick={() => openContactPanel('partnership')}>
-              Discuss the Fit
-              <ArrowUpRight size={15} />
-            </button>
-          ) : (
-            <Link className="header-cta" to="/partners" onPointerEnter={() => preloadRoute('/partners')} onFocus={() => preloadRoute('/partners')}>
-              15 Min Partner Walkthrough
-              <ArrowUpRight size={15} />
-            </Link>
-          )}
+          <button className="header-cta" onClick={() => openContactPanel('partnership')}>
+            Discuss a Partnership
+            <ArrowUpRight size={15} />
+          </button>
 
           <button
             className="mobile-menu-button"
@@ -85,19 +77,13 @@ export function Header() {
           >
             <div className="mobile-menu-inner">
               {navLinks.map((link) => (
-                <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
+                <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onClick={() => setMobileMenuOpen(false)} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
                   {link.label}
                 </Link>
               ))}
-              {location.pathname === '/partners' ? (
-                <button onClick={() => openContactPanel('partnership')}>
-                  <MessageCircle size={18} /> Discuss the Fit
-                </button>
-              ) : (
-                <Link to="/partners" className="mobile-partner-walkthrough">
-                  <MessageCircle size={18} /> 15 Min Partner Walkthrough
-                </Link>
-              )}
+              <button onClick={() => openContactPanel('partnership')}>
+                <MessageCircle size={18} /> Discuss a Partnership
+              </button>
             </div>
           </motion.div>
         )}
@@ -112,7 +98,7 @@ export function Footer() {
       <div className="site-shell footer-grid">
         <div className="footer-lead">
           <span className="footer-kicker">SIX CONTINENTS WORLD RECORD</span>
-          <h2>6 full distance IRONMAN races. 6 continents. 1 world record attempt.</h2>
+          <h2>6 full distance IRONMAN races. 6 continents. Before age 21.</h2>
           <button className="text-link" onClick={() => openContactPanel('partnership')}>
             Discuss a partnership <ArrowUpRight size={16} />
           </button>
@@ -139,7 +125,7 @@ export function Footer() {
 
       <div className="site-shell footer-bottom">
         <p>© {new Date().getFullYear()} Toufic Abou Ali.</p>
-        <p>Application accepted. Guidelines issued 5 August 2026. Status: Pending Evidence. No record is claimed. Recognition depends on completion and evidence review. No endorsement is implied.</p>
+        <p>Application accepted. Guidelines issued 5 August 2026. Status: Pending Evidence. No record is claimed. Recognition depends on completion and evidence review. Guinness World Records and IRONMAN® names and marks are shown only to identify the application and race format. No sponsorship, partnership or endorsement is implied.</p>
       </div>
     </footer>
   );

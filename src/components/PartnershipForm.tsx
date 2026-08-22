@@ -90,7 +90,7 @@ ${formData.message || 'No additional message'}
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Open mailto link
-      window.location.href = `mailto:protoufic@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:hello@toufic.co?subject=${subject}&body=${body}`;
       
       setStatus('success');
     } catch {

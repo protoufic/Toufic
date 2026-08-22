@@ -1,8 +1,8 @@
 export const raceMetrics = {
-  totalEntries: 52,
+  totalEntries: 60,
   entriesWithLinks: 33,
   verifiedEntries: 34,
-  verifiedPodiums: 19,
+  verifiedPodiums: 20,
 };
 
 export const personalBests = {

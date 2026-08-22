@@ -8,7 +8,7 @@ import { media } from '../data/mission';
 
 const filters = [
   { id: 'all', label: 'All' },
-  { id: 'triathlon', label: 'IRONMAN / Triathlon' },
+  { id: 'triathlon', label: 'IRONMAN / Multisport' },
   { id: 'marathon', label: 'Marathon' },
   { id: 'half', label: 'Half Marathon' },
   { id: 'short', label: '10K and shorter' },
@@ -24,7 +24,7 @@ export function ProofPage() {
   const filtered = useMemo(() => races.filter((race) => {
     const text = `${race.name} ${race.location} ${race.country} ${race.distance} ${race.result}`.toLowerCase();
     if (query && !text.includes(query.toLowerCase())) return false;
-    if (filter === 'triathlon') return /triathlon|multisport/i.test(race.discipline) || /ironman/i.test(race.name);
+    if (filter === 'triathlon') return /triathlon|multisport|duathlon/i.test(race.discipline) || /ironman/i.test(race.name);
     if (filter === 'marathon') {
       const distance = race.distance.trim().toLowerCase();
       return distance === 'marathon' || /^42(?:\.195|\.2)?k(?:\s|$)/i.test(race.distance);
@@ -44,16 +44,16 @@ export function ProofPage() {
         <div className="site-shell page-hero-content">
           <p className="eyebrow">JOURNEY & PROOF</p>
           <h1>The mission starts with a documented record of work.</h1>
-          <p>IRONMAN 70.3. Marathons. Half marathons. Podiums. Track races. Training. Founder execution.</p>
+          <p>More than 60 races locally and internationally. More than 20 podiums. Two full marathons. One IRONMAN 70.3 finish at 19.</p>
         </div>
       </section>
 
       <section className="section proof-overview-section">
         <div className="site-shell">
           <div className="proof-overview-grid">
-            <div><strong>{raceMetrics.totalEntries}</strong><span>race archive entries</span></div>
-            <div><strong>{raceMetrics.verifiedPodiums}+</strong><span>documented podium results</span></div>
-            <div><strong>{personalBests.halfMarathon.time}</strong><span>half-marathon best</span></div>
+            <div><strong>{raceMetrics.totalEntries}+</strong><span>races locally and internationally</span></div>
+            <div><strong>{raceMetrics.verifiedPodiums}+</strong><span>podium finishes</span></div>
+            <div><strong>{personalBests.halfMarathon.time}</strong><span>half marathon best</span></div>
             <div><strong>{personalBests.tenK.time}</strong><span>10 km best</span></div>
             <div><strong>{personalBests.marathon.time}</strong><span>marathon best</span></div>
             <div><strong>{personalBests.ironman703.time}</strong><span>IRONMAN 70.3</span></div>
@@ -69,10 +69,34 @@ export function ProofPage() {
         </div>
       </section>
 
+      <section className="section latest-proof-section">
+        <div className="site-shell">
+          <div className="section-heading section-heading-wide">
+            <p className="eyebrow">LATEST PODIUM PROOF</p>
+            <h2>August 2026. Two race wins. Three real frames.</h2>
+            <p>New race records are connected to the original activities and podium photographs.</p>
+          </div>
+          <div className="latest-proof-grid">
+            <figure>
+              <img src="/assets/img/races/2026-kharbe.webp" alt="Toufic Abou Ali on the first place podium at Kharbe Race 2026" loading="lazy" />
+              <figcaption><span>9 AUGUST 2026</span><strong>Kharbe Race</strong><small>1st place · 22:52 tracked</small></figcaption>
+            </figure>
+            <figure>
+              <img src="/assets/img/races/2026-saghbine-award.webp" alt="Toufic Abou Ali on the first place podium at Saghbine Race 2026" loading="lazy" />
+              <figcaption><span>16 AUGUST 2026</span><strong>Saghbine Race</strong><small>1st place · 23:31 tracked</small></figcaption>
+            </figure>
+            <figure>
+              <img src="/assets/img/races/2026-saghbine-podium.webp" alt="Toufic Abou Ali holding the Saghbine Race award on the first place podium" loading="lazy" />
+              <figcaption><span>ORIGINAL RACE PHOTO</span><strong>Saghbine Award</strong><small>Podium proof</small></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
       <section className="section race-archive-section">
         <div className="site-shell">
           <div className="race-archive-top">
-            <div><p className="eyebrow">FULL RACE ARCHIVE</p><h2>Find the result. Open the detail. Check the link.</h2></div>
+            <div><p className="eyebrow">DETAILED RACE ARCHIVE</p><h2>Find the result. Open the detail. Check the link.</h2></div>
             <label className="race-search"><Search size={17} /><input value={query} onChange={(event) => { setQuery(event.target.value); setVisible(12); }} placeholder="Search races" /></label>
           </div>
           <div className="race-filters" role="group" aria-label="Race filters">

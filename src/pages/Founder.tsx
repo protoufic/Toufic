@@ -25,7 +25,7 @@ export function FounderPage() {
         <div className="site-shell founder-page-hero-grid">
           <div className="founder-page-copy">
             <p className="eyebrow">TOUFIC ABOU ALI</p>
-            <h1>Lebanese Founder and Athlete.</h1>
+            <h1>Lebanese founder and athlete.</h1>
             <p>Founder & CEO of Sira. Student abroad. Endurance athlete. Building one global campaign through the same discipline used to build teams and systems.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss the Campaign <ArrowRight size={16} /></button>
           </div>
@@ -44,7 +44,7 @@ export function FounderPage() {
           </motion.div>
           <motion.div {...reveal}>
             <p>Toufic began using fitness as a way to change his life at 13. The discipline later became useful in school, work, entrepreneurship, and endurance sport.</p>
-            <p>He moved abroad, studied in France, helped build Sira, led systems and teams, completed marathons, and finished IRONMAN 70.3 Warsaw before turning 20.</p>
+            <p>He moved abroad, studied in France, built Sira, led systems and teams, completed more than 60 races, earned more than 20 podiums, finished two full marathons, and completed IRONMAN 70.3 Warsaw before turning 20.</p>
             <blockquote>“{quotes[2]}”</blockquote>
           </motion.div>
         </div>
@@ -84,7 +84,7 @@ export function FounderPage() {
             <img src={media.founderRunning} alt="Toufic Abou Ali running" loading="lazy" />
           </motion.figure>
           <motion.div {...reveal}>
-            <p className="eyebrow">FOUNDER × ATHLETE</p>
+            <p className="eyebrow">FOUNDER AND ATHLETE</p>
             <h2>Pressure does not disappear. It gets organised.</h2>
             <p>Six Continents World Record requires the athlete, founder, student, and operator to work as one system. The story is not about doing everything alone. It is about building the right team around a hard target.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Build the Mission Together <ArrowRight size={16} /></button>

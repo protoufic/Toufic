@@ -43,7 +43,7 @@ export function WorldMap() {
             onMouseEnter={() => setSelected(continent)}
             onFocus={() => setSelected(continent)}
             aria-pressed={selected.name === continent.name}
-            aria-label={`${continent.name}: view planned race chapters`}
+            aria-label={`${continent.name}: ${continent.status}`}
           >
             <span />
             <small>{continent.name}</small>
@@ -61,17 +61,12 @@ export function WorldMap() {
           transition={{ duration: .24, ease: 'easeOut' }}
         >
           <div>
-            <p className="eyebrow">TARGET CONTINENT</p>
+            <p className="eyebrow">{selected.status}</p>
             <h3>{selected.name}</h3>
+            <strong>{selected.race} · {selected.date}</strong>
           </div>
-          <div className="map-route-detail">
-            <p>{selected.summary}</p>
-            <div className="map-route-options">
-              <span><small>ROUTE B · PREFERRED</small><strong>{selected.preferredRace}</strong><em>{selected.preferredDate}</em></span>
-              <span><small>ROUTE A · BACKUP</small><strong>{selected.backupRace}</strong><em>{selected.backupDate}</em></span>
-            </div>
-          </div>
-          <span className="map-status">Route architecture defined · final execution checks ongoing</span>
+          <p>{selected.summary}</p>
+          <span className={`map-status ${selected.secured ? 'map-status-secured' : ''}`}>{selected.status}</span>
         </motion.div>
       </AnimatePresence>
 
@@ -84,8 +79,8 @@ export function WorldMap() {
       </div>
 
       <div className="map-next-step">
-        <p><strong>Route B is preferred. Route A stays live as backup.</strong> Entries, visas, travel, recovery, evidence, and partner roles still have to be secured chapter by chapter.</p>
-        <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Discuss a partner role <ArrowRight size={15} /></button>
+        <p><strong>Four of six entries are secured.</strong> The preferred final route is Jacksonville then Hamburg. A flexible backup protects the attempt and the deadline.</p>
+        <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Help unlock the route <ArrowRight size={15} /></button>
       </div>
     </div>
   );

@@ -5,269 +5,310 @@ import {
   Building2,
   Camera,
   Check,
-  Clock3,
+  CircleDollarSign,
   FileCheck2,
   Globe2,
   HeartPulse,
-  Landmark,
+  Hotel,
+  MessageCircle,
+  PackageCheck,
   Plane,
-  PlayCircle,
   ShieldCheck,
-  Target,
   Users,
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
-import { RoutePlans } from '../components/RoutePlans';
-import { media, mission, site } from '../data/mission';
+import { media, mission, preferredRoute, site, warsawRace } from '../data/mission';
+import { personalBests, raceMetrics } from '../data/metrics';
 import { openContactPanel } from '../utils/contact';
 
 const reveal = {
-  initial: { opacity: 0, y: 24 },
+  initial: { opacity: 0, y: 22 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.17 },
-  transition: { duration: 0.58 },
+  viewport: { once: true, amount: 0.16 },
+  transition: { duration: 0.56 },
 };
 
-const callNav = [
-  ['01', 'Mission', 'partner-mission'],
-  ['02', 'Proof', 'partner-proof'],
-  ['03', 'Route', 'partner-route'],
-  ['04', 'Needs', 'partner-needs'],
-  ['05', 'Fit', 'partner-fit'],
-  ['06', 'Value', 'partner-value'],
-  ['07', 'Next step', 'partner-next'],
-];
-
-const beliefs = [
-  { number: '01', title: 'Why Toufic?', copy: 'The story already has proof behind it: an official IRONMAN 70.3 finish at 19, years of race history, and a company built while studying abroad.' },
-  { number: '02', title: 'Why now?', copy: 'The application is accepted, the rules are issued, Race 1 is scheduled for 1 November 2026, and the deadline cannot move.' },
-  { number: '03', title: 'Why it matters?', copy: 'The mission turns one idea into visible proof: where you start should not decide how far you can go.' },
-  { number: '04', title: 'Why your company?', copy: 'Because the mission has real problems to solve. A partner can own one of them instead of sitting beside the story as a logo.' },
-];
-
 const proof = [
-  { value: '6:08:15', label: 'IRONMAN 70.3 Warsaw at 19', detail: 'Official finish' },
-  { value: '25+', label: 'Sira team', detail: 'Founder and CEO' },
-  { value: '~60K', label: 'Sira community', detail: 'Built while studying' },
-  { value: '8,400+', label: 'LinkedIn followers', detail: 'Current owned audience' },
+  { value: `${raceMetrics.totalEntries}+`, label: 'races locally and internationally' },
+  { value: `${raceMetrics.verifiedPodiums}+`, label: 'podium finishes' },
+  { value: '2', label: 'full marathons completed' },
+  { value: personalBests.halfMarathon.time, label: 'half marathon best' },
+  { value: warsawRace.total, label: 'first IRONMAN 70.3 at 19' },
 ];
 
 const needs = [
-  { icon: Plane, title: 'Global mobility', copy: 'Move the athlete and bicycle safely between continents.', detail: 'Flights · bike transport · travel logistics' },
-  { icon: ShieldCheck, title: 'Protection', copy: 'Stop one medical, travel, or equipment issue from ending the attempt.', detail: 'Travel · health · equipment cover' },
-  { icon: Building2, title: 'Race week base', copy: 'Create a reliable place to recover, prepare, and perform.', detail: 'Accommodation · race week support' },
-  { icon: Bike, title: 'Bike system', copy: 'Build one race ready system that can survive six continents.', detail: 'Bike · fit · service · case · spares' },
-  { icon: HeartPulse, title: 'Health and performance', copy: 'Make sure the body can safely restart after each race.', detail: 'Screening · medical oversight · physio · recovery' },
-  { icon: Camera, title: 'Story and evidence', copy: 'Capture the journey properly from preparation to final result.', detail: 'Photography · video · production · evidence' },
+  { icon: Plane, title: 'Global mobility', copy: 'Flights, bicycle transport, visas, and reliable movement across six continents.' },
+  { icon: ShieldCheck, title: 'Protection', copy: 'Travel, health, and equipment cover that protects the attempt when plans change.' },
+  { icon: Hotel, title: 'Race week base', copy: 'Accommodation and local support for preparation, recovery, and race execution.' },
+  { icon: Bike, title: 'Bicycle system', copy: 'A race ready bicycle, fit, travel case, service, spares, and technical support.' },
+  { icon: HeartPulse, title: 'Health and performance', copy: 'Medical oversight, physiotherapy, nutrition, testing, and recovery support.' },
+  { icon: CircleDollarSign, title: 'Final race access', copy: 'The last two entries and the support required to secure North America and Europe.' },
+  { icon: Camera, title: 'Story and evidence', copy: 'Content production and disciplined proof capture from preparation to final review.' },
 ];
 
-const fits = [
-  { type: 'Airline', role: 'Global Mobility Partner', solve: 'Athlete and bike transport', story: 'The journey across six continents' },
-  { type: 'Insurance', role: 'Insurance and Risk Partner', solve: 'Health, travel, and equipment cover', story: 'Keeping the attempt moving when risk appears' },
-  { type: 'Hotel Group', role: 'Accommodation Partner', solve: 'Race week rooms and recovery base', story: 'Rest, destination, and recovery' },
-  { type: 'Bike / Sports', role: 'Bicycle and Technical Partner', solve: 'Bike, fit, service, case, equipment', story: 'Product tested in real conditions' },
-  { type: 'Hospital / Clinic', role: 'Health and Performance Partner', solve: 'Screening, oversight, and recovery', story: 'Responsible performance' },
-  { type: 'Bank / Telecom / Payment', role: 'Founding Mission Partner', solve: 'Unlock a mission or race chapter', story: 'Youth, ambition, and execution' },
-  { type: 'Media / Production', role: 'Content and Media Partner', solve: 'Story capture and distribution', story: 'A six chapter international story' },
+const companyFit = [
+  { company: 'Airline or travel', role: 'Global Mobility Partner', action: 'Move Toufic and the bicycle', story: 'Six continents made reachable' },
+  { company: 'Insurance', role: 'Insurance and Risk Partner', action: 'Protect health, travel, and equipment', story: 'Ambition protected by preparation' },
+  { company: 'Hotel or property', role: 'Accommodation Partner', action: 'Create the race week base', story: 'Rest, place, and recovery' },
+  { company: 'Bicycle or sports', role: 'Bicycle and Technical Partner', action: 'Build the race system', story: 'Products used in real conditions' },
+  { company: 'Hospital or clinic', role: 'Health and Performance Partner', action: 'Support safe performance', story: 'Responsible ambition' },
+  { company: 'Bank, telecom, or payment', role: 'Founding Mission Partner', action: 'Unlock a chapter or core cost', story: 'Youth, access, and execution' },
+  { company: 'Media or production', role: 'Content and Media Partner', action: 'Capture and distribute the story', story: 'Six international chapters' },
 ];
 
-const partnerValue = [
-  { icon: Target, title: 'Named role', copy: 'A clear partner position with category protection where agreed.' },
-  { icon: Check, title: 'Real use', copy: 'The product or service is shown doing the job it was built to do.' },
-  { icon: Camera, title: 'Content', copy: 'Preparation, travel, race week, race day, recovery, and the next chapter.' },
-  { icon: FileCheck2, title: 'Partner assets', copy: 'Approved photography, video, interviews, and campaign material for partner channels.' },
-  { icon: Users, title: 'Activation', copy: 'Employee, customer, youth, university, and community moments can be built around the mission.' },
-  { icon: Globe2, title: 'Reporting and proof', copy: 'Clear updates, delivered asset tracking, media proof when achieved, and a final case study.' },
+const value = [
+  { icon: Globe2, title: 'A role people understand', copy: 'A clear position tied to the part your company genuinely makes possible.' },
+  { icon: PackageCheck, title: 'Real use', copy: 'Your product or service appears while solving a visible problem, not as decoration.' },
+  { icon: Camera, title: 'Months of story', copy: 'Training, travel, race week, race day, recovery, and the next continent.' },
+  { icon: Building2, title: 'Useful company assets', copy: 'Approved photos, video, interviews, and campaign material for agreed channels.' },
+  { icon: Users, title: 'People to involve', copy: 'Employee, customer, youth, university, and community moments can be built around the mission.' },
+  { icon: FileCheck2, title: 'Proof and reporting', copy: 'Clear delivery tracking, race updates, asset records, and a final case study.' },
 ];
 
-function goTo(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+const scopes = [
+  { number: '01', title: 'Whole mission', copy: 'A leading role across all six race chapters.' },
+  { number: '02', title: 'One category', copy: 'Own one core need throughout the attempt.' },
+  { number: '03', title: 'One race chapter', copy: 'Unlock one continent with a focused role.' },
+  { number: '04', title: 'One specific need', copy: 'Provide the product, service, access, or funding that solves it.' },
+];
+
+const faqs = [
+  {
+    q: 'Is the Guinness World Records title already confirmed?',
+    a: 'No. The application has been accepted and the official guidelines were issued on 5 August 2026. Recognition depends on completing all six races, submitting the required evidence, and passing the final review.',
+  },
+  {
+    q: 'Are all six race entries secured?',
+    a: 'Four are secured: Argentina, Oman, New Zealand, and South Africa. Jacksonville and Hamburg are the preferred final races and are being secured. A flexible backup route protects the attempt if that final combination changes.',
+  },
+  {
+    q: 'Does a company need to fund the whole mission?',
+    a: 'No. A company can support the whole mission, one category, one race chapter, or one specific need. Support can be financial, product, service, access, or a useful mix.',
+  },
+  {
+    q: 'What is promised before an agreement?',
+    a: 'Nothing vague. The role, contribution, rights, deliverables, approvals, owners, dates, useful measures, and reporting are written into one custom proposal.',
+  },
+  {
+    q: 'Is media coverage guaranteed?',
+    a: 'No. The mission creates credible media opportunities and strong partner assets. Earned coverage is never promised unless it is already confirmed.',
+  },
+];
 
 export function PartnersPage() {
   return (
     <Layout>
-      <section className="partner-deck-hero">
-        <div className="partner-deck-hero-bg" aria-hidden="true"><img src={media.warsaw.finishWide} alt="" /></div>
-        <div className="site-shell partner-deck-hero-grid">
-          <div className="partner-deck-hero-copy">
-            <p className="eyebrow">15 MINUTE PARTNER WALKTHROUGH</p>
+      <section className="partners-hero-split partner-deck-hero">
+        <div className="site-shell partners-hero-grid">
+          <div className="partners-hero-copy">
+            <p className="eyebrow">PARTNER BRIEF · BUILT FOR A FIRST CONVERSATION</p>
             <h1>Do not sponsor the attempt.<br /><em>Own the part that makes it possible.</em></h1>
-            <p className="partner-deck-hero-lead">Six full distance IRONMAN races. Six continents. Before 21. A small group of partners can each make one real part of the mission possible and build value around what they helped make happen.</p>
-            <div className="partner-deck-hero-actions">
-              <button className="button-primary" onClick={() => goTo('partner-mission')}><PlayCircle size={17} /> Start the 15 minute walkthrough</button>
-              <button className="button-quiet" onClick={() => goTo('partner-fit')}>Jump to company fit <ArrowRight size={16} /></button>
+            <p>Six races. Six continents. Six problems to solve. Your company can own one real gap, then build useful visibility, content, and engagement around what it helped make possible.</p>
+            <div className="partners-hero-actions">
+              <button className="button-primary" onClick={() => openContactPanel('partnership')}>Start a 15 Minute Conversation <ArrowRight size={16} /></button>
+              <a className="button-quiet" href="#fit">Find Your Company Fit</a>
             </div>
-            <div className="partner-deck-status-row">
-              <span><strong>ROUTE B</strong> Preferred</span>
-              <span><strong>RACE 1</strong> Argentina · 1 Nov 2026</span>
-              <span><strong>DEADLINE</strong> Before 14 Jun 2027</span>
-            </div>
-          </div>
-          <div className="partner-deck-hero-card">
-            <figure>
-              <img src={media.partnerCover} alt="Toufic Abou Ali crossing the IRONMAN 70.3 Warsaw finish with the Lebanese flag" />
-              <figcaption><span>THE PROOF BEFORE THE ATTEMPT</span><strong>IRONMAN 70.3 WARSAW</strong><small>6:08:15 · AGE 19</small></figcaption>
-            </figure>
-            <div className="partner-deck-record-card">
-              <small>GUINNESS WORLD RECORDS APPLICATION</small>
-              <strong>Accepted</strong>
-              <p>Guidelines issued 5 August 2026 · Pending Evidence</p>
+            <div className="partner-trust-line">
+              <span><Check size={15} /> Application accepted</span>
+              <span><Check size={15} /> Guidelines issued</span>
+              <span><Check size={15} /> Four entries secured</span>
             </div>
           </div>
+          <figure className="partners-hero-media">
+            <img src={media.partnerCover} alt="Toufic Abou Ali crossing the IRONMAN 70.3 Warsaw finish with the Lebanese flag" />
+            <figcaption><span>PROOF BEFORE THE PROMISE</span><strong>IRONMAN 70.3 WARSAW</strong><small>FINISHED AT 19 · {warsawRace.total}</small></figcaption>
+          </figure>
         </div>
       </section>
 
-      <nav className="partner-call-nav" aria-label="15 minute partner walkthrough chapters">
-        <div className="site-shell partner-call-nav-inner">
-          {callNav.map(([number, label, id]) => <button key={id} onClick={() => goTo(id)}><span>{number}</span>{label}</button>)}
-          <button className="partner-call-nav-cta" onClick={() => openContactPanel('partnership')}>Discuss fit <ArrowRight size={14} /></button>
+      <section className="partner-status-ribbon">
+        <div className="site-shell partner-status-grid">
+          <div><span>Race 1</span><strong>San Juan, Argentina</strong><small>1 November 2026</small></div>
+          <div><span>Route status</span><strong>4 of 6 entries secured</strong><small>Two preferred races being secured</small></div>
+          <div><span>Deadline</span><strong>Before age 21</strong><small>14 June 2027</small></div>
+          <div><span>Application</span><strong>Pending Evidence</strong><small>No record is claimed</small></div>
         </div>
-      </nav>
+      </section>
 
-      <section id="partner-mission" className="section partner-deck-section partner-mission-section">
+      <section className="section partner-proof-section" id="proof">
         <div className="site-shell">
-          <div className="partner-deck-heading">
-            <motion.div {...reveal}>
-              <p className="eyebrow">01 · THE MISSION IN 20 SECONDS</p>
-              <h2>Six continents.<br />One deadline.<br /><em>One reason to care.</em></h2>
-            </motion.div>
-            <motion.div {...reveal} className="partner-deck-heading-copy">
-              <p>At 20, Toufic Abou Ali is preparing to attempt the Guinness World Records title:</p>
-              <blockquote>“{mission.recordTitle}.”</blockquote>
-              <p>The target is to complete all six qualifying races before 14 June 2027.</p>
-            </motion.div>
-          </div>
-
-          <div className="partner-belief-grid">
-            {beliefs.map((item, index) => (
-              <motion.article key={item.title} {...reveal} transition={{ duration: .5, delay: index * .055 }}>
-                <span>{item.number}</span><h3>{item.title}</h3><p>{item.copy}</p>
-              </motion.article>
-            ))}
-          </div>
-          <div className="partner-manifesto"><span>THE IDEA</span><strong>Where you start should not decide how far you can go.</strong><p>The mission is designed to make that belief visible through six hard, documented chapters.</p></div>
-        </div>
-      </section>
-
-      <section id="partner-proof" className="section partner-deck-section partner-proof-section">
-        <div className="site-shell partner-proof-layout">
-          <motion.div {...reveal} className="partner-proof-copy">
-            <p className="eyebrow">02 · WHY THIS IS BELIEVABLE</p>
-            <h2>The ambition is new.<br /><em>The proof is not.</em></h2>
-            <p>The mission starts with a real athletic result, a real operating company, an owned audience, and years of documentation. The next chapter is larger, but it is not starting from zero.</p>
-            <div className="partner-proof-status"><Check size={17} /><span>Application accepted · guidelines issued · evidence process underway</span></div>
+          <motion.div {...reveal} className="section-heading section-heading-wide">
+            <p className="eyebrow">WHY THIS IS BELIEVABLE</p>
+            <h2>The ambition is new. The proof is not.</h2>
+            <p>Toufic is not asking a company to believe a promise with no history behind it.</p>
           </motion.div>
           <div className="partner-proof-grid">
             {proof.map((item, index) => (
-              <motion.div key={item.label} {...reveal} transition={{ duration: .5, delay: index * .055 }}>
-                <span>{item.detail}</span><strong>{item.value}</strong><p>{item.label}</p>
+              <motion.div key={item.label} {...reveal} transition={{ duration: .48, delay: index * .045 }}>
+                <strong>{item.value}</strong><span>{item.label}</span>
               </motion.div>
             ))}
+          </div>
+          <div className="partner-proof-notes">
+            <p><strong>Lebanese athletic milestone.</strong> The Lebanese Triathlon Federation featured Toufic as the youngest Lebanese athlete to complete an IRONMAN 70.3. <a className="inline-link" href={site.federationFeature} target="_blank" rel="noreferrer">View the Federation post <ArrowRight size={14} /></a></p>
+            <p><strong>Execution beyond sport.</strong> As Founder and CEO of Sira, Toufic helps lead a 25 person team, a 60K plus WhatsApp community, and work that has generated more than 15 million content impressions.</p>
           </div>
         </div>
       </section>
 
-      <section id="partner-route" className="section partner-deck-section partner-route-section">
-        <div className="site-shell">
-          <motion.div {...reveal} className="section-heading section-heading-wide">
-            <p className="eyebrow">03 · THE SIX CHAPTERS</p>
-            <h2>The route is designed around one thing:<br /><em>finishing the whole mission.</em></h2>
-            <p>Route B is the preferred operating plan because recovery spacing is materially safer. Route A remains a live backup until the final North America and Europe combination is secured.</p>
+      <section className="section partner-opening-section" id="mission">
+        <div className="site-shell partner-opening-grid">
+          <motion.div {...reveal}>
+            <p className="eyebrow">THE MISSION IN ONE SENTENCE</p>
+            <h2>Six full distance races. Six required regions. Finish before 14 June 2027.</h2>
           </motion.div>
-          <RoutePlans />
+          <motion.div {...reveal}>
+            <p>The accepted application title is <strong>{mission.recordTitle}</strong>.</p>
+            <p>One qualifying race must be completed in North America, South America, Europe, Africa, Asia, and Australasia. Each result must then pass the required evidence review.</p>
+            <p className="partner-legal-note">The application is accepted and official guidelines were issued on 5 August 2026. The record is not achieved, guaranteed, or approved in advance.</p>
+          </motion.div>
         </div>
       </section>
 
-      <section id="partner-needs" className="section partner-deck-section partner-needs-section">
+      <section className="section partner-route-section" id="route">
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading section-heading-wide">
-            <p className="eyebrow">04 · WHAT HAS TO WORK</p>
-            <h2>I am not looking for one company to fund six races.</h2>
-            <p>I am building a small group of serious partners that can each make one real part of the mission possible.</p>
+            <p className="eyebrow">THE PREFERRED ROUTE</p>
+            <h2>Four entries secured. Two final chapters to unlock.</h2>
+            <p>The first four races are secured. Jacksonville then Hamburg is the preferred finish. A flexible final combination protects the deadline if those last two races change.</p>
           </motion.div>
-          <div className="partner-needs-grid">
-            {needs.map((item, index) => (
-              <motion.article key={item.title} {...reveal} transition={{ duration: .5, delay: index * .045 }}>
-                <div className="partner-need-icon"><item.icon size={22} /></div>
-                <span>0{index + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.copy}</p>
-                <small>{item.detail}</small>
+          <div className="partner-route-grid">
+            {preferredRoute.map((race, index) => (
+              <motion.article key={race.number} {...reveal} transition={{ duration: .48, delay: index * .045 }} className={race.secured ? 'route-secured' : 'route-open'}>
+                <div><span>{race.number}</span><small>{race.continent}</small></div>
+                <h3>{race.race}</h3>
+                <p>{race.country}</p>
+                <time>{race.date}</time>
+                <strong>{race.secured ? <Check size={15} /> : <Globe2 size={15} />}{race.status}</strong>
               </motion.article>
             ))}
           </div>
-          <div className="partner-needs-line"><strong>One partner solves one real problem.</strong><span>That becomes part of the story.</span></div>
         </div>
       </section>
 
-      <section id="partner-fit" className="section partner-deck-section partner-fit-section">
+      <section className="section partner-needs-section">
         <div className="site-shell">
-          <motion.div {...reveal} className="partner-fit-heading">
-            <div><p className="eyebrow">05 · WHERE YOUR COMPANY FITS</p><h2>See yourself inside the mission in seconds.</h2></div>
-            <p>There is no generic package to squeeze a company into. The role starts with the problem the company can genuinely own.</p>
+          <motion.div {...reveal} className="section-heading section-heading-wide">
+            <p className="eyebrow">THE REAL NEEDS</p>
+            <h2>Choose the problem your company is built to solve.</h2>
+            <p>The strongest partner role begins with a real mission need, not a logo position.</p>
           </motion.div>
-          <div className="partner-fit-table" role="table" aria-label="Potential partner roles">
-            <div className="partner-fit-row partner-fit-row-head" role="row"><span>COMPANY</span><span>ROLE</span><span>WHAT IT SOLVES</span><span>WHAT THE STORY BECOMES</span></div>
-            {fits.map((item, index) => (
-              <motion.div key={item.type} {...reveal} transition={{ duration: .44, delay: index * .035 }} className="partner-fit-row" role="row">
-                <strong>{item.type}</strong><span>{item.role}</span><span>{item.solve}</span><span>{item.story}</span>
-              </motion.div>
+          <div className="partner-needs-grid">
+            {needs.map((need, index) => (
+              <motion.article key={need.title} {...reveal} transition={{ duration: .48, delay: index * .04 }}>
+                <need.icon size={22} /><span>{String(index + 1).padStart(2, '0')}</span><h3>{need.title}</h3><p>{need.copy}</p>
+              </motion.article>
             ))}
           </div>
-          <div className="partner-fit-callout"><Landmark size={22} /><p><strong>Best fit:</strong> the company that can own one clear part of the attempt and turn that contribution into useful business value.</p></div>
         </div>
       </section>
 
-      <section id="partner-value" className="section partner-deck-section partner-value-deck-section">
+      <section className="section partner-fit-section" id="fit">
         <div className="site-shell">
-          <motion.div {...reveal} className="partner-value-title">
-            <p className="eyebrow">06 · WHAT A PARTNER ACTUALLY GETS</p>
-            <h2>Not a logo beside the story.<br /><em>A real role inside it.</em></h2>
+          <motion.div {...reveal} className="section-heading section-heading-wide">
+            <p className="eyebrow">WHERE YOUR COMPANY CAN FIT</p>
+            <h2>See the role before the custom proposal.</h2>
+            <p>This is the starting point. The final role is shaped around the company objective and the part it can genuinely enable.</p>
           </motion.div>
-          <div className="partner-value-deck-grid">
-            {partnerValue.map((item, index) => (
+          <div className="partner-fit-table" role="table" aria-label="Company partnership fit">
+            <div className="partner-fit-row partner-fit-head" role="row">
+              <span role="columnheader">Company type</span><span role="columnheader">Possible role</span><span role="columnheader">What it enables</span><span role="columnheader">Story people understand</span>
+            </div>
+            {companyFit.map((item) => (
+              <div className="partner-fit-row" role="row" key={item.company}>
+                <strong role="cell">{item.company}</strong><span role="cell">{item.role}</span><span role="cell">{item.action}</span><span role="cell">{item.story}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section partner-value-section" id="value">
+        <div className="site-shell">
+          <motion.div {...reveal} className="section-heading section-heading-wide">
+            <p className="eyebrow">WHAT A PARTNER CAN RECEIVE</p>
+            <h2>A useful role. Real use. Clear delivery.</h2>
+            <p>The exact package depends on the role, contribution, rights, and channels agreed together.</p>
+          </motion.div>
+          <div className="partner-value-page-grid">
+            {value.map((item, index) => (
               <motion.article key={item.title} {...reveal} transition={{ duration: .48, delay: index * .045 }}>
                 <item.icon size={22} /><h3>{item.title}</h3><p>{item.copy}</p>
               </motion.article>
             ))}
           </div>
-
-          <div className="partner-story-system">
-            <motion.div {...reveal}><span>BEFORE</span><strong>Help build it</strong><p>The partner solves a real need before the first chapter starts.</p></motion.div>
-            <motion.div {...reveal}><span>DURING</span><strong>Appear in real use</strong><p>The company is present through the preparation, travel, race, and recovery chapters it helps enable.</p></motion.div>
-            <motion.div {...reveal}><span>AFTER</span><strong>Own the proof</strong><p>The journey becomes reusable content, delivered assets, partner reporting, and a final campaign case study.</p></motion.div>
-          </div>
-          <p className="partner-value-close">The strongest partner story is not “we appeared after the result.” It is “we helped make the result possible.”</p>
         </div>
       </section>
 
-      <section id="partner-next" className="partner-deck-next">
-        <div className="site-shell partner-deck-next-grid">
-          <motion.div {...reveal} className="partner-deck-next-copy">
-            <p className="eyebrow">07 · THE NEXT STEP</p>
-            <h2>15 minutes.<br />One question:</h2>
-            <strong>What part should your company own?</strong>
-            <p>This page is the conversation. No generic sponsorship deck is needed before we understand the fit.</p>
+      <section className="section partner-scope-section">
+        <div className="site-shell partner-scope-grid">
+          <motion.div {...reveal}>
+            <p className="eyebrow">THE SUPPORT CAN BE FOCUSED</p>
+            <h2>Your company does not need to fund everything.</h2>
+            <p>Financial support helps, but a product, service, access, expertise, or useful mix can remove an equally important blocker.</p>
           </motion.div>
-          <div className="partner-scope-cards">
-            <motion.article {...reveal}><span>01</span><h3>Whole mission</h3><p>A major role across all six chapters for a company that wants the broadest story and activation scope.</p></motion.article>
-            <motion.article {...reveal}><span>02</span><h3>One category</h3><p>Own one core need across the mission, such as mobility, insurance, accommodation, bike, or health.</p></motion.article>
-            <motion.article {...reveal}><span>03</span><h3>One race chapter</h3><p>Unlock one specific continent with a focused story, clear use, and clear activation.</p></motion.article>
+          <div className="partner-scope-list">
+            {scopes.map((scope) => <article key={scope.number}><span>{scope.number}</span><div><h3>{scope.title}</h3><p>{scope.copy}</p></div></article>)}
           </div>
         </div>
-        <div className="site-shell partner-deck-close">
+      </section>
+
+      <section className="section partner-process-section">
+        <div className="site-shell">
+          <motion.div {...reveal} className="section-heading section-heading-wide">
+            <p className="eyebrow">WHAT HAPPENS NEXT</p>
+            <h2>One short meeting. Then one precise proposal.</h2>
+          </motion.div>
+          <div className="partner-process-grid">
+            <div><span>01</span><h3>15 minute fit call</h3><p>We identify the company goal, the strongest mission need, and the right internal owner.</p></div>
+            <div><span>02</span><h3>Custom role</h3><p>You receive one clear proposal with the support, rights, deliverables, activation, useful measures, timeline, and decision date.</p></div>
+            <div><span>03</span><h3>Clear agreement</h3><p>Nothing starts until the scope, approvals, owners, dates, and reporting are agreed.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section partner-faq-section">
+        <div className="site-shell partner-faq-grid">
+          <motion.div {...reveal}>
+            <p className="eyebrow">STRAIGHT ANSWERS</p>
+            <h2>No vague promises. No hidden assumptions.</h2>
+          </motion.div>
+          <div className="partner-faq-list">
+            {faqs.map((item, index) => (
+              <details key={item.q} open={index === 0}>
+                <summary><span>{String(index + 1).padStart(2, '0')}</span>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section partner-trust-section visual-backdrop-section">
+        <div className="section-backdrop section-backdrop-trust" aria-hidden="true"><img src={media.warsaw.postFlag} alt="" /></div>
+        <div className="site-shell partner-trust-single">
+          <motion.div {...reveal} className="trust-column trust-column-positive">
+            <p className="eyebrow">CLEAR SCOPE. CLEAR DELIVERY.</p>
+            <h2>Know exactly what is promised.</h2>
+            <p className="trust-intro">The contribution, role, deliverables, rights, approvals, dates, and reporting are agreed before activation.</p>
+            <div className="trust-deliverables">
+              {['Exact deliverables', 'Usage rights', 'Approval process', 'Owners and dates', 'Reports and asset delivery'].map((item) => <div key={item}><Check size={17} /><span>{item}</span></div>)}
+            </div>
+            <button className="button-primary" onClick={() => openContactPanel('partnership')}>Build the Right Role <ArrowRight size={16} /></button>
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="contact" className="final-cta partner-final-cta">
+        <div className="site-shell final-cta-inner">
+          <div><p className="eyebrow">THE NEXT STEP</p><h2>What part should your company make possible?</h2></div>
           <div>
-            <Clock3 size={20} />
-            <p>After the conversation, only one custom proposal is built around the company’s goals: exact role, deliverables, rights, activation, KPIs, timeline, support, and next decision date.</p>
+            <p>Start with 15 minutes. If the fit is real, the next step is one custom proposal built around the company goal and the mission need.</p>
+            <div className="partner-contact-actions">
+              <button className="button-primary" onClick={() => openContactPanel('partnership')}><MessageCircle size={17} /> Start the Conversation</button>
+              <a className="button-quiet" href={`mailto:${site.email}`}>Email {site.email}</a>
+            </div>
           </div>
-          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss the right role <ArrowRight size={16} /></button>
-        </div>
-        <div className="site-shell partner-contact-strip">
-          <span>Toufic Abou Ali · Lebanese Founder and Athlete</span>
-          <a href={`mailto:${site.email}`}>{site.email}</a>
-          <a href={site.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a>
-          <span>toufic.co</span>
         </div>
       </section>
     </Layout>
