@@ -8,18 +8,18 @@ type Intent = 'partnership' | 'media' | 'general';
 const intentCopy: Record<Intent, { title: string; subject: string; body: string }> = {
   partnership: {
     title: 'Discuss a partnership',
-    subject: 'Six Continents World Record partnership enquiry',
-    body: 'Hello Toufic,\n\nI would like to discuss a possible partnership for the Six Continents World Record mission.\n\nCompany:\nRole:\nMain objective:\nFunding, product, service, access, or undecided:\n\nBest,',
+    subject: 'Six Continents Before 21 partnership enquiry',
+    body: 'Hello Toufic,\n\nI would like to discuss a possible partnership for the Six Continents Before 21 mission.\n\nCompany:\nRole:\nMain objective:\nFunding, product, service, access, or undecided:\n\nBest,',
   },
   media: {
     title: 'Media enquiry',
-    subject: 'Six Continents World Record media enquiry',
-    body: 'Hello Toufic,\n\nI would like to discuss a media opportunity related to the Six Continents World Record mission.\n\nOutlet / organisation:\nRequest:\nDeadline:\n\nBest,',
+    subject: 'Six Continents Before 21 media enquiry',
+    body: 'Hello Toufic,\n\nI would like to discuss a media opportunity related to the Six Continents Before 21 mission.\n\nOutlet / organisation:\nRequest:\nDeadline:\n\nBest,',
   },
   general: {
     title: 'Contact Toufic',
-    subject: 'Six Continents World Record enquiry',
-    body: 'Hello Toufic,\n\nI am reaching out about the Six Continents World Record mission.\n\nMessage:\n\nBest,',
+    subject: 'Six Continents Before 21 enquiry',
+    body: 'Hello Toufic,\n\nI am reaching out about the Six Continents Before 21 mission.\n\nMessage:\n\nBest,',
   },
 };
 

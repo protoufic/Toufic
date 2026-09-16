@@ -1,4 +1,4 @@
-# Toufic Abou Ali: Six Continents World Record
+# Toufic Abou Ali: Six Continents Before 21
 
 This is the production ready Vercel edition of Toufic Abou Ali's website.
 
@@ -27,6 +27,7 @@ The test command runs the full lint check and the optimized Next.js production b
 
 ## Main pages
 
+- `/support`: mobile first fundraising and payment funnel
 - `/partners`: conversion focused partner brief
 - `/proof`: race and evidence archive
 - `/mission`: six continent attempt and route
@@ -34,8 +35,10 @@ The test command runs the full lint check and the optimized Next.js production b
 - `/warsaw`: IRONMAN 70.3 Warsaw case study
 - `/media`: approved biographies, facts, and sources
 
+Payment verification, GoFundMe corrections, UTM links, supporter consent rules and launch checks are in `docs/`.
+
 ## Important claim language
 
-The Guinness World Records application is accepted and remains Pending Evidence. The record is not claimed, guaranteed, or presented as achieved. Preserve that distinction in future edits.
+The official Guinness World Records attempt is in progress. The application was accepted and official guidelines were issued. No record is claimed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.
 
-The Guinness World Records logo and IRONMAN wordmark are intentionally retained with the existing disclaimer and source language.
+The IRONMAN wordmark identifies the race format only. No sponsorship, partnership, or endorsement is implied.

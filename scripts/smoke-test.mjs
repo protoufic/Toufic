@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { readFile, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const host = "127.0.0.1";
@@ -11,6 +12,7 @@ const routes = [
   "/founder",
   "/warsaw",
   "/media",
+  "/support",
   "/story",
   "/record",
   "/ironman",
@@ -46,7 +48,57 @@ try {
     }
     await response.arrayBuffer();
   }
-  console.log(`Smoke test passed for ${routes.length} routes.`);
+
+  const supportResponse = await fetch(`http://${host}:${port}/support`);
+  const supportHtml = await supportResponse.text();
+  const requiredSupportContent = [
+    '€30,000',
+    '€1,000',
+    'Annahar',
+    'Noursat',
+    'Télé Liban',
+    'Final recognition remains subject to completion of the attempt',
+  ];
+
+  for (const expected of requiredSupportContent) {
+    if (!supportHtml.includes(expected)) {
+      throw new Error(`/support is missing required content: ${expected}`);
+    }
+  }
+
+  if (supportHtml.includes('76 923 943')) {
+    throw new Error('/support exposes the local wallet number before a visitor selects a wallet');
+  }
+
+  const chunkRoot = resolve('dist/static/chunks');
+  const chunkFiles = (await readdir(chunkRoot, { recursive: true })).filter((path) => path.endsWith('.js'));
+  const supportScripts = await Promise.all(chunkFiles.map((path) => readFile(resolve(chunkRoot, path), 'utf8')));
+  const supportClientCode = supportScripts.join('\n');
+  for (const expected of ['https://gofund.me/5612179bc', '76 923 943', 'Purpl', 'MyMonty']) {
+    if (!supportClientCode.includes(expected)) {
+      throw new Error(`/support client code is missing payment configuration: ${expected}`);
+    }
+  }
+
+  const acceptedEvent = await fetch(`http://${host}:${port}/api/support-events`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'purpl_click', method: 'purpl' }),
+  });
+  if (acceptedEvent.status !== 204) {
+    throw new Error(`Allowed analytics event returned HTTP ${acceptedEvent.status}`);
+  }
+
+  const rejectedEvent = await fetch(`http://${host}:${port}/api/support-events`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'unsupported_event' }),
+  });
+  if (rejectedEvent.status !== 400) {
+    throw new Error(`Unsupported analytics event returned HTTP ${rejectedEvent.status}`);
+  }
+
+  console.log(`Smoke test passed for ${routes.length} routes, support content, and analytics allowlist.`);
 } finally {
   server.kill("SIGTERM");
 }

@@ -5,8 +5,8 @@ import { media, quotes, site, warsawRace } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
 
 const bios = {
-  short: 'Toufic Abou Ali is a 20 year old Lebanese founder and athlete and Founder and CEO of Sira. He has completed more than 60 races, earned more than 20 podiums, finished two full marathons, and completed IRONMAN 70.3 Warsaw at 19. His Guinness World Records application is accepted and remains Pending Evidence.',
-  medium: 'Toufic Abou Ali is a Lebanese founder and athlete and Founder and CEO of Sira. He has completed more than 60 races locally and internationally, earned more than 20 podiums, finished two full marathons, and completed IRONMAN 70.3 Warsaw at 19 in 6:08:15. The Lebanese Triathlon Federation featured him as the youngest Lebanese athlete to complete an IRONMAN 70.3. He is now preparing six qualifying full distance IRONMAN races across six continents before turning 21. Four race entries are secured. His Guinness World Records application is accepted, the official guidelines were issued on 5 August 2026, and the status is Pending Evidence. No record is claimed.',
+  short: 'Toufic Abou Ali is a 20 year old Lebanese founder and athlete and Co Founder and Co CEO of Sira. He has completed more than 60 races, earned more than 20 podiums, finished two full marathons, and completed IRONMAN 70.3 Warsaw at 19. He is preparing an official Guinness World Records attempt across six continents before turning 21. No record is claimed.',
+  medium: 'Toufic Abou Ali is a Lebanese founder and athlete and Co Founder and Co CEO of Sira. He has completed more than 60 races locally and internationally, earned more than 20 podiums, finished two full marathons, and completed IRONMAN 70.3 Warsaw at 19 in 6:08:15. The Lebanese Triathlon Federation featured him as the youngest Lebanese athlete to complete an IRONMAN 70.3. He is preparing six full distance IRONMAN races across six continents before turning 21. His Guinness World Records application was accepted and official guidelines were issued. No record is claimed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.',
 };
 
 export function MediaPage() {
@@ -31,16 +31,16 @@ export function MediaPage() {
         <div className="site-shell">
           <div className="section-heading"><p className="eyebrow">KEY FACTS</p><h2>Use the exact facts.</h2></div>
           <div className="media-facts-grid">
-            <div><span>Mission</span><strong>Six Continents World Record</strong></div>
-            <div><span>Application</span><strong>Accepted · 5 August 2026</strong></div>
-            <div><span>Current status</span><strong>Pending Evidence</strong></div>
+            <div><span>Mission</span><strong>Six Continents Before 21</strong></div>
+            <div><span>Application</span><strong>Accepted</strong></div>
+            <div><span>Current status</span><strong>Official guidelines issued</strong></div>
             <div><span>Personal target</span><strong>Complete all six before turning 21</strong></div>
             <div><span>Race route</span><strong>Four of six entries secured</strong></div>
             <div><span>First IRONMAN 70.3</span><strong>Warsaw · {warsawRace.total}</strong></div>
             <div><span>Race history</span><strong>60+ races · 20+ podiums · 2 marathons</strong></div>
             <div><span>Lebanese milestone</span><strong>Featured by the Lebanese Triathlon Federation</strong><a className="inline-link" href={site.federationFeature} target="_blank" rel="noreferrer">Open source <ArrowUpRight size={14} /></a></div>
             <div><span>Identity</span><strong>Lebanese founder and athlete</strong></div>
-            <div><span>Company</span><strong>Founder & CEO of Sira</strong></div>
+            <div><span>Company</span><strong>Co Founder and Co CEO of Sira</strong></div>
           </div>
         </div>
       </section>

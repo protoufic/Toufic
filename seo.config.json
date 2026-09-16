@@ -1,5 +1,5 @@
 {
-  "siteName": "Toufic Abou Ali — Six Continents World Record",
+  "siteName": "Toufic Abou Ali — Six Continents Before 21",
   "siteUrl": "https://toufic.co",
   "language": "en",
   "locale": "en_US",
@@ -7,9 +7,9 @@
   "person": {
     "name": "Toufic Abou Ali",
     "alternateName": "Toufic",
-    "description": "Lebanese founder and athlete and Founder & CEO of Sira preparing Six Continents World Record: six full distance IRONMAN races across six continents before turning 21. Application accepted; guidelines issued; Pending Evidence.",
+    "description": "Lebanese founder and athlete and Co Founder and Co CEO of Sira preparing six full distance IRONMAN races across six continents before turning 21. No record is claimed.",
     "image": "/assets/img/identity/headshot.webp",
-    "jobTitle": "Founder & CEO of Sira; Lebanese founder and athlete",
+    "jobTitle": "Co Founder and Co CEO of Sira; Lebanese founder and athlete",
     "nationality": "Lebanon",
     "sameAs": [
       "https://www.instagram.com/touficaa/",
@@ -20,10 +20,10 @@
   "pages": [
     {
       "path": "/",
-      "title": "Toufic Abou Ali | Six Continents World Record",
-      "description": "Application accepted; guidelines issued. Toufic Abou Ali is preparing six full distance IRONMAN races across six continents before turning 21. Four race entries are secured. No record is claimed.",
+      "title": "Toufic Abou Ali | Six Continents Before 21",
+      "description": "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents before turning 21. The first starting line is San Juan on 1 November 2026. No record is claimed.",
       "image": "/assets/img/mission/scene-01-poster.webp",
-      "imageAlt": "Toufic Abou Ali and the Six Continents World Record mission",
+      "imageAlt": "Toufic Abou Ali and the Six Continents Before 21 mission",
       "schemaType": "WebSite",
       "priority": 1.0,
       "breadcrumbName": "Home",
@@ -31,14 +31,25 @@
     },
     {
       "path": "/mission",
-      "title": "Six Continents World Record Mission | Toufic Abou Ali",
-      "description": "The accepted application, six required regions, secured race route, evidence rules, and deadline behind Toufic Abou Ali’s world record attempt.",
+      "title": "Six Continents Before 21 Mission | Toufic Abou Ali",
+      "description": "The race route, preparation system, documentation plan, and deadline behind Toufic Abou Ali’s independent six continent endurance mission.",
       "image": "/assets/img/mission/mission-page-cover.webp",
       "imageAlt": "Toufic Abou Ali in front of the Six Continents mission map",
       "schemaType": "AboutPage",
       "priority": 0.9,
-      "breadcrumbName": "Six Continents World Record",
+      "breadcrumbName": "Six Continents Before 21",
       "lastModified": "2026-08-22"
+    },
+    {
+      "path": "/support",
+      "title": "Support Six Continents Before 21 | Toufic Abou Ali",
+      "description": "Help Toufic Abou Ali reach the next starting line in San Juan, Argentina, on 1 November 2026 through verified payment routes.",
+      "image": "/assets/img/mission/scene-01-poster.webp",
+      "imageAlt": "Toufic Abou Ali standing at a starting line",
+      "schemaType": "WebPage",
+      "priority": 0.95,
+      "breadcrumbName": "Support the Mission",
+      "lastModified": "2026-09-15"
     },
     {
       "path": "/proof",
@@ -54,7 +65,7 @@
     {
       "path": "/founder",
       "title": "Toufic Abou Ali | Lebanese Founder, Athlete and Sira CEO",
-      "description": "Meet Toufic Abou Ali, the Lebanese founder and athlete and Sira Founder and CEO combining company building, university, and endurance sport in a global record mission.",
+      "description": "Meet Toufic Abou Ali, the Lebanese founder and athlete and Sira Co Founder and Co CEO combining company building, university, and endurance sport in a six continent mission.",
       "image": "/assets/img/identity/headshot.webp",
       "imageAlt": "Portrait of Lebanese founder and athlete Toufic Abou Ali",
       "schemaType": "ProfilePage",
@@ -64,8 +75,8 @@
     },
     {
       "path": "/partners",
-      "title": "Partner with Six Continents World Record | Toufic Abou Ali",
-      "description": "Find the exact role your company can own inside Toufic Abou Ali’s six continent world record attempt before a custom proposal is built.",
+      "title": "Partner with Six Continents Before 21 | Toufic Abou Ali",
+      "description": "Find the exact role your company can own inside Toufic Abou Ali’s six continent endurance mission before a custom proposal is built.",
       "image": "/assets/img/warsaw/finish-lebanon.webp",
       "imageAlt": "Toufic Abou Ali carrying the Lebanese flag at an IRONMAN finish",
       "schemaType": "WebPage",
@@ -88,9 +99,9 @@
     {
       "path": "/media",
       "title": "Toufic Abou Ali Media Kit | Bio, Facts, Photos & Contact",
-      "description": "Approved bios, exact application status, verified facts, quotes, race results, photographs and media contact for Six Continents World Record.",
+      "description": "Approved bios, current record status, verified facts, quotes, race results, photographs and media contact for Six Continents Before 21.",
       "image": "/assets/img/warsaw/finish-up.webp",
-      "imageAlt": "Toufic Abou Ali media kit for Six Continents World Record",
+      "imageAlt": "Toufic Abou Ali media kit for Six Continents Before 21",
       "schemaType": "CollectionPage",
       "priority": 0.85,
       "breadcrumbName": "Media Kit",

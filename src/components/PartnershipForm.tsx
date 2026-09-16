@@ -72,7 +72,7 @@ export function PartnershipForm() {
     // In production, this would send to an API endpoint
     // For now, we'll create a mailto link as fallback
     try {
-      const subject = encodeURIComponent(`Six Continents World Record Partnership: ${formData.company}`);
+      const subject = encodeURIComponent(`Six Continents Before 21 Partnership: ${formData.company}`);
       const body = encodeURIComponent(`
 Name: ${formData.name}
 Email: ${formData.email}

@@ -40,9 +40,9 @@ export function MissionPage() {
         <img src={media.missionWide} alt="Toufic Abou Ali in front of the Six Continents map" />
         <div className="page-hero-overlay" />
         <div className="site-shell page-hero-content">
-          <p className="eyebrow">SIX CONTINENTS WORLD RECORD</p>
+          <p className="eyebrow">SIX CONTINENTS BEFORE 21</p>
           <h1>Six full distance IRONMAN races.<br />Six continents.<br /><em>Before age 21.</em></h1>
-          <p>Application accepted. Guidelines issued. Four race entries secured. Status: Pending Evidence.</p>
+          <p>An independent athlete led mission. The first starting line is San Juan, Argentina, on 1 November 2026.</p>
           <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partner Role <ArrowRight size={16} /></button>
         </div>
       </section>
@@ -50,12 +50,12 @@ export function MissionPage() {
       <section className="section mission-summary-section">
         <div className="site-shell mission-summary-grid">
           <motion.div {...reveal}>
-            <p className="eyebrow">THE ACCEPTED APPLICATION TITLE</p>
-            <h2>Youngest person to complete an IRONMAN® triathlon on six continents (male).</h2>
+            <p className="eyebrow">THE SPORTING MISSION</p>
+            <h2>Six full distance races across six continents before age 21.</h2>
           </motion.div>
           <motion.div {...reveal}>
-            <p>Guinness World Records accepted Toufic’s application and issued the official guidelines on 5 August 2026. He must complete one qualifying full distance race in North America, South America, Europe, Africa, Asia, and Australasia.</p>
-            <p>No record is claimed. The result will only be determined after all six races are completed and the full evidence is reviewed. Toufic’s target is to finish before 14 June 2027.</p>
+            <p>This is an official Guinness World Records attempt in progress. The application was accepted and official guidelines were issued. The six race route covers North America, South America, Europe, Africa, Asia, and Oceania.</p>
+            <p>No record is claimed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.</p>
           </motion.div>
         </div>
       </section>
@@ -90,8 +90,8 @@ export function MissionPage() {
         <div className="site-shell">
           <motion.div {...reveal} className="section-heading">
             <p className="eyebrow">SIX RACES. ONE EVIDENCE SYSTEM.</p>
-            <h2>Every race must be finished and proved.</h2>
-            <p>Every race needs an official result, independent verification, travel proof, photographs, and video.</p>
+            <h2>Every race must be finished and documented.</h2>
+            <p>Every race needs an official result, travel proof, photographs, and video.</p>
           </motion.div>
           <div className="chapter-track">
             {chapterSteps.map((step, index) => (

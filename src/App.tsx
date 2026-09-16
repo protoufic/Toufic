@@ -9,6 +9,7 @@ const ProofPage = lazy(() => import('./views/Proof').then((module) => ({ default
 const FounderPage = lazy(() => import('./views/Founder').then((module) => ({ default: module.FounderPage })));
 const PartnersPage = lazy(() => import('./views/Partners').then((module) => ({ default: module.PartnersPage })));
 const MediaPage = lazy(() => import('./views/Media').then((module) => ({ default: module.MediaPage })));
+const SupportPage = lazy(() => import('./views/Support').then((module) => ({ default: module.SupportPage })));
 const NotFoundPage = lazy(() => import('./views/NotFound').then((module) => ({ default: module.NotFoundPage })));
 
 function RouteEffects() {
@@ -42,6 +43,7 @@ function SiteRoutes() {
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/warsaw" element={<WarsawPage />} />
           <Route path="/media" element={<MediaPage />} />
+          <Route path="/support" element={<SupportPage />} />
           <Route path="/story" element={<FounderPage />} />
           <Route path="/record" element={<ProofPage />} />
           <Route path="/ironman" element={<WarsawPage />} />

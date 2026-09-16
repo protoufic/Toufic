@@ -13,7 +13,7 @@ const reveal = {
 
 const pillars = [
   { icon: Building2, title: 'Build systems', copy: 'The mission requires planning, owners, deadlines, reporting, and repeatable execution.' },
-  { icon: BriefcaseBusiness, title: 'Lead teams', copy: 'Toufic is Founder & CEO of Sira while preparing the campaign.' },
+  { icon: BriefcaseBusiness, title: 'Lead teams', copy: 'Toufic is Co Founder and Co CEO of Sira while preparing the campaign.' },
   { icon: GraduationCap, title: 'Operate under pressure', copy: 'University, international life, company responsibilities, and training all compete for the same time.' },
   { icon: MapPinned, title: 'Work across markets', copy: 'Lebanon is the origin. France, China, and six race continents shape the context.' },
 ];
@@ -26,7 +26,7 @@ export function FounderPage() {
           <div className="founder-page-copy">
             <p className="eyebrow">TOUFIC ABOU ALI</p>
             <h1>Lebanese founder and athlete.</h1>
-            <p>Founder & CEO of Sira. Student abroad. Endurance athlete. Building one global campaign through the same discipline used to build teams and systems.</p>
+            <p>Co Founder and Co CEO of Sira. Student abroad. Endurance athlete. Building one global campaign through the same discipline used to build teams and systems.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss the Campaign <ArrowRight size={16} /></button>
           </div>
           <figure className="founder-main-portrait">
@@ -86,7 +86,7 @@ export function FounderPage() {
           <motion.div {...reveal}>
             <p className="eyebrow">FOUNDER AND ATHLETE</p>
             <h2>Pressure does not disappear. It gets organised.</h2>
-            <p>Six Continents World Record requires the athlete, founder, student, and operator to work as one system. The story is not about doing everything alone. It is about building the right team around a hard target.</p>
+            <p>Six Continents Before 21 requires the athlete, founder, student, and operator to work as one system. The story is not about doing everything alone. It is about building the right team around a hard target.</p>
             <button className="button-primary" onClick={() => openContactPanel('partnership')}>Build the Mission Together <ArrowRight size={16} /></button>
           </motion.div>
         </div>

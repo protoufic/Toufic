@@ -33,11 +33,11 @@ export function Header() {
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="site-shell">
         <nav className="site-nav" aria-label="Primary navigation">
-          <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents World Record home">
+          <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents Before 21 home">
             <span className="site-brand-mark"><img src="/assets/img/brand/toufic-mark.svg" alt="" /></span>
             <span className="site-brand-copy">
               <strong>Toufic Abou Ali</strong>
-              <small>Six Continents World Record</small>
+              <small>Six Continents Before 21</small>
             </span>
           </Link>
 
@@ -97,7 +97,7 @@ export function Footer() {
     <footer className="site-footer">
       <div className="site-shell footer-grid">
         <div className="footer-lead">
-          <span className="footer-kicker">SIX CONTINENTS WORLD RECORD</span>
+          <span className="footer-kicker">SIX CONTINENTS BEFORE 21</span>
           <h2>6 full distance IRONMAN races. 6 continents. Before age 21.</h2>
           <button className="text-link" onClick={() => openContactPanel('partnership')}>
             Discuss a partnership <ArrowUpRight size={16} />
@@ -125,7 +125,7 @@ export function Footer() {
 
       <div className="site-shell footer-bottom">
         <p>© {new Date().getFullYear()} Toufic Abou Ali.</p>
-        <p>Application accepted. Guidelines issued 5 August 2026. Status: Pending Evidence. No record is claimed. Recognition depends on completion and evidence review. Guinness World Records and IRONMAN® names and marks are shown only to identify the application and race format. No sponsorship, partnership or endorsement is implied.</p>
+        <p>Official Guinness World Records attempt in progress. The application was accepted and official guidelines were issued. No record is claimed. Final recognition remains subject to completion and evidence review. Guinness World Records and IRONMAN® names and marks do not imply sponsorship, partnership or endorsement.</p>
       </div>
     </footer>
   );

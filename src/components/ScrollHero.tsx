@@ -20,7 +20,7 @@ export function ScrollHero() {
         <div className="site-shell cinematic-content cinematic-content-left">
           <motion.div {...reveal} className="film-copy-panel cinematic-copy">
             <div className="hero-brand-lockup">
-              <img src={media.guinness} alt="Guinness World Records" />
+              <img src="/assets/img/brand/toufic-mark.svg" alt="Toufic Abou Ali" />
               <span aria-hidden="true" />
               <div className="ironman-wordmark" aria-label="IRONMAN">IRONMAN<sup>®</sup></div>
             </div>
@@ -31,12 +31,12 @@ export function ScrollHero() {
               <em>Before I turn 21.</em>
             </h1>
             <p className="film-subcopy"><strong>I am Toufic Abou Ali.</strong> A Lebanese founder and athlete turning one clear target into six international race chapters.</p>
-            <p className="film-proof-line">Application accepted. Guidelines issued. Four of six race entries secured. The record is not yet achieved.</p>
+            <p className="film-proof-line">The mission is active. The first starting line is San Juan, Argentina, on 1 November 2026. No record is claimed.</p>
             <div className="film-actions">
               <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
               <Link className="button-quiet" to="/mission">Understand the Mission</Link>
             </div>
-            <small className="hero-mark-note">Names and marks identify the application and race format. No endorsement or official partnership is implied.</small>
+            <small className="hero-mark-note">The IRONMAN name identifies the race format. No endorsement or official partnership is implied.</small>
           </motion.div>
         </div>
         <div className="cinematic-index"><span>01 / 03</span><i /></div>

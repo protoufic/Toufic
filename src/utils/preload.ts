@@ -5,6 +5,7 @@ const routeLoaders: Record<string, () => Promise<unknown>> = {
   '/partners': () => import('../views/Partners'),
   '/warsaw': () => import('../views/Warsaw'),
   '/media': () => import('../views/Media'),
+  '/support': () => import('../views/Support'),
 };
 
 const requested = new Set<string>();

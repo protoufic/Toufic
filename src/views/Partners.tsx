@@ -25,7 +25,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
-import { media, mission, preferredRoute, site, warsawRace } from '../data/mission';
+import { media, preferredRoute, site, warsawRace } from '../data/mission';
 import { personalBests, raceMetrics } from '../data/metrics';
 import { openContactPanel } from '../utils/contact';
 
@@ -104,7 +104,7 @@ const scopes = [
 const faqs = [
   {
     q: 'Is the Guinness World Records title already confirmed?',
-    a: 'No. The application has been accepted and the official guidelines were issued on 5 August 2026. Recognition depends on completing all six races, submitting the required evidence, and passing the final review.',
+    a: 'No. The application was accepted and official guidelines were issued, but no record is claimed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.',
   },
   {
     q: 'Where will the six race chapters happen?',
@@ -138,8 +138,8 @@ export function PartnersPage() {
               <a className="button-quiet" href="#fit">Find Your Company Fit</a>
             </div>
             <div className="partner-trust-line">
-              <span><Check size={15} /> Application accepted</span>
-              <span><Check size={15} /> Guidelines issued</span>
+              <span><Check size={15} /> Mission underway</span>
+              <span><Check size={15} /> First race 1 November</span>
               <span><Check size={15} /> Six race chapters</span>
             </div>
           </div>
@@ -155,7 +155,7 @@ export function PartnersPage() {
           <div><span>Race 1</span><strong>San Juan, Argentina</strong><small>1 November 2026</small></div>
           <div><span>Global route</span><strong>6 races · 6 continents</strong><small>One complete international mission</small></div>
           <div><span>Deadline</span><strong>Before age 21</strong><small>14 June 2027</small></div>
-          <div><span>Application</span><strong>Pending Evidence</strong><small>No record is claimed</small></div>
+          <div><span>Record status</span><strong>Attempt in progress</strong><small>Final recognition requires evidence review</small></div>
         </div>
       </section>
 
@@ -175,7 +175,7 @@ export function PartnersPage() {
           </div>
           <div className="partner-proof-notes">
             <p><strong>Lebanese athletic milestone.</strong> The Lebanese Triathlon Federation featured Toufic as the youngest Lebanese athlete to complete an IRONMAN 70.3. <a className="inline-link" href={site.federationFeature} target="_blank" rel="noreferrer">View the Federation post <ArrowRight size={14} /></a></p>
-            <p><strong>Execution beyond sport.</strong> As Founder and CEO of Sira, Toufic helps lead a 25 person team, a 60K plus WhatsApp community, and work that has generated more than 15 million content impressions.</p>
+            <p><strong>Execution beyond sport.</strong> As Co Founder and Co CEO of Sira, Toufic helps lead a 25 person team, a 60K plus WhatsApp community, and work that has generated more than 15 million content impressions.</p>
           </div>
         </div>
       </section>
@@ -187,9 +187,9 @@ export function PartnersPage() {
             <h2>Six full distance races. Six required regions. Finish before 14 June 2027.</h2>
           </motion.div>
           <motion.div {...reveal}>
-            <p>The accepted application title is <strong>{mission.recordTitle}</strong>.</p>
-            <p>One qualifying race must be completed in North America, South America, Europe, Africa, Asia, and Australasia. Each result must then pass the required evidence review.</p>
-            <p className="partner-legal-note">The application is accepted and official guidelines were issued on 5 August 2026. The record is not achieved, guaranteed, or approved in advance.</p>
+            <p>The sporting target is <strong>six full distance races across six continents before age 21</strong>.</p>
+            <p>The planned route covers North America, South America, Europe, Africa, Asia, and Oceania.</p>
+            <p className="partner-legal-note">The Guinness World Records application was accepted and official guidelines were issued. No record is claimed or guaranteed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.</p>
           </motion.div>
         </div>
       </section>

@@ -14,11 +14,11 @@ export const site = {
 };
 
 export const mission = {
-  headline: '6 full distance IRONMAN races. 6 continents. 1 world record attempt.',
-  name: 'Six Continents World Record',
+  headline: '6 full distance IRONMAN races. 6 continents. Before age 21.',
+  name: 'Six Continents Before 21',
   recordTitle: 'Youngest person to complete an IRONMAN® triathlon on six continents (male)',
-  applicationStatus: 'Application accepted • Guidelines issued 5 August 2026 • Pending Evidence',
-  disclaimer: 'No record is claimed. Recognition depends on completing the attempt and passing Guinness World Records’ evidence review.',
+  applicationStatus: 'Application accepted • Official guidelines issued • Evidence review pending',
+  disclaimer: 'Official Guinness World Records attempt in progress. No record has been achieved or awarded. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.',
   distances: {
     swim: 3.85,
     bike: 180,
@@ -38,7 +38,7 @@ export const mission = {
     age: '21 years and 167 days',
     achieved: 'September 28, 2025',
   },
-  recordStatus: 'Application accepted • Guidelines issued 5 August 2026 • Pending Evidence',
+  recordStatus: 'Application accepted • Official guidelines issued • Final recognition subject to evidence review',
   continents: [
     { name: 'North America', x: 20.0, y: 38.8, race: 'Jacksonville, United States', date: '16 May 2027', status: 'Preferred route · Being secured', secured: false, summary: 'Jacksonville is the preferred North America race. A flexible backup protects the attempt if the final combination must change.' },
     { name: 'South America', x: 30.5, y: 66.8, race: 'San Juan, Argentina', date: '1 November 2026', status: 'Entry secured', secured: true, summary: 'San Juan is the opening race and the first full distance chapter of the mission.' },

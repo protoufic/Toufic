@@ -98,9 +98,9 @@ function RecordSection() {
       <div className="site-shell">
         <motion.div {...reveal} className="record-panel">
           <div className="record-copy">
-            <p className="eyebrow">OFFICIAL APPLICATION STATUS</p>
-            <h2>Application accepted. Guidelines issued. Pending Evidence.</h2>
-            <p>The record is not achieved. Toufic must complete six qualifying races and pass the evidence review. Four race entries are secured and the target is to finish before 14 June 2027.</p>
+            <p className="eyebrow">RECORD STATUS</p>
+            <h2>Official attempt in progress.</h2>
+            <p>The Guinness World Records application was accepted and official guidelines were issued. No record is claimed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.</p>
             <a className="inline-link" href={site.recordSource} target="_blank" rel="noreferrer">View the current listed benchmark <ExternalLink size={15} /></a>
           </div>
           <DualCountdown />
@@ -198,7 +198,7 @@ function FounderSection() {
         <motion.div {...reveal} className="founder-home-copy">
           <p className="eyebrow">WHY TOUFIC CAN BUILD THE CAMPAIGN</p>
           <h2>The mission is athletic. The execution is operational.</h2>
-          <p>Toufic is Founder & CEO of Sira while studying abroad and building as an endurance athlete. The same work behind teams, systems, deadlines, and partnerships now has to carry a global race campaign.</p>
+          <p>Toufic is Co Founder and Co CEO of Sira while studying abroad and building as an endurance athlete. The same work behind teams, systems, deadlines, and partnerships now has to carry a global race campaign.</p>
           <div className="sira-metrics-mini">
             {siraMetrics.slice(0, 4).map((item) => <span key={item.label}><strong>{item.value}</strong><small>{item.label}</small></span>)}
           </div>
