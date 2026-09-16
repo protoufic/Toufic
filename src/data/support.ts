@@ -9,6 +9,7 @@ export type PublicSupporter = {
   currency?: string;
   showCountry: boolean;
   showAmount: boolean;
+  foundingNumber?: number;
 };
 
 function verifiedUrl(value: string | undefined) {
@@ -32,6 +33,7 @@ const fundingGoal = verifiedNumber(process.env.NEXT_PUBLIC_SUPPORT_GOAL) ?? 3000
 const cashReceived = verifiedNumber(process.env.NEXT_PUBLIC_SUPPORT_CASH_RECEIVED) ?? 0;
 const committedCash = verifiedNumber(process.env.NEXT_PUBLIC_SUPPORT_COMMITTED_CASH) ?? 1000;
 const inKindValue = verifiedNumber(process.env.NEXT_PUBLIC_SUPPORT_IN_KIND_VALUE) ?? 0;
+const foundingSupporterCount = Math.min(100, Math.floor(verifiedNumber(process.env.NEXT_PUBLIC_FOUNDING_SUPPORTER_COUNT) ?? 0));
 
 const mediaProof = [
   { name: 'Annahar', description: 'Video feature', url: verifiedUrl(process.env.NEXT_PUBLIC_ANNAHAR_COVERAGE_URL) ?? 'https://www.instagram.com/reel/DdT-aPmtUae/' },
@@ -42,6 +44,8 @@ const mediaProof = [
 export const supportConfig = {
   canonicalUrl: 'https://toufic.co/support',
   contactEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'protoufic@gmail.com',
+  supporterWhatsApp: process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || '96176923943',
+  foundingSupporterCount,
   nextRace: {
     name: 'IRONMAN San Juan',
     city: 'San Juan',

@@ -1,18 +1,17 @@
 # Support funnel operations
 
-## Version one structure
+## Current structure
 
-1. One mobile first hero with the mission, next race, date, and one support action.
-2. One location choice: International or Lebanon.
-3. One international route: GoFundMe.
-4. Two primary local routes after Lebanon is selected: Whish and OMT Pay.
-5. Purpl and MyMonty behind More Lebanese wallets.
-6. Six continent progress visual.
-7. Verified funding summary.
-8. Short mission story.
-9. Trust, record status, and verified media source links.
-10. Consent based supporter wall.
-11. Partner, media, and share actions.
+1. Bright, plain-language hero with the Guinness World Records attempt status, next race, and one primary action: `Fund the Mission`.
+2. One payment choice after the CTA: International or Lebanon.
+3. International opens the verified GoFundMe route immediately.
+4. Lebanon reveals one confirmed receiving number that can be used with Whish, OMT Pay, Purpl, or MyMonty, plus the simple transfer note `SIX`.
+5. Payment comes first. Supporter recognition is optional afterward through the pre-filled WhatsApp confirmation route.
+6. The first 100 verified supporters who choose to appear receive numbered `Founding Supporter #001–#100` positions.
+7. Supporters choose separately whether name, country, and contribution amount are public.
+8. The page explains mission costs, verified cash progress, record status, media proof, and the planned Lebanon celebration if the attempt succeeds.
+9. Company traffic is routed separately to `/partners`; individual support and commercial partnership are not mixed into one funnel.
+10. A sticky `Fund the Mission` action remains available as the visitor scrolls.
 
 ## Required environment values
 
@@ -28,13 +27,15 @@ NEXT_PUBLIC_SUPPORT_CURRENCY=EUR
 NEXT_PUBLIC_SUPPORT_UPDATED_AT="16 September 2026"
 NEXT_PUBLIC_SUPPORTER_CONSENT_URL=
 NEXT_PUBLIC_SUPPORT_EMAIL=protoufic@gmail.com
+NEXT_PUBLIC_SUPPORT_WHATSAPP=96176923943
+NEXT_PUBLIC_FOUNDING_SUPPORTER_COUNT=0
 NEXT_PUBLIC_ANNAHAR_COVERAGE_URL=https://www.instagram.com/reel/DdT-aPmtUae/
 NEXT_PUBLIC_NOURSAT_APPEARANCE_URL=https://www.instagram.com/reel/DdTav13JPn8/
 NEXT_PUBLIC_TELE_LIBAN_APPEARANCE_URL=https://www.instagram.com/reel/Dc87f-ypZ6o/
 NEXT_PUBLIC_GA4_ID=
 ```
 
-The GoFundMe link must use HTTPS. Lebanese wallet routes use the confirmed receiving number and reveal it only after a wallet is selected. Funding progress counts only cash received.
+The GoFundMe link must use HTTPS. The Lebanese receiving number is revealed only after the visitor chooses Lebanon. If the selected wallet supports a note field, supporters are asked to write `SIX`; the note is optional and must never block a transfer. Funding progress counts only cash received.
 
 Media names appear only when a verified source URL is configured.
 
@@ -59,8 +60,9 @@ Already paid expenses, covered expenses, and uncovered expenses should live in a
 3. Ask separately whether to show country.
 4. Ask separately whether to show contribution amount.
 5. Store when and where consent was received.
-6. Add only the approved display fields to `src/data/support.ts`.
-7. Never publish payment references, email addresses, phone numbers, private notes, or bank details.
+6. Assign Founding Supporter numbers in confirmed-payment order for the first 100 verified supporters. Update `NEXT_PUBLIC_FOUNDING_SUPPORTER_COUNT` even if a supporter chooses to stay fully private.
+7. For supporters who choose to appear, add only the approved display fields plus their `foundingNumber` to `src/data/support.ts`.
+8. Never publish payment references, email addresses, phone numbers, private notes, or bank details.
 
 ## UTM links
 
@@ -100,6 +102,7 @@ Use `utm_content` only to separate two placements inside one source, such as `pr
 | `purpl_click` | Purpl is selected under more Lebanese wallets |
 | `mymonty_click` | MyMonty is selected under more Lebanese wallets |
 | `local_number_copy` | The confirmed receiving number is copied |
+| `support_note_copy` | The optional `SIX` transfer note is copied |
 | `partner_enquiry_click` | Partner route is opened |
 | `media_enquiry_click` | Media route is opened |
 | `supporter_consent_click` | Supporter visibility route is opened |
@@ -130,7 +133,7 @@ Do not deploy until all of these are true:
 
 1. GoFundMe organizer and withdrawal route are verified.
 2. The public GoFundMe URL is verified and every local wallet route shows the correct receiving number.
-3. The wallet number is confirmed for each service and remains hidden unless a manual transfer path truly needs it.
+3. The wallet number is confirmed for each listed service and appears only after the visitor chooses Lebanon.
 4. Public goal and cash received are reconciled.
 5. Media source links are verified.
 6. Record status wording is approved against the latest written correspondence.

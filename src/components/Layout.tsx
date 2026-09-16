@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Menu, X, ArrowUpRight, MessageCircle } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Heart, Building2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ContactPanel } from './ContactPanel';
 import { openContactPanel } from '../utils/contact';
@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/mission', label: 'Mission' },
   { href: '/proof', label: 'Proof' },
   { href: '/founder', label: 'Founder' },
+  { href: '/support', label: 'Support' },
   { href: '/partners', label: 'Partners' },
   { href: '/media', label: 'Media' },
 ];
@@ -29,66 +30,71 @@ export function Header() {
   }, []);
 
   return (
-    <header className={`site-header ${isScrolled ? 'site-header-scrolled' : ''}`}>
-      <a href="#main-content" className="skip-link">Skip to main content</a>
-      <div className="site-shell">
-        <nav className="site-nav" aria-label="Primary navigation">
-          <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents Before 21 home">
-            <span className="site-brand-mark"><img src="/assets/img/brand/toufic-mark.svg" alt="" /></span>
-            <span className="site-brand-copy">
-              <strong>Toufic Abou Ali</strong>
-              <small>Six Continents Before 21</small>
-            </span>
-          </Link>
+    <>
+      <header className={`site-header ${isScrolled ? 'site-header-scrolled' : ''}`}>
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <div className="site-shell">
+          <nav className="site-nav" aria-label="Primary navigation">
+            <Link to="/" className="site-brand" aria-label="Toufic Abou Ali — Six Continents. One Mission. home">
+              <span className="site-brand-mark"><img src="/assets/img/brand/toufic-mark.svg" alt="" /></span>
+              <span className="site-brand-copy">
+                <strong>Toufic Abou Ali</strong>
+                <small>Six Continents. One Mission.</small>
+              </span>
+            </Link>
 
-          <div className="site-nav-links">
-            {navLinks.map((link) => (
-              <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <button className="header-cta" onClick={() => openContactPanel('partnership')}>
-            Discuss a Partnership
-            <ArrowUpRight size={15} />
-          </button>
-
-          <button
-            className="mobile-menu-button"
-            onClick={() => setMobileMenuOpen((value) => !value)}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-menu"
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        </nav>
-      </div>
-
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            id="mobile-menu"
-            className="mobile-menu"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-          >
-            <div className="mobile-menu-inner">
+            <div className="site-nav-links">
               {navLinks.map((link) => (
-                <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onClick={() => setMobileMenuOpen(false)} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
+                <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
                   {link.label}
                 </Link>
               ))}
-              <button onClick={() => openContactPanel('partnership')}>
-                <MessageCircle size={18} /> Discuss a Partnership
-              </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+
+            <Link className="header-cta header-support-cta" to="/support" onPointerEnter={() => preloadRoute('/support')} onFocus={() => preloadRoute('/support')}>
+              Fund the Mission
+              <Heart size={15} fill="currentColor" />
+            </Link>
+
+            <button
+              className="mobile-menu-button"
+              onClick={() => setMobileMenuOpen((value) => !value)}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </nav>
+        </div>
+
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              id="mobile-menu"
+              className="mobile-menu"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <div className="mobile-menu-inner">
+                {navLinks.map((link) => (
+                  <Link key={link.href} to={link.href} className={location.pathname === link.href ? 'active' : ''} onClick={() => setMobileMenuOpen(false)} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)} onTouchStart={() => preloadRoute(link.href)}>
+                    {link.label}
+                  </Link>
+                ))}
+                <Link className="mobile-support-link" to="/support" onClick={() => setMobileMenuOpen(false)}><Heart size={18} fill="currentColor" /> Fund the Mission</Link>
+                <button onClick={() => { setMobileMenuOpen(false); openContactPanel('partnership'); }}><Building2 size={18} /> Discuss a Company Partnership</button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      {location.pathname !== '/support' && (
+        <Link className="global-support-sticky" to="/support"><Heart size={17} fill="currentColor" /> Fund the Mission</Link>
+      )}
+    </>
   );
 }
 
@@ -97,11 +103,12 @@ export function Footer() {
     <footer className="site-footer">
       <div className="site-shell footer-grid">
         <div className="footer-lead">
-          <span className="footer-kicker">SIX CONTINENTS BEFORE 21</span>
-          <h2>6 full distance IRONMAN races. 6 continents. Before age 21.</h2>
-          <button className="text-link" onClick={() => openContactPanel('partnership')}>
-            Discuss a partnership <ArrowUpRight size={16} />
-          </button>
+          <span className="footer-kicker">SIX CONTINENTS. ONE MISSION.</span>
+          <h2>6 full distance IRONMAN races. 6 continents. One Guinness World Records attempt.</h2>
+          <div className="footer-primary-actions">
+            <Link className="button-primary" to="/support">Fund the Mission <Heart size={16} fill="currentColor" /></Link>
+            <button className="text-link" onClick={() => openContactPanel('partnership')}>Partner as a Company <ArrowUpRight size={16} /></button>
+          </div>
         </div>
 
         <div className="footer-links">
@@ -109,7 +116,6 @@ export function Footer() {
             <h3>Website</h3>
             {navLinks.map((link) => <Link key={link.href} to={link.href} onPointerEnter={() => preloadRoute(link.href)} onFocus={() => preloadRoute(link.href)}>{link.label}</Link>)}
             <Link to="/warsaw" onPointerEnter={() => preloadRoute('/warsaw')} onFocus={() => preloadRoute('/warsaw')}>IRONMAN 70.3 Warsaw</Link>
-            <Link to="/media" onPointerEnter={() => preloadRoute('/media')} onFocus={() => preloadRoute('/media')}>Media</Link>
           </div>
           <div>
             <h3>Connect</h3>

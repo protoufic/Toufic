@@ -4,28 +4,28 @@ import { Analytics } from './analytics';
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://toufic.co"),
-  title: "Toufic Abou Ali | Six Continents Before 21",
+  title: "Toufic Abou Ali | Six Continents. One Guinness World Records Attempt.",
   description:
-    "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents before turning 21. Explore the mission, proof, founder story, media facts, and partner roles.",
+    "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents as part of an official Guinness World Records attempt. No record is claimed.",
   openGraph: {
-    title: "Six Continents Before 21 | Partner Experience",
+    title: "Six Continents. One Guinness World Records Attempt. | Toufic Abou Ali",
     description:
-      "A clear partner brief covering the mission, proof, route, real needs, company fit and partner value.",
+      "Follow and support Toufic Abou Ali’s six-continent IRONMAN Guinness World Records attempt, or explore company partnership roles.",
     type: "website",
     images: [
       {
-        url: "/assets/img/warsaw/finish-lebanon.webp",
+        url: "/assets/img/support/six-continents-one-mission.webp",
         width: 1200,
         height: 630,
-        alt: "Toufic Abou Ali carrying the Lebanese flag at an IRONMAN finish",
+        alt: "Six Continents, One Mission — Toufic Abou Ali Guinness World Records attempt",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Six Continents Before 21 | Partner Experience",
-    description: "Six full distance IRONMAN races. Six continents. Before age 21.",
-    images: ["/assets/img/warsaw/finish-lebanon.webp"],
+    title: "Six Continents. One Guinness World Records Attempt. | Toufic Abou Ali",
+    description: "Six full distance IRONMAN races. Six continents. One official Guinness World Records attempt.",
+    images: ["/assets/img/support/six-continents-one-mission.webp"],
   },
   icons: {
     icon: "/favicon.svg",

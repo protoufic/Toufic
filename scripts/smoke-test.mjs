@@ -57,7 +57,7 @@ try {
     'Annahar',
     'Noursat',
     'Télé Liban',
-    'Final recognition remains subject to completion of the attempt',
+    'One record attempt. Hundreds of names behind it.',
   ];
 
   for (const expected of requiredSupportContent) {
@@ -67,7 +67,7 @@ try {
   }
 
   if (supportHtml.includes('76 923 943')) {
-    throw new Error('/support exposes the local wallet number before a visitor selects a wallet');
+    throw new Error('/support exposes the local wallet number before a visitor chooses Lebanon');
   }
 
   const chunkRoot = resolve('dist/static/chunks');

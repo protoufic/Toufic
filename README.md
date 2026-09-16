@@ -1,4 +1,4 @@
-# Toufic Abou Ali: Six Continents Before 21
+# Toufic Abou Ali: Six Continents. One Mission.
 
 This is the production ready Vercel edition of Toufic Abou Ali's website.
 
@@ -27,7 +27,7 @@ The test command runs the full lint check and the optimized Next.js production b
 
 ## Main pages
 
-- `/support`: mobile first fundraising and payment funnel
+- `/support`: conversion-first supporter funnel with International/Lebanon payment routing, Founding 100 recognition, and supporter confirmation
 - `/partners`: conversion focused partner brief
 - `/proof`: race and evidence archive
 - `/mission`: six continent attempt and route

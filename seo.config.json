@@ -1,5 +1,5 @@
 {
-  "siteName": "Toufic Abou Ali — Six Continents Before 21",
+  "siteName": "Toufic Abou Ali — Six Continents. One Mission.",
   "siteUrl": "https://toufic.co",
   "language": "en",
   "locale": "en_US",
@@ -7,7 +7,7 @@
   "person": {
     "name": "Toufic Abou Ali",
     "alternateName": "Toufic",
-    "description": "Lebanese founder and athlete and Co Founder and Co CEO of Sira preparing six full distance IRONMAN races across six continents before turning 21. No record is claimed.",
+    "description": "Lebanese founder and athlete preparing six full distance IRONMAN races across six continents as part of an official Guinness World Records attempt. No record is claimed.",
     "image": "/assets/img/identity/headshot.webp",
     "jobTitle": "Co Founder and Co CEO of Sira; Lebanese founder and athlete",
     "nationality": "Lebanon",
@@ -20,14 +20,14 @@
   "pages": [
     {
       "path": "/",
-      "title": "Toufic Abou Ali | Six Continents Before 21",
-      "description": "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents before turning 21. The first starting line is San Juan on 1 November 2026. No record is claimed.",
-      "image": "/assets/img/mission/scene-01-poster.webp",
-      "imageAlt": "Toufic Abou Ali and the Six Continents Before 21 mission",
+      "title": "Toufic Abou Ali | Six Continents. One Guinness World Records Attempt.",
+      "description": "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents as part of an official Guinness World Records attempt. The first starting line is San Juan on 1 November 2026. No record is claimed.",
+      "image": "/assets/img/support/six-continents-one-mission.webp",
+      "imageAlt": "Toufic Abou Ali and the Six Continents Guinness World Records attempt",
       "schemaType": "WebSite",
       "priority": 1.0,
       "breadcrumbName": "Home",
-      "lastModified": "2026-08-22"
+      "lastModified": "2026-09-16"
     },
     {
       "path": "/mission",
@@ -42,14 +42,14 @@
     },
     {
       "path": "/support",
-      "title": "Support Six Continents Before 21 | Toufic Abou Ali",
-      "description": "Help Toufic Abou Ali reach the next starting line in San Juan, Argentina, on 1 November 2026 through verified payment routes.",
-      "image": "/assets/img/mission/scene-01-poster.webp",
-      "imageAlt": "Toufic Abou Ali standing at a starting line",
+      "title": "Fund the Six Continents Mission | Toufic Abou Ali",
+      "description": "Help Toufic Abou Ali reach six full distance IRONMAN starting lines across six continents as part of an official Guinness World Records attempt. Support internationally or from Lebanon.",
+      "image": "/assets/img/support/six-continents-one-mission.webp",
+      "imageAlt": "Six Continents, One Mission — Toufic Abou Ali official Guinness World Records attempt in progress",
       "schemaType": "WebPage",
       "priority": 0.95,
       "breadcrumbName": "Support the Mission",
-      "lastModified": "2026-09-15"
+      "lastModified": "2026-09-16"
     },
     {
       "path": "/proof",

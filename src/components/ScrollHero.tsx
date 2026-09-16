@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight, Building2, ChevronDown, Heart, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { media } from '../data/mission';
-import { openContactPanel } from '../utils/contact';
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
@@ -19,24 +18,21 @@ export function ScrollHero() {
         <div className="cinematic-shade" />
         <div className="site-shell cinematic-content cinematic-content-left">
           <motion.div {...reveal} className="film-copy-panel cinematic-copy">
-            <div className="hero-brand-lockup">
-              <img src="/assets/img/brand/toufic-mark.svg" alt="Toufic Abou Ali" />
-              <span aria-hidden="true" />
-              <div className="ironman-wordmark" aria-label="IRONMAN">IRONMAN<sup>®</sup></div>
-            </div>
+            <div className="home-record-status"><ShieldCheck size={16} /><span><strong>GUINNESS WORLD RECORDS ATTEMPT</strong><small>Application accepted · Official guidelines issued</small></span></div>
             <p className="film-eyebrow">A LEBANESE MISSION ACROSS SIX CONTINENTS</p>
             <h1 className="hero-record-title">
               <span>6 full IRONMAN races.</span>
               <span>6 continents.</span>
-              <em>Before I turn 21.</em>
+              <em>1 official record attempt.</em>
             </h1>
-            <p className="film-subcopy"><strong>I am Toufic Abou Ali.</strong> A Lebanese founder and athlete turning one clear target into six international race chapters.</p>
-            <p className="film-proof-line">The mission is active. The first starting line is San Juan, Argentina, on 1 November 2026. No record is claimed.</p>
-            <div className="film-actions">
-              <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
-              <Link className="button-quiet" to="/mission">Understand the Mission</Link>
+            <p className="film-subcopy"><strong>I am Toufic Abou Ali.</strong> I am preparing to complete six full distance IRONMAN races across six continents as part of an official Guinness World Records attempt.</p>
+            <p className="film-proof-line">The first starting line is San Juan, Argentina, on 1 November 2026. No record is claimed. Final recognition depends on completing the attempt and evidence review.</p>
+            <div className="film-actions home-hero-actions">
+              <Link className="button-primary" to="/support">Fund the Mission <Heart size={16} fill="currentColor" /></Link>
+              <Link className="button-quiet" to="/partners">Partner as a Company <Building2 size={16} /></Link>
             </div>
-            <small className="hero-mark-note">The IRONMAN name identifies the race format. No endorsement or official partnership is implied.</small>
+            <Link className="home-mission-link" to="/mission">Understand the mission <ArrowRight size={15} /></Link>
+            <small className="hero-mark-note">Guinness World Records and IRONMAN names identify the attempt and race context only. No sponsorship or endorsement is implied.</small>
           </motion.div>
         </div>
         <div className="cinematic-index"><span>01 / 03</span><i /></div>
@@ -65,10 +61,10 @@ export function ScrollHero() {
             <p className="film-eyebrow">BORN IN LEBANON · BUILT FOR SIX CONTINENTS</p>
             <h2>Do it six times across <em>six required regions</em>.</h2>
             <p>North America. South America. Europe. Africa. Asia. Australasia.</p>
-            <p className="film-proof-line">Four entries are secured. The right partners can now own the real parts that make all six possible.</p>
+            <p className="film-proof-line">Four race entries are secured. Every next line still needs travel, equipment, health, evidence and funding to work together.</p>
             <div className="film-actions">
-              <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
-              <Link className="button-quiet" to="/partners">Find Your Company Role</Link>
+              <Link className="button-primary" to="/support">Help Reach the Next Line <Heart size={16} fill="currentColor" /></Link>
+              <Link className="button-quiet" to="/partners">Company Partnership <ArrowRight size={16} /></Link>
             </div>
           </motion.div>
         </div>

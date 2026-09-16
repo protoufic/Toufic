@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, ExternalLink, ShieldCheck, TimerReset, Globe2, Camera, Users, PackageCheck } from 'lucide-react';
+import { ArrowRight, Building2, ExternalLink, Heart, ShieldCheck, TimerReset, Globe2, Camera, Users, PackageCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { ScrollHero } from '../components/ScrollHero';
-import { DualCountdown } from '../components/Countdown';
 import { WorldMap } from '../components/WorldMap';
 import { media, quotes, siraMetrics, site, warsawRace } from '../data/mission';
 import { personalBests, raceMetrics } from '../data/metrics';
@@ -63,7 +62,7 @@ function ScaleSection() {
 
 function WhyNowSection() {
   const items = [
-    { icon: TimerReset, title: 'Race 1 is 1 November 2026', copy: 'San Juan starts a seven month race calendar that must finish before 14 June 2027.' },
+    { icon: TimerReset, title: 'Race 1 is 1 November 2026', copy: 'San Juan starts the first full distance chapter of a six-continent race calendar.' },
     { icon: ShieldCheck, title: 'Evidence starts before every race', copy: 'Witnesses, travel proof, photos, and video must be planned before each start.' },
     { icon: Globe2, title: 'Four entries are secured', copy: 'Argentina, Oman, New Zealand, and South Africa are secured. North America and Europe are next.' },
   ];
@@ -75,7 +74,7 @@ function WhyNowSection() {
           <p className="eyebrow">WHY THE ATTEMPT STARTS NOW</p>
           <h2>The mission is no longer an idea. It is now a calendar.</h2>
           <p>Four entries are secured. The races, travel, bicycle, health, funding, witnesses, and evidence must now work as one system.</p>
-          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Find Your Company Role <ArrowRight size={16} /></button>
+          <div className="home-section-actions"><Link className="button-primary" to="/support">Help Reach the Next Line <Heart size={16} fill="currentColor" /></Link><Link className="button-quiet" to="/partners">Company Partnership <ArrowRight size={16} /></Link></div>
         </motion.div>
         <div className="urgency-list">
           {items.map((item, index) => (
@@ -103,7 +102,11 @@ function RecordSection() {
             <p>The Guinness World Records application was accepted and official guidelines were issued. No record is claimed. Final recognition remains subject to completion of the attempt and Guinness World Records evidence review.</p>
             <a className="inline-link" href={site.recordSource} target="_blank" rel="noreferrer">View the current listed benchmark <ExternalLink size={15} /></a>
           </div>
-          <DualCountdown />
+          <div className="home-record-checks" aria-label="Guinness World Records attempt status">
+            <span><strong>01</strong><small>APPLICATION</small><b>Accepted</b></span>
+            <span><strong>02</strong><small>GUIDELINES</small><b>Issued</b></span>
+            <span><strong>03</strong><small>RECORD</small><b>Not claimed</b></span>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -243,16 +246,17 @@ function PartnersSection() {
 
 function FinalCta() {
   return (
-    <section className="final-cta visual-backdrop-section">
+    <section className="final-cta home-final-support visual-backdrop-section">
       <div className="section-backdrop section-backdrop-final" aria-hidden="true"><img src={media.warsaw.postFlag} alt="" loading="lazy" decoding="async" /></div>
-      <div className="site-shell final-cta-inner">
+      <div className="site-shell home-final-support-grid">
         <div>
-          <p className="eyebrow">ONE COMPANY. ONE ROLE. ONE PROBLEM SOLVED.</p>
-          <h2>Tell me what your company can unlock.<br />I will build one clear role.</h2>
+          <p className="eyebrow">TWO WAYS TO STAND BEHIND THE MISSION</p>
+          <h2>Support personally.<br />Or build a company role.</h2>
+          <p className="home-final-support-intro">Individuals can fund the next starting line in seconds. Companies can own a real part of the mission with clear value and deliverables.</p>
         </div>
-        <div>
-          <p>In 15 minutes, we can find the strongest fit. The custom proposal will define the role, support, rights, deliverables, activation, useful measures, timeline, and decision date.</p>
-          <button className="button-primary" onClick={() => openContactPanel('partnership')}>Discuss a Partnership <ArrowRight size={16} /></button>
+        <div className="home-final-choice-grid">
+          <Link to="/support"><Heart size={24} fill="currentColor" /><span><small>FOR PEOPLE</small><strong>Fund the Mission</strong><em>International or Lebanon. Two clicks.</em></span><ArrowRight size={18} /></Link>
+          <Link to="/partners"><Building2 size={24} /><span><small>FOR COMPANIES</small><strong>Become a Partner</strong><em>Own a real problem the mission needs solved.</em></span><ArrowRight size={18} /></Link>
         </div>
       </div>
     </section>

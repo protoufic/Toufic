@@ -8,6 +8,7 @@ export type SupportEventName =
   | 'purpl_click'
   | 'mymonty_click'
   | 'local_number_copy'
+  | 'support_note_copy'
   | 'partner_enquiry_click'
   | 'media_enquiry_click'
   | 'supporter_consent_click'
