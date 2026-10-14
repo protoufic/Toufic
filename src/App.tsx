@@ -10,6 +10,8 @@ const FounderPage = lazy(() => import('./views/Founder').then((module) => ({ def
 const PartnersPage = lazy(() => import('./views/Partners').then((module) => ({ default: module.PartnersPage })));
 const MediaPage = lazy(() => import('./views/Media').then((module) => ({ default: module.MediaPage })));
 const SupportPage = lazy(() => import('./views/Support').then((module) => ({ default: module.SupportPage })));
+const SponsorPage = lazy(() => import('./views/Sponsor').then((module) => ({ default: module.SponsorPage })));
+const SponsorArgentinaPage = lazy(() => import('./views/SponsorArgentina').then((module) => ({ default: module.SponsorArgentinaPage })));
 const NotFoundPage = lazy(() => import('./views/NotFound').then((module) => ({ default: module.NotFoundPage })));
 
 function RouteEffects() {
@@ -44,6 +46,8 @@ function SiteRoutes() {
           <Route path="/warsaw" element={<WarsawPage />} />
           <Route path="/media" element={<MediaPage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/sponsor" element={<SponsorPage />} />
+          <Route path="/sponsor/argentina" element={<SponsorArgentinaPage />} />
           <Route path="/story" element={<FounderPage />} />
           <Route path="/record" element={<ProofPage />} />
           <Route path="/ironman" element={<WarsawPage />} />
