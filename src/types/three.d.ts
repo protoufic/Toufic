@@ -1,0 +1,1 @@
+declare module 'three';\ndeclare module 'three/examples/jsm/loaders/GLTFLoader.js';\ndeclare module 'three/examples/jsm/controls/OrbitControls.js';\n
