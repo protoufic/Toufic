@@ -190,7 +190,7 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
         if (obj instanceof THREE.Mesh) {
           obj.geometry?.dispose();
           const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
-          materials.forEach((material) => material.dispose());
+          materials.forEach((material: any) => material.dispose());
         }
       });
       if (renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement);
