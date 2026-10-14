@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, BadgeCheck, Bike, Check, ChevronRight, Crown, Gauge, ImagePlus, Layers3, LockKeyhole, Mail, ShieldCheck, Sparkles, Upload, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
