@@ -31,7 +31,7 @@ const posterUrls: Record<MarketplaceAsset, string> = {
 };
 
 function makeContainTexture(url: string) {
-  return new Promise<THREE.CanvasTexture>((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     const image = new Image();
     image.onload = () => {
       const canvas = document.createElement('canvas');
@@ -57,12 +57,7 @@ function makeContainTexture(url: string) {
 
 export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const apiRef = useRef<{
-    camera: THREE.PerspectiveCamera;
-    controls: OrbitControls;
-    overlays: Map<string, THREE.Mesh>;
-    renderer: THREE.WebGLRenderer;
-  } | null>(null);
+  const apiRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -108,7 +103,7 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
 
     const root = new THREE.Group();
     scene.add(root);
-    const overlays = new Map<string, THREE.Mesh>();
+    const overlays = new Map<string, any>();
     const meshToSpot = new Map<string, SponsorSpot>();
     spots.forEach((spot) => meshToSpot.set(spot.mesh, spot));
 
