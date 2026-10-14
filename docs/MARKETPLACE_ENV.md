@@ -1,12 +1,22 @@
 # Argentina marketplace environment
 
-The public 3D marketplace does not require database credentials to render.
+The public 3D marketplace renders without browser database credentials.
 
-The custom partnership form posts to `/api/partnership-lead`. Configure these server-side Vercel variables before relying on database intake:
+## Partnership intake
 
-- `SUPABASE_URL` (or `NEXT_PUBLIC_SUPABASE_URL`)
-- `SUPABASE_SERVICE_ROLE_KEY`
+`/api/partnership-lead` proxies requests to the deployed Supabase Edge Function:
 
-Never expose `SUPABASE_SERVICE_ROLE_KEY` to client-side code.
+`partnership-lead`
 
-Self-serve checkout remains intentionally disabled in Supabase until production, legal, Stripe webhook, success/status route, real-device and physical-placement QA are complete.
+The edge function:
+- validates required contact fields
+- rate-limits by a hashed request IP bucket
+- writes with the Supabase service role only inside the function
+- tags the lead to the Argentina race
+- allows toufic.co, localhost development, and Vercel preview origins
+
+No Supabase service-role key is exposed to the browser or stored in the repository.
+
+## Checkout
+
+Self-serve checkout remains intentionally disabled in Supabase until production legal documents, Stripe webhook deployment, success/status route, physical-placement checks, and real-device QA are complete.
