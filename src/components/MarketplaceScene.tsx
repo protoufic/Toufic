@@ -202,7 +202,7 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
     const api = apiRef.current;
     if (!api) return;
 
-    api.overlays.forEach((mesh, name) => {
+    api.overlays.forEach((mesh: any, name: string) => {
       const active = selectedSpot?.mesh === name;
       if (!logoUrl || !active) {
         mesh.material = new THREE.MeshBasicMaterial({
