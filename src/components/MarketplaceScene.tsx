@@ -122,8 +122,8 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
 
     Promise.all(assetUrls[mode].map((url) => loader.loadAsync(url))).then((models) => {
       if (cancelled) return;
-      models.forEach(({ scene: model }) => {
-        model.traverse((obj) => {
+      models.forEach(({ scene: model }: any) => {
+        model.traverse((obj: any) => {
           if (!(obj instanceof THREE.Mesh)) return;
           obj.castShadow = false;
           obj.receiveShadow = false;
@@ -185,7 +185,7 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
       renderer.domElement.removeEventListener('pointerdown', onPointer);
       controls.dispose();
       renderer.dispose();
-      scene.traverse((obj) => {
+      scene.traverse((obj: any) => {
         if (obj instanceof THREE.Mesh) {
           obj.geometry?.dispose();
           const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
