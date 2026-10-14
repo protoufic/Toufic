@@ -74,10 +74,10 @@ export function SponsorArgentinaPage() {
 
   const modeSpots = useMemo(() => argentinaSpots.filter((spot) => spot.asset === mode), [mode]);
 
-  const selectSpot = (spot: SponsorSpot) => {
+  const selectSpot = useCallback((spot: SponsorSpot) => {
     setMode(spot.asset);
     setSelectedSpot(spot);
-  };
+  }, []);
 
   const uploadLogo = (file?: File) => {
     if (!file) return;
