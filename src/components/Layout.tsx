@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/proof', label: 'Proof' },
   { href: '/founder', label: 'Founder' },
   { href: '/support', label: 'Support' },
+  { href: '/sponsor', label: 'Sponsor' },
   { href: '/partners', label: 'Partners' },
   { href: '/media', label: 'Media' },
 ];
@@ -51,9 +52,9 @@ export function Header() {
               ))}
             </div>
 
-            <Link className="header-cta header-support-cta" to="/support" onPointerEnter={() => preloadRoute('/support')} onFocus={() => preloadRoute('/support')}>
-              Fund the Mission
-              <Heart size={15} fill="currentColor" />
+            <Link className="header-cta header-support-cta" to="/sponsor/argentina" onPointerEnter={() => preloadRoute('/sponsor/argentina')} onFocus={() => preloadRoute('/sponsor/argentina')}>
+              Sponsor Argentina
+              <ArrowUpRight size={15} />
             </Link>
 
             <button
@@ -83,7 +84,7 @@ export function Header() {
                     {link.label}
                   </Link>
                 ))}
-                <Link className="mobile-support-link" to="/support" onClick={() => setMobileMenuOpen(false)}><Heart size={18} fill="currentColor" /> Fund the Mission</Link>
+                <Link className="mobile-support-link" to="/sponsor/argentina" onClick={() => setMobileMenuOpen(false)}>Sponsor Argentina <ArrowUpRight size={18} /></Link>
                 <button onClick={() => { setMobileMenuOpen(false); openContactPanel('partnership'); }}><Building2 size={18} /> Discuss a Company Partnership</button>
               </div>
             </motion.div>
@@ -91,7 +92,7 @@ export function Header() {
         </AnimatePresence>
       </header>
 
-      {location.pathname !== '/support' && (
+      {location.pathname !== '/support' && !location.pathname.startsWith('/sponsor') && (
         <Link className="global-support-sticky" to="/support"><Heart size={17} fill="currentColor" /> Fund the Mission</Link>
       )}
     </>
@@ -104,10 +105,10 @@ export function Footer() {
       <div className="site-shell footer-grid">
         <div className="footer-lead">
           <span className="footer-kicker">SIX CONTINENTS. ONE MISSION.</span>
-          <h2>6 full distance IRONMAN races. 6 continents. One Guinness World Records attempt.</h2>
+          <h2>6 full distance races. 6 continents. Before 21.</h2>
           <div className="footer-primary-actions">
-            <Link className="button-primary" to="/support">Fund the Mission <Heart size={16} fill="currentColor" /></Link>
-            <button className="text-link" onClick={() => openContactPanel('partnership')}>Partner as a Company <ArrowUpRight size={16} /></button>
+            <Link className="button-primary" to="/sponsor/argentina">Sponsor Argentina <ArrowUpRight size={16} /></Link>
+            <Link className="text-link" to="/support">Fund the Mission <Heart size={16} /></Link>
           </div>
         </div>
 
@@ -131,7 +132,7 @@ export function Footer() {
 
       <div className="site-shell footer-bottom">
         <p>© {new Date().getFullYear()} Toufic Abou Ali.</p>
-        <p>Official Guinness World Records attempt in progress. The application was accepted and official guidelines were issued. No record is claimed. Final recognition remains subject to completion and evidence review. Guinness World Records and IRONMAN® names and marks do not imply sponsorship, partnership or endorsement.</p>
+        <p>Independent athlete-led mission. Commercial placements remain subject to creative approval, physical production feasibility and race rules. Guinness World Records and IRONMAN® names and marks do not imply sponsorship, partnership or endorsement.</p>
       </div>
     </footer>
   );
