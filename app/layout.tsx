@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";\nimport "./marketplace.css";
+import "./globals.css";
+import "./marketplace.css";
 import { Analytics } from './analytics';
 
 export const metadata: Metadata = {
