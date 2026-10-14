@@ -25,7 +25,7 @@
       "image": "/assets/img/support/six-continents-one-mission.webp",
       "imageAlt": "Toufic Abou Ali and the Six Continents Guinness World Records attempt",
       "schemaType": "WebSite",
-      "priority": 1.0,
+      "priority": 1,
       "breadcrumbName": "Home",
       "lastModified": "2026-09-16"
     },
@@ -106,6 +106,28 @@
       "priority": 0.85,
       "breadcrumbName": "Media Kit",
       "lastModified": "2026-08-22"
+    },
+    {
+      "path": "/sponsor",
+      "title": "Sponsor the Six Continents Mission | Toufic Abou Ali",
+      "description": "Explore scarce race-specific sponsorship placements on Toufic Abou Ali’s trisuit, helmet and bike, plus custom full-takeover partnerships.",
+      "image": "/assets/3d/argentina/poster_full_front.webp",
+      "imageAlt": "Toufic.co interactive sponsorship marketplace athlete preview",
+      "schemaType": "WebPage",
+      "priority": 0.95,
+      "breadcrumbName": "Sponsor the Mission",
+      "lastModified": "2026-10-14"
+    },
+    {
+      "path": "/sponsor/argentina",
+      "title": "Sponsor Argentina | Interactive Race Marketplace | Toufic.co",
+      "description": "Explore 13 scarce Argentina sponsorship placements on Toufic’s trisuit, helmet and bike. Preview your logo in 3D or discuss a custom takeover.",
+      "image": "/assets/3d/argentina/poster_full_front.webp",
+      "imageAlt": "Argentina interactive trisuit, helmet and bike sponsorship marketplace",
+      "schemaType": "WebPage",
+      "priority": 1,
+      "breadcrumbName": "Sponsor Argentina",
+      "lastModified": "2026-10-14"
     }
   ],
   "redirects": {
