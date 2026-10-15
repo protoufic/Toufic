@@ -137,3 +137,21 @@
   .market-form { grid-template-columns: 1fr; }
   .market-form-wide,.market-form-error,.market-form-submit { grid-column: auto; }
 }
+
+
+.market-board { padding-top: 36px; }
+.market-board-table { border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.market-board-row { width: 100%; min-height: 72px; padding: 14px 18px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #090909; color: white; display: grid; grid-template-columns: 1.5fr 1fr .55fr 28px; gap: 18px; align-items: center; text-align: left; }
+button.market-board-row { cursor: pointer; }
+button.market-board-row:hover { background: #111; }
+.market-board-head { min-height: 42px; color: #666; font-size: 8px; font-weight: 850; letter-spacing: .11em; text-transform: uppercase; }
+.market-board-row > span:first-child { display: grid; }
+.market-board-row small { color: #666; font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.market-board-row strong { margin-top: 4px; font-size: 15px; }
+.market-board-row > span:nth-child(2) { color: #aaa; font-size: 11px; }
+.market-board-price { font: 800 13px ui-monospace, monospace; }
+.market-board-row > span:last-child { justify-self: end; color: #666; }
+@media (max-width: 760px) {
+  .market-board-row { grid-template-columns: 1.35fr .85fr auto; gap: 10px; padding-inline: 13px; }
+  .market-board-row > span:last-child { display: none; }
+}
