@@ -155,3 +155,14 @@ button.market-board-row:hover { background: #111; }
   .market-board-row { grid-template-columns: 1.35fr .85fr auto; gap: 10px; padding-inline: 13px; }
   .market-board-row > span:last-child { display: none; }
 }
+
+/* Sponsor artwork editor — restrained controls inside the selected-placement panel. */
+.market-artwork-controls { margin-top: 19px; padding: 16px; border: 1px solid rgba(255,255,255,.15); background: #101010; display: grid; gap: 11px; }
+.market-artwork-controls .eyebrow { margin: 0; font-size: 9px; letter-spacing: .11em; }
+.market-artwork-help { margin: 0; color: #c1c1c1; font-size: 11px; line-height: 1.65; }
+.market-artwork-controls > small { color: #888; font-size: 10px; line-height: 1.55; }
+.market-artwork-controls label { display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; font-size: 10px; color: #c9c9c9; }
+.market-artwork-controls label strong { color: #fff; font: 800 10px ui-monospace,monospace; }
+.market-artwork-controls input[type="range"] { grid-column: 1 / -1; width: 100%; accent-color: #ed2936; cursor: pointer; }
+.market-artwork-reset { justify-self: start; padding: 8px 12px; border: 1px solid rgba(255,255,255,.2); color: #fff; background: transparent; font-size: 10px; cursor: pointer; }
+.market-artwork-reset:hover { border-color: #ed2936; }
