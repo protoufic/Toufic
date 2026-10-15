@@ -11,6 +11,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,3 +23,33 @@ jobs:
       - name: Production dependency audit
         run: npm audit --omit=dev || true
       - run: npm test
+
+  dependency_fix:
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[deps-fix]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/argentina-marketplace-v1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Upgrade vulnerable runtime dependencies
+        run: |
+          npm install --save-exact next@16.4.1 react-router-dom@7.18.4
+          npm install --save-dev --save-exact eslint-config-next@16.4.1
+          npm audit fix
+          npm audit --omit=dev || true
+          npm test
+      - name: Commit refreshed manifest and lockfile
+        run: |
+          git config user.name "toufic-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add package.json package-lock.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Apply dependency security upgrades"
+          git push origin HEAD:feature/argentina-marketplace-v1
