@@ -24,7 +24,7 @@ export function artworkGeometry(
   const safeAspect = Number.isFinite(surfaceAspect) && surfaceAspect > 0 ? surfaceAspect : 1;
   const imageAspect = Math.max(0.0001, imageWidth / Math.max(1, imageHeight));
   const uvAspect = imageAspect / safeAspect;
-  const scale = Math.min(1, Math.max(0.3, placement.scale));
+  const scale = Math.min(1.1, Math.max(0.3, placement.scale));
   const limit = canvasSize * 0.88 * scale;
   let width = Math.min(limit, limit * uvAspect);
   let height = width / uvAspect;
