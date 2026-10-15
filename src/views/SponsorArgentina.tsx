@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, BadgeCheck, Bike, Check, ChevronRight, Crown, Gauge, ImagePlus, Layers3, LockKeyhole, Mail, ShieldCheck, Sparkles, Upload, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
@@ -71,8 +71,27 @@ export function SponsorArgentinaPage() {
   const [selectedSpot, setSelectedSpot] = useState<SponsorSpot | null>(argentinaSpots[0]);
   const [logoUrl, setLogoUrl] = useState<string>();
   const [partnershipOpen, setPartnershipOpen] = useState(false);
+  const [liveState, setLiveState] = useState<Record<string, { level: number; nextPriceCents: number | null; state: string; ownerLabel: string | null }>>({});
+  const [liveStateStatus, setLiveStateStatus] = useState<'loading' | 'ready' | 'error'>('loading');
 
   const modeSpots = useMemo(() => argentinaSpots.filter((spot) => spot.asset === mode), [mode]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('https://eicjgsjkeqiceldcfwjp.supabase.co/functions/v1/marketplace-state', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error('marketplace state unavailable')))
+      .then((payload) => {
+        if (cancelled || !payload?.ok || !Array.isArray(payload.spots)) return;
+        const next: Record<string, { level: number; nextPriceCents: number | null; state: string; ownerLabel: string | null }> = {};
+        payload.spots.forEach((row: { code: string; level: number; nextPriceCents: number | null; state: string; ownerLabel: string | null }) => {
+          next[row.code] = { level: row.level, nextPriceCents: row.nextPriceCents, state: row.state, ownerLabel: row.ownerLabel };
+        });
+        setLiveState(next);
+        setLiveStateStatus('ready');
+      })
+      .catch(() => { if (!cancelled) setLiveStateStatus('error'); });
+    return () => { cancelled = true; };
+  }, []);
 
   const selectSpot = useCallback((spot: SponsorSpot) => {
     setMode(spot.asset);
@@ -137,9 +156,9 @@ export function SponsorArgentinaPage() {
                   </div>
 
                   <div className="market-price-block">
-                    <span>Opening takeover</span>
-                    <strong>{money(selectedSpot.nextPrice)}</strong>
-                    <small>Current level 1 · USD</small>
+                    <span>{liveState[selectedSpot.id]?.ownerLabel ? 'Next takeover' : 'Opening takeover'}</span>
+                    <strong>{money(liveState[selectedSpot.id]?.nextPriceCents ? liveState[selectedSpot.id].nextPriceCents! / 100 : selectedSpot.nextPrice)}</strong>
+                    <small>{liveStateStatus === 'ready' ? `Current level ${liveState[selectedSpot.id]?.level || 1} · USD` : 'USD · live state loading'}</small>
                   </div>
 
                   <label className="market-upload">
@@ -172,10 +191,38 @@ export function SponsorArgentinaPage() {
                 <button key={spot.id} className={'market-inventory-card ' + (selectedSpot?.id === spot.id ? 'active' : '')} onClick={() => selectSpot(spot)}>
                   <span className="market-inventory-index">{String(index + 1).padStart(2, '0')}</span>
                   <div><small>{modeMeta[spot.asset].label} · {spot.tier}</small><strong>{spot.label}</strong></div>
-                  <span className="market-inventory-price">{money(spot.basePrice)}</span>
+                  <span className="market-inventory-price">{money(liveState[spot.id]?.nextPriceCents ? liveState[spot.id].nextPriceCents! / 100 : spot.basePrice)}</span>
                   <ChevronRight size={17} />
                 </button>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="market-board section">
+          <div className="site-shell">
+            <div className="section-heading section-heading-wide">
+              <p className="eyebrow">SPONSOR BOARD</p>
+              <h2>One board. Same inventory.</h2>
+              <p>{liveStateStatus === 'ready' ? 'Live ownership and next-takeover state from the marketplace database.' : liveStateStatus === 'loading' ? 'Loading live marketplace state…' : 'Live marketplace state is temporarily unavailable; 3D inventory remains visible above.'}</p>
+            </div>
+            <div className="market-board-table" role="table" aria-label="Argentina sponsor board">
+              <div className="market-board-row market-board-head" role="row">
+                <span>Placement</span><span>Owner</span><span>Next</span><span />
+              </div>
+              {argentinaSpots.map((spot) => {
+                const state = liveState[spot.id];
+                const owner = liveStateStatus === 'ready' ? (state?.ownerLabel || 'Available') : '—';
+                const nextPrice = state?.nextPriceCents ? state.nextPriceCents / 100 : spot.basePrice;
+                return (
+                  <button key={spot.id} className="market-board-row" role="row" onClick={() => selectSpot(spot)}>
+                    <span><small>{modeMeta[spot.asset].label}</small><strong>{spot.label}</strong></span>
+                    <span>{owner}</span>
+                    <span className="market-board-price">{money(nextPrice)}</span>
+                    <span><ChevronRight size={16} /></span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
