@@ -185,8 +185,8 @@ export function SponsorArgentinaPage() {
                     {logoUrl && (
                       <>
                         <small>Uploaded image: {artworkResolution || 'Checking resolution…'}</small>
-                        <label>Size within placement <strong>{Math.round(artworkPlacement.scale * 100)}%</strong>
-                          <input type="range" min="30" max="100" value={Math.round(artworkPlacement.scale * 100)} onChange={(e) => setArtworkPlacement((p) => ({ ...p, scale: Number(e.target.value) / 100 }))} />
+                        <label>Logo fill <strong>{Math.round(artworkPlacement.scale * 100)}%</strong>
+                          <input type="range" min="30" max="110" value={Math.round(artworkPlacement.scale * 100)} onChange={(e) => setArtworkPlacement((p) => ({ ...p, scale: Number(e.target.value) / 100 }))} />
                         </label>
                         <label>Horizontal offset <strong>{artworkPlacement.x}%</strong>
                           <input type="range" min="-100" max="100" value={artworkPlacement.x} onChange={(e) => setArtworkPlacement((p) => ({ ...p, x: Number(e.target.value) }))} />
