@@ -10,7 +10,7 @@ const origin = { x: 56.2, y: 47.8 };
 export function WorldMap() {
   const [selectedName, setSelectedName] = useState(mission.continents[0].name);
   const { races, loading, error, securedCount } = usePublicMission();
-  const continents = continents.map((location) => {
+  const continents = mission.continents.map((location) => {
     const race = races?.find((item) => item.continent === location.name || (location.name === 'Australasia' && item.continent === 'Oceania'));
     return { ...location, race: race ? [race.title, race.city && race.city !== race.title ? race.city : null, race.country !== race.title ? race.country : null].filter(Boolean).join(', ') : '', date: race ? missionDate(race.race_date) : '', status: race ? (race.registration_status || race.status) : '', secured: race ? isSecured(race) : false, summary: race?.public_summary || '' };
   });
@@ -47,10 +47,10 @@ export function WorldMap() {
             className={`map-node ${selectedName === continent.name ? 'active' : ''}`}
             style={{ left: `${continent.x}%`, top: `${continent.y}%` }}
             onClick={() => setSelectedName(continent.name)}
-            onMouseEnter={() => setSelected(continent)}
-            onFocus={() => setSelected(continent)}
-            aria-pressed={selected.name === continent.name}
-            aria-label={`${continent.name}: ${continent.status}`}
+            onMouseEnter={() => setSelectedName(continent.name)}
+            onFocus={() => setSelectedName(continent.name)}
+            aria-pressed={selectedName === continent.name}
+            aria-label={`${continent.name}: ${continent.status || 'Loading'}`}
           >
             <span />
             <small>{continent.name}</small>
@@ -81,7 +81,7 @@ export function WorldMap() {
 
       <div className="map-mobile-list">
         {mission.continents.map((continent) => (
-          <button key={continent.name} onClick={() => setSelected(continent)} className={selected.name === continent.name ? 'active' : ''}>
+          <button key={continent.name} onClick={() => setSelectedName(continent.name)} className={selected.name === continent.name ? 'active' : ''}>
             <span>{continent.name}</span><ArrowRight size={15} />
           </button>
         ))}
