@@ -6,12 +6,14 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { MarketplaceAsset, SponsorSpot } from '../data/marketplace';
+import { renderArtworkCanvas, type ArtworkPlacement } from '../utils/marketplaceArtwork';
 
 type Props = {
   mode: MarketplaceAsset;
   spots: SponsorSpot[];
   selectedSpot: SponsorSpot | null;
   logoUrl?: string;
+  artworkPlacement: ArtworkPlacement;
   onSelect: (spot: SponsorSpot) => void;
 };
 
@@ -31,42 +33,20 @@ const posterUrls: Record<MarketplaceAsset, string> = {
   bike: '/assets/3d/argentina/poster_bike_left.webp',
 };
 
-function makeContainTexture(url: string) {
-  return new Promise<any>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 1024;
-      canvas.height = 1024;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return reject(new Error('Canvas unavailable'));
-      ctx.clearRect(0, 0, 1024, 1024);
-      const scale = Math.min(900 / image.width, 900 / image.height);
-      const w = image.width * scale;
-      const h = image.height * scale;
-      ctx.drawImage(image, (1024 - w) / 2, (1024 - h) / 2, w, h);
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.flipY = false;
-      texture.needsUpdate = true;
-      resolve(texture);
-    };
-    image.onerror = reject;
-    image.src = url;
-  });
-}
-
-export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect }: Props) {
+export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, artworkPlacement, onSelect }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  const textureRequestRef = useRef(0);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
     let cancelled = false;
+    setReady(false);
+    setFailed(false);
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#070707');
     scene.fog = new THREE.Fog('#070707', 4, 9);
@@ -131,9 +111,9 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
           if (meshToSpot.has(obj.name)) {
             overlays.set(obj.name, obj);
             obj.material = new THREE.MeshBasicMaterial({
-              color: 0xffffff,
+              color: 0xee2833,
               transparent: true,
-              opacity: 0.12,
+              opacity: 0.48,
               side: THREE.DoubleSide,
               depthWrite: false,
               toneMapped: false,
@@ -205,14 +185,16 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
     api.overlays.forEach((mesh: any, name: string) => {
       const active = selectedSpot?.mesh === name;
       if (!logoUrl || !active) {
+        const previous = mesh.material;
         mesh.material = new THREE.MeshBasicMaterial({
-          color: active ? 0xff3138 : 0xffffff,
+          color: active ? 0xff3138 : 0xee2833,
           transparent: true,
-          opacity: active ? 0.62 : 0.12,
+          opacity: active ? 0.86 : 0.48,
           side: THREE.DoubleSide,
           depthWrite: false,
           toneMapped: false,
         });
+        if (previous !== mesh.material) { previous.map?.dispose(); previous.dispose(); }
       }
     });
 
@@ -226,10 +208,17 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
     api.camera.position.lerp(desired, 0.92);
     api.controls.update();
 
+    const requestId = ++textureRequestRef.current;
     if (logoUrl) {
       const mesh = api.overlays.get(selectedSpot.mesh);
       if (mesh) {
-        void makeContainTexture(logoUrl).then((texture) => {
+        void renderArtworkCanvas(logoUrl, selectedSpot.aspectRatio, artworkPlacement).then((canvas) => {
+          if (requestId !== textureRequestRef.current || apiRef.current !== api) return;
+          const texture = new THREE.CanvasTexture(canvas);
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.flipY = false;
+          texture.needsUpdate = true;
+          const previous = mesh.material;
           mesh.material = new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true,
@@ -237,10 +226,13 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, onSelect 
             depthWrite: false,
             toneMapped: false,
           });
-        });
+          previous.map?.dispose();
+          previous.dispose();
+        }).catch(() => { /* The red placement surface stays usable without artwork. */ });
       }
     }
-  }, [selectedSpot, logoUrl]);
+    return () => { textureRequestRef.current++; };
+  }, [selectedSpot, logoUrl, artworkPlacement, ready]);
 
   return (
     <div className="market-scene" ref={mountRef}>
