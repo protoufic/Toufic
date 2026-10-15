@@ -5,6 +5,7 @@ import { DualCountdown } from '../components/Countdown';
 import { WorldMap } from '../components/WorldMap';
 import { media, mission, site } from '../data/mission';
 import { openContactPanel } from '../utils/contact';
+import { usePublicMission } from '../hooks/usePublicMission';
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
@@ -34,6 +35,7 @@ const gates = [
 ];
 
 export function MissionPage() {
+  const { securedCount, loading, error } = usePublicMission();
   return (
     <Layout>
       <section className="page-hero mission-page-hero">
@@ -106,7 +108,7 @@ export function MissionPage() {
       <section className="section readiness-section">
         <div className="site-shell readiness-grid">
           <motion.div {...reveal} className="readiness-copy">
-            <p className="eyebrow">FIVE ENTRIES SECURED · EVERY CHECK STILL MATTERS</p>
+            <p className="eyebrow">{loading ? 'CHECKING CURRENT RACE STATUS' : error ? 'RACE STATUS TEMPORARILY UNAVAILABLE' : `${securedCount} ENTRIES SECURED · EVERY CHECK STILL MATTERS`}</p>
             <h2>An entry alone does not complete the mission.</h2>
             <p>Every event still needs the official rules, travel, medical, recovery, funding, organiser, witness, and evidence checks to work together.</p>
           </motion.div>
