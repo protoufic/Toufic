@@ -11,7 +11,7 @@ export function isSecured(race: PublicMissionRace) {
 }
 
 export function missionDate(value: string | null) {
-  if (!value || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return 'Date to be confirmed';
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Date to be confirmed';
   return new Date(value + 'T12:00:00Z').toLocaleDateString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
   });
