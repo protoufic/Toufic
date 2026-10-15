@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { MarketplaceScene } from '../components/MarketplaceScene';
 import { argentinaMarketplace, argentinaSpots, type MarketplaceAsset, type SponsorSpot } from '../data/marketplace';
+import { defaultArtworkPlacement, type ArtworkPlacement } from '../utils/marketplaceArtwork';
 
 const money = (value: number) => '$' + value.toLocaleString('en-US');
 
@@ -70,6 +71,8 @@ export function SponsorArgentinaPage() {
   const [mode, setMode] = useState<MarketplaceAsset>('athlete');
   const [selectedSpot, setSelectedSpot] = useState<SponsorSpot | null>(argentinaSpots[0]);
   const [logoUrl, setLogoUrl] = useState<string>();
+  const [artworkPlacement, setArtworkPlacement] = useState<ArtworkPlacement>(defaultArtworkPlacement);
+  const [artworkResolution, setArtworkResolution] = useState('');
   const [partnershipOpen, setPartnershipOpen] = useState(false);
   const [liveState, setLiveState] = useState<Record<string, { level: number; nextPriceCents: number | null; state: string; ownerLabel: string | null }>>({});
   const [liveStateStatus, setLiveStateStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -101,7 +104,14 @@ export function SponsorArgentinaPage() {
   const uploadLogo = (file?: File) => {
     if (!file) return;
     if (logoUrl) URL.revokeObjectURL(logoUrl);
-    setLogoUrl(URL.createObjectURL(file));
+    if (!file.type.startsWith('image/')) return;
+    const url = URL.createObjectURL(file);
+    setLogoUrl(url);
+    setArtworkPlacement({ ...defaultArtworkPlacement });
+    const image = new Image();
+    image.onload = () => setArtworkResolution(`${image.naturalWidth} × ${image.naturalHeight} px`);
+    image.onerror = () => setArtworkResolution('Could not verify image dimensions');
+    image.src = url;
   };
 
   return (
@@ -138,7 +148,7 @@ export function SponsorArgentinaPage() {
                   return <button key={asset} className={mode === asset ? 'active' : ''} onClick={() => { setMode(asset); setSelectedSpot(argentinaSpots.find((spot) => spot.asset === asset) || null); }}><Icon size={15} /> {modeMeta[asset].label}</button>;
                 })}
               </div>
-              <MarketplaceScene mode={mode} spots={modeSpots} selectedSpot={selectedSpot?.asset === mode ? selectedSpot : null} logoUrl={logoUrl} onSelect={selectSpot} />
+              <MarketplaceScene mode={mode} spots={modeSpots} selectedSpot={selectedSpot?.asset === mode ? selectedSpot : null} logoUrl={logoUrl} artworkPlacement={artworkPlacement} onSelect={selectSpot} />
               <div className="market-stage-footer">
                 <span><Gauge size={15} /> Interactive production geometry</span>
                 <span><ShieldCheck size={15} /> Creative approval required</span>
@@ -157,21 +167,46 @@ export function SponsorArgentinaPage() {
 
                   <div className="market-price-block">
                     <span>{liveState[selectedSpot.id]?.ownerLabel ? 'Next takeover' : 'Opening takeover'}</span>
-                    <strong>{money(liveState[selectedSpot.id]?.nextPriceCents ? liveState[selectedSpot.id].nextPriceCents! / 100 : selectedSpot.nextPrice)}</strong>
+                    <strong>{liveStateStatus === 'ready' && liveState[selectedSpot.id]?.nextPriceCents != null ? money(liveState[selectedSpot.id].nextPriceCents! / 100) : '—'}</strong>
                     <small>{liveStateStatus === 'ready' ? `Current level ${liveState[selectedSpot.id]?.level || 1} · USD` : 'USD · live state loading'}</small>
                   </div>
 
                   <label className="market-upload">
                     <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={(event) => uploadLogo(event.target.files?.[0])} />
                     <ImagePlus size={20} />
-                    <span><strong>{logoUrl ? 'Replace preview artwork' : 'Preview your logo here'}</strong><small>PNG, JPG, WebP or SVG · preview only</small></span>
+                    <span><strong>{logoUrl ? 'Replace preview artwork' : 'Preview your logo here'}</strong><small>Transparent PNG or SVG preferred · never stretched</small></span>
                     <Upload size={16} />
                   </label>
+
+                  <div className="market-artwork-controls">
+                    <p className="eyebrow">ARTWORK POSITIONING</p>
+                    <p className="market-artwork-help">Fit your logo inside the selected red placement. Its proportions are preserved. The final printable dimensions will be provided after physical equipment validation.</p>
+                    <small>Recommended: vector SVG (or production-ready PDF supplied separately); otherwise transparent PNG at least 2000 px on its longest side. Actual minimum depends on final print dimensions.</small>
+                    {logoUrl && (
+                      <>
+                        <small>Uploaded image: {artworkResolution || 'Checking resolution…'}</small>
+                        <label>Size within placement <strong>{Math.round(artworkPlacement.scale * 100)}%</strong>
+                          <input type="range" min="30" max="100" value={Math.round(artworkPlacement.scale * 100)} onChange={(e) => setArtworkPlacement((p) => ({ ...p, scale: Number(e.target.value) / 100 }))} />
+                        </label>
+                        <label>Horizontal offset <strong>{artworkPlacement.x}%</strong>
+                          <input type="range" min="-100" max="100" value={artworkPlacement.x} onChange={(e) => setArtworkPlacement((p) => ({ ...p, x: Number(e.target.value) }))} />
+                        </label>
+                        <label>Vertical offset <strong>{artworkPlacement.y}%</strong>
+                          <input type="range" min="-100" max="100" value={artworkPlacement.y} onChange={(e) => setArtworkPlacement((p) => ({ ...p, y: Number(e.target.value) }))} />
+                        </label>
+                        <label>Rotation <strong>{artworkPlacement.rotation}°</strong>
+                          <input type="range" min="-180" max="180" value={artworkPlacement.rotation} onChange={(e) => setArtworkPlacement((p) => ({ ...p, rotation: Number(e.target.value) }))} />
+                        </label>
+                        <button type="button" className="market-artwork-reset" onClick={() => setArtworkPlacement({ ...defaultArtworkPlacement })}>Reset artwork position</button>
+                      </>
+                    )}
+                    <p className="market-checkout-note">Preview positioning is not a final print approval. A larger physical branding area is a separate placement or custom quote, not a distortion of the logo.</p>
+                  </div>
 
                   <div className="market-checklist">
                     <span><Check size={15} /> Fitted sponsor overlay</span>
                     <span><Check size={15} /> Dedicated camera focus</span>
-                    <span><Check size={15} /> Logo orientation tested</span>
+                    <span><Check size={15} /> Adjustable artwork preview</span>
                     <span><Check size={15} /> Physical print confirmation still required</span>
                   </div>
 
@@ -191,7 +226,7 @@ export function SponsorArgentinaPage() {
                 <button key={spot.id} className={'market-inventory-card ' + (selectedSpot?.id === spot.id ? 'active' : '')} onClick={() => selectSpot(spot)}>
                   <span className="market-inventory-index">{String(index + 1).padStart(2, '0')}</span>
                   <div><small>{modeMeta[spot.asset].label} · {spot.tier}</small><strong>{spot.label}</strong></div>
-                  <span className="market-inventory-price">{money(liveState[spot.id]?.nextPriceCents ? liveState[spot.id].nextPriceCents! / 100 : spot.basePrice)}</span>
+                  <span className="market-inventory-price">{liveStateStatus === 'ready' && liveState[spot.id]?.nextPriceCents != null ? money(liveState[spot.id].nextPriceCents! / 100) : '—'}</span>
                   <ChevronRight size={17} />
                 </button>
               ))}
@@ -213,12 +248,12 @@ export function SponsorArgentinaPage() {
               {argentinaSpots.map((spot) => {
                 const state = liveState[spot.id];
                 const owner = liveStateStatus === 'ready' ? (state?.ownerLabel || 'Available') : '—';
-                const nextPrice = state?.nextPriceCents ? state.nextPriceCents / 100 : spot.basePrice;
+                const nextPrice = liveStateStatus === 'ready' && state?.nextPriceCents != null ? money(state.nextPriceCents / 100) : '—';
                 return (
                   <button key={spot.id} className="market-board-row" role="row" onClick={() => selectSpot(spot)}>
                     <span><small>{modeMeta[spot.asset].label}</small><strong>{spot.label}</strong></span>
                     <span>{owner}</span>
-                    <span className="market-board-price">{money(nextPrice)}</span>
+                    <span className="market-board-price">{nextPrice}</span>
                     <span><ChevronRight size={16} /></span>
                   </button>
                 );
