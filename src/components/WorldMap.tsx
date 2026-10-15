@@ -2,12 +2,19 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { mission, media } from '../data/mission';
+import { usePublicMission, isSecured, missionDate } from '../hooks/usePublicMission';
 import { openContactPanel } from '../utils/contact';
 
 const origin = { x: 56.2, y: 47.8 };
 
 export function WorldMap() {
-  const [selected, setSelected] = useState(mission.continents[0]);
+  const [selectedName, setSelectedName] = useState(mission.continents[0].name);
+  const { races, loading, error, securedCount } = usePublicMission();
+  const continents = continents.map((location) => {
+    const race = races?.find((item) => item.continent === location.name || (location.name === 'Australasia' && item.continent === 'Oceania'));
+    return { ...location, race: race ? [race.title, race.city && race.city !== race.title ? race.city : null, race.country !== race.title ? race.country : null].filter(Boolean).join(', ') : '', date: race ? missionDate(race.race_date) : '', status: race ? (race.registration_status || race.status) : '', secured: race ? isSecured(race) : false, summary: race?.public_summary || '' };
+  });
+  const selected = continents.find((item) => item.name === selectedName) || continents[0];
 
   return (
     <div className="mission-map-shell">
@@ -37,9 +44,9 @@ export function WorldMap() {
         {mission.continents.map((continent) => (
           <button
             key={continent.name}
-            className={`map-node ${selected.name === continent.name ? 'active' : ''}`}
+            className={`map-node ${selectedName === continent.name ? 'active' : ''}`}
             style={{ left: `${continent.x}%`, top: `${continent.y}%` }}
-            onClick={() => setSelected(continent)}
+            onClick={() => setSelectedName(continent.name)}
             onMouseEnter={() => setSelected(continent)}
             onFocus={() => setSelected(continent)}
             aria-pressed={selected.name === continent.name}
@@ -51,7 +58,9 @@ export function WorldMap() {
         ))}
       </div>
 
-      <AnimatePresence mode="wait">
+      {loading && <p role="status" className="source-note">Loading the current race route…</p>}
+      {error && <p role="alert" className="source-note">The verified mission route is temporarily unavailable.</p>}
+      {races && <AnimatePresence mode="wait">
         <motion.div
           key={selected.name}
           className="map-detail"
@@ -68,7 +77,7 @@ export function WorldMap() {
           <p>{selected.summary}</p>
           <span className={`map-status ${selected.secured ? 'map-status-secured' : ''}`}>{selected.status}</span>
         </motion.div>
-      </AnimatePresence>
+      </AnimatePresence>}
 
       <div className="map-mobile-list">
         {mission.continents.map((continent) => (
@@ -79,7 +88,7 @@ export function WorldMap() {
       </div>
 
       <div className="map-next-step">
-        <p><strong>Five of six entries are secured.</strong> Austria–Kärnten is the final race on 13 June 2027. Jacksonville remains the North American entry to secure; travel, recovery, race completion and evidence are still critical.</p>
+        <p>{races ? <><strong>{securedCount} of six entries are secured.</strong> Race statuses and dates above are sourced from the current published mission record.</> : 'Current entry status will appear when the verified mission route is available.'}</p>
         <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Help unlock the route <ArrowRight size={15} /></button>
       </div>
     </div>
