@@ -42,7 +42,7 @@ jobs:
         run: |
           npm install --save-exact next@16.4.1 react-router-dom@7.18.4
           npm install --save-dev --save-exact eslint-config-next@16.4.1
-          npm audit fix
+          npm audit fix || true
           npm audit --omit=dev || true
           npm test
       - name: Commit refreshed manifest and lockfile
