@@ -3,7 +3,7 @@ export const site = {
   identity: 'Lebanese founder and athlete',
   age: 20,
   email: 'protoufic@gmail.com',
-  whatsapp: 'https://wa.me/96176923943?text=Hello%20Toufic%2C%20I%20would%20like%20to%20discuss%20a%20possible%20partnership%20for%20the%20Six%20Continents%20World%20Record%20mission.',
+  whatsapp: 'https://wa.me/96176923943?text=Hello%20Toufic%2C%20I%20would%20like%20to%20discuss%20a%20possible%20partnership%20for%20the%20Six%20Continents%20mission.',
   instagram: 'https://www.instagram.com/touficaa/',
   linkedin: 'https://www.linkedin.com/in/touficabouali',
   strava: 'https://www.strava.com/athletes/109556347',
