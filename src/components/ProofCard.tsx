@@ -30,7 +30,8 @@ const imageByRace: Record<string, string> = {
 
 export function ProofCard({ race }: { race: Race }) {
   const [open, setOpen] = useState(false);
-  const image = imageByRace[race.id];
+  // Imported proof slugs append an archive sequence number. Match the curated local asset safely.
+  const image = imageByRace[race.id] || Object.entries(imageByRace).find(([id]) => race.id.startsWith(id + '-'))?.[1];
   const cleanTime = race.time === '—' ? '' : race.time.replace(' official', '').replace(' tracked', '');
   return (
     <article className={`race-card ${open ? 'open' : ''}`}>
