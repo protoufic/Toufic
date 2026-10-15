@@ -132,7 +132,7 @@ export function Footer() {
 
       <div className="site-shell footer-bottom">
         <p>© {new Date().getFullYear()} Toufic Abou Ali.</p>
-        <p>Independent athlete-led mission. Commercial placements remain subject to creative approval, physical production feasibility and race rules. Guinness World Records and IRONMAN® names and marks do not imply sponsorship, partnership or endorsement.</p>
+        <p>Independent athlete-led mission. Commercial placements remain subject to creative approval, physical production feasibility and race rules. Event and third-party names and marks do not imply sponsorship, partnership or endorsement.</p>
       </div>
     </footer>
   );
