@@ -79,7 +79,7 @@ export function WorldMap() {
       </div>
 
       <div className="map-next-step">
-        <p><strong>Four of six entries are secured.</strong> The preferred final route is Jacksonville then Hamburg. A flexible backup protects the attempt and the deadline.</p>
+        <p><strong>Five of six entries are secured.</strong> Austria–Kärnten is the final race on 13 June 2027. Jacksonville remains the North American entry to secure; travel, recovery, race completion and evidence are still critical.</p>
         <button className="button-quiet" onClick={() => openContactPanel('partnership')}>Help unlock the route <ArrowRight size={15} /></button>
       </div>
     </div>
