@@ -42,7 +42,7 @@ export const mission = {
   continents: [
     { name: 'North America', x: 20.0, y: 38.8, race: 'Jacksonville, United States', date: '16 May 2027', status: 'Preferred route · Being secured', secured: false, summary: 'Jacksonville is the preferred North America race. A flexible backup protects the attempt if the final combination must change.' },
     { name: 'South America', x: 30.5, y: 66.8, race: 'San Juan, Argentina', date: '1 November 2026', status: 'Entry secured', secured: true, summary: 'San Juan is the opening race and the first full distance chapter of the mission.' },
-    { name: 'Europe', x: 49.0, y: 36.0, race: 'Hamburg, Germany', date: '6 June 2027', status: 'Preferred route · Being secured', secured: false, summary: 'Hamburg is the preferred final race, eight days before Toufic turns 21. A flexible backup route protects the deadline.' },
+    { name: 'Europe', x: 49.0, y: 36.0, race: 'IRONMAN Austria–Kärnten, Klagenfurt', date: '13 June 2027', status: 'Entry secured', secured: true, summary: 'IRONMAN Austria–Kärnten in Klagenfurt is the confirmed final European race. The entry is secured, with the race scheduled one day before Toufic turns 21. Completion and evidence review remain ahead.' },
     { name: 'Africa', x: 53.7, y: 63.0, race: 'South Africa', date: '18 April 2027', status: 'Entry secured', secured: true, summary: 'South Africa is the fourth secured race and the African chapter of the attempt.' },
     { name: 'Asia', x: 75.5, y: 40.5, race: 'Oman', date: '5 December 2026', status: 'Entry secured', secured: true, summary: 'Oman is the second secured race, five weeks after the opening chapter in Argentina.' },
     { name: 'Australasia', x: 85.0, y: 73.5, race: 'New Zealand', date: '6 March 2027', status: 'Entry secured', secured: true, summary: 'New Zealand is the third secured race and begins the final four month push to the deadline.' },
@@ -55,7 +55,7 @@ export const preferredRoute = [
   { number: '03', continent: 'Australasia', race: 'New Zealand', country: 'New Zealand', date: '6 Mar 2027', status: 'Entry secured', secured: true },
   { number: '04', continent: 'Africa', race: 'South Africa', country: 'South Africa', date: '18 Apr 2027', status: 'Entry secured', secured: true },
   { number: '05', continent: 'North America', race: 'Jacksonville', country: 'United States', date: '16 May 2027', status: 'Being secured', secured: false },
-  { number: '06', continent: 'Europe', race: 'Hamburg', country: 'Germany', date: '6 Jun 2027', status: 'Being secured', secured: false },
+  { number: '06', continent: 'Europe', race: 'IRONMAN Austria–Kärnten', country: 'Austria', date: '13 Jun 2027', status: 'Entry secured', secured: true },
 ];
 
 export const warsawRace = {
