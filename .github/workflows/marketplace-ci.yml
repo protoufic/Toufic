@@ -18,4 +18,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Production dependency audit
+        run: npm audit --omit=dev || true
       - run: npm test
