@@ -10,6 +10,7 @@ type PublicEvent = {
   location: string | null; discipline: string | null; distance_label: string | null;
   time_label: string | null; result_label: string | null; is_podium: boolean;
   featured: boolean; images: unknown; links: unknown; notes: string | null;
+  source_status: string | null; source_summary: string | null;
 };
 type PublicBest = { code: string; label: string; distance_label: string; performance_label: string; evidence_url: string | null; };
 type ProofResponse = { ok: true; events: PublicEvent[]; bests: PublicBest[] };
@@ -30,8 +31,9 @@ function toRace(event: PublicEvent, order: number): Race {
     location: event.location || '', country: event.location?.split(',').pop()?.trim() || '',
     discipline: event.discipline || '', distance: event.distance_label || '',
     time: event.time_label || '', result: event.result_label || '',
-    status: 'Verified', note: event.notes || '', images: [], links: linksOf(event.links),
-    featured: Boolean(event.featured), podium: Boolean(event.is_podium), order, sourceSummary: '',
+    status: (['Verified', 'Verified placing', 'Proof reviewed', 'Tracked', 'Documented', 'GPS incomplete', 'Proof pending'].includes(event.source_status || '') ? event.source_status : 'Documented') as Race['status'],
+    note: event.notes || '', images: [], links: linksOf(event.links),
+    featured: Boolean(event.featured), podium: Boolean(event.is_podium), order, sourceSummary: event.source_summary || '',
   };
 }
 const filters = [
