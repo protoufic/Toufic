@@ -209,11 +209,12 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, artworkPl
     api.controls.update();
 
     const requestId = ++textureRequestRef.current;
+    let invalidated = false;
     if (logoUrl) {
       const mesh = api.overlays.get(selectedSpot.mesh);
       if (mesh) {
         void renderArtworkCanvas(logoUrl, selectedSpot.aspectRatio, artworkPlacement).then((canvas) => {
-          if (requestId !== textureRequestRef.current || apiRef.current !== api) return;
+          if (invalidated || requestId !== textureRequestRef.current || apiRef.current !== api) return;
           const texture = new THREE.CanvasTexture(canvas);
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.flipY = false;
@@ -231,7 +232,7 @@ export function MarketplaceScene({ mode, spots, selectedSpot, logoUrl, artworkPl
         }).catch(() => { /* The red placement surface stays usable without artwork. */ });
       }
     }
-    return () => { textureRequestRef.current++; };
+    return () => { invalidated = true; };
   }, [selectedSpot, logoUrl, artworkPlacement, ready]);
 
   return (
