@@ -61,7 +61,8 @@ function copyText(value: string, onSuccess: () => void, onFailure: () => void) {
     input.select();
     const copied = document.execCommand('copy');
     input.remove();
-    copied ? onSuccess() : onFailure();
+    if (copied) onSuccess();
+    else onFailure();
   };
 
   if (navigator.clipboard?.writeText) {

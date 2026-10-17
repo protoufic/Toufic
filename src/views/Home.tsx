@@ -64,7 +64,7 @@ function WhyNowSection() {
   const items = [
     { icon: TimerReset, title: 'Race 1 is 1 November 2026', copy: 'San Juan starts the first full distance chapter of a six-continent race calendar.' },
     { icon: ShieldCheck, title: 'Evidence starts before every race', copy: 'Witnesses, travel proof, photos, and video must be planned before each start.' },
-    { icon: Globe2, title: 'Four entries are secured', copy: 'Argentina, Oman, New Zealand, and South Africa are secured. North America and Europe are next.' },
+    { icon: Globe2, title: 'Five entries are secured', copy: 'Argentina, Oman, New Zealand, South Africa, and Austria are secured. Jacksonville remains to be secured.' },
   ];
   return (
     <section className="section urgency-section visual-backdrop-section">
@@ -73,7 +73,7 @@ function WhyNowSection() {
         <motion.div {...reveal} className="urgency-lead">
           <p className="eyebrow">WHY THE ATTEMPT STARTS NOW</p>
           <h2>The mission is no longer an idea. It is now a calendar.</h2>
-          <p>Four entries are secured. The races, travel, bicycle, health, funding, witnesses, and evidence must now work as one system.</p>
+          <p>Five entries are secured. The races, travel, bicycle, health, funding, witnesses, and evidence must now work as one system.</p>
           <div className="home-section-actions"><Link className="button-primary" to="/support">Help Reach the Next Line <Heart size={16} fill="currentColor" /></Link><Link className="button-quiet" to="/partners">Company Partnership <ArrowRight size={16} /></Link></div>
         </motion.div>
         <div className="urgency-list">
@@ -146,7 +146,7 @@ function MapSection() {
         <motion.div {...reveal} className="section-heading">
           <p className="eyebrow">THE SIX REQUIRED REGIONS</p>
           <h2>Six qualifying races. Six required regions.</h2>
-          <p>Argentina, Oman, New Zealand, and South Africa are secured. Jacksonville and Hamburg form the preferred final route, with a flexible backup protecting the deadline.</p>
+          <p>Argentina, Oman, New Zealand, South Africa, and Austria are secured. Jacksonville is the remaining planned entry, with Austria–Kärnten as the final race on 13 June 2027.</p>
         </motion.div>
         <WorldMap />
       </div>

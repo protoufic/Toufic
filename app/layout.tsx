@@ -1,30 +1,31 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./marketplace.css";
 import { Analytics } from './analytics';
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://toufic.co"),
-  title: "Toufic Abou Ali | Six Continents. One Guinness World Records Attempt.",
+  title: "Toufic Abou Ali | Six Continents. One Mission.",
   description:
-    "Toufic Abou Ali is preparing six full distance IRONMAN races across six continents as part of an official Guinness World Records attempt. No record is claimed.",
+    "Toufic Abou Ali is building toward six full-distance races across six continents before turning 21.",
   openGraph: {
-    title: "Six Continents. One Guinness World Records Attempt. | Toufic Abou Ali",
+    title: "Six Continents. One Mission. | Toufic Abou Ali",
     description:
-      "Follow and support Toufic Abou Ali’s six-continent IRONMAN Guinness World Records attempt, or explore company partnership roles.",
+      "Follow Toufic Abou Ali’s six-continent endurance mission, race proof, progress and partnership opportunities.",
     type: "website",
     images: [
       {
         url: "/assets/img/support/six-continents-one-mission.webp",
         width: 1200,
         height: 630,
-        alt: "Six Continents, One Mission — Toufic Abou Ali Guinness World Records attempt",
+        alt: "Six Continents, One Mission — Toufic Abou Ali",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Six Continents. One Guinness World Records Attempt. | Toufic Abou Ali",
-    description: "Six full distance IRONMAN races. Six continents. One official Guinness World Records attempt.",
+    title: "Six Continents. One Mission. | Toufic Abou Ali",
+    description: "6 full-distance races. 6 continents. Before 21.",
     images: ["/assets/img/support/six-continents-one-mission.webp"],
   },
   icons: {
