@@ -19,7 +19,7 @@ export async function GET() {
   try {
     // RLS plus explicit published/verified filters; no service-role key.
     const [events, bests] = await Promise.all([
-      publicRead('/proof_events?select=slug,title,event_date,date_label,location,discipline,distance_label,time_label,result_label,is_podium,featured,images,links,notes&published=eq.true&verified=eq.true&order=event_date.desc.nullslast&limit=150'),
+      publicRead('/proof_events?select=slug,title,event_date,date_label,location,discipline,distance_label,time_label,result_label,is_podium,featured,images,links,notes,source_status,source_summary&published=eq.true&verified=eq.true&order=event_date.desc.nullslast&limit=150'),
       publicRead('/performance_bests?select=code,label,distance_label,performance_label,result_type,evidence_url,note,sort_order&published=eq.true&order=sort_order.asc&limit=20'),
     ]);
     return NextResponse.json(
